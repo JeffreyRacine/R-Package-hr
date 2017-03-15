@@ -60,7 +60,7 @@ This function is in beta mode until further notice.
 }
 
 \seealso{
-\code{\link[tseries]{pp.test}}
+\code{\link[tseries]{pp.test}}, \code{\link[fUnitRoots]{adfTest}}, \code{\link[fUnitRoots]{unitrootTest}}
 }
 
 \examples{
