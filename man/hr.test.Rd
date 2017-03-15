@@ -65,11 +65,18 @@ This function is in beta mode until further notice.
 
 \examples{
 library(tseries)
+
 ## Generate a series with a unit root, MA errors
+
 set.seed(42)
 x <- arima.sim(list(order=c(0,1,1),ma=-0.8),n=100)
+
+## Compute the Hansen-Racine test
+
 hr.test(x,B=99)
+
 ## The Phillips-Perron test rejects 100% of the time for this DGP
+
 pp.test(x)
 }
 

@@ -186,23 +186,23 @@ hrtest <- function(tau,
                    boot.num,
                    adf.lags) {
    
-    tsig <- list(tau = tau,
-                 tau.alpha.low = tau.alpha.low,
-                 tau.alpha.up = tau.alpha.up,
-                 decision = decision,
-                 reject = reject,
-                 quantiles = quantiles,
-                 alpha = alpha,
-                 trend = trend,
-                 mma.weights = mma.weights,
-                 tau.boot = tau.boot,
-                 e.block.length = e.block.length,
-                 boot.num = boot.num,
-                 adf.lags = adf.lags)
+    thr <- list(tau = tau,
+                tau.alpha.low = tau.alpha.low,
+                tau.alpha.up = tau.alpha.up,
+                decision = decision,
+                reject = reject,
+                quantiles = quantiles,
+                alpha = alpha,
+                trend = trend,
+                mma.weights = mma.weights,
+                tau.boot = tau.boot,
+                e.block.length = e.block.length,
+                boot.num = boot.num,
+                adf.lags = adf.lags)
 
-     class(tsig) = "hrtest"
+    class(thr) = "hrtest"
     
-    tsig
+    thr
 }
 
 print.hrtest <- function(x, ...){
