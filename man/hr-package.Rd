@@ -21,7 +21,7 @@ Kindly see ?hr.test
 Maintainer: \packageMaintainer{hr}
 }
 \references{
-Hansen and Racine (2017)
+Hansen and Racine (2017), \dQuote{Bootstrap Mallows Model Averaging Unit Root Inference,} Technical Report.
 }
 
 \keyword{ package }

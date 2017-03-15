@@ -2,7 +2,7 @@
 
 \alias{hr.test}
 
-\title{Hansen and Racine's Nonparametric Model Averaged Unit Root Test}
+\title{Hansen-Racine Unit Root Test}
 
 \description{This function takes a univariate time series object and performs Hansen and Racine's (2017) nonparametric bootstrap frequentist model average unit root test.}
 
@@ -48,7 +48,7 @@ We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the a
 }
 
 \references{
-Hansen and Racine (2017)
+Hansen and Racine (2017), \dQuote{Bootstrap Mallows Model Averaging Unit Root Inference,} Technical Report.
 }
 
 \author{
