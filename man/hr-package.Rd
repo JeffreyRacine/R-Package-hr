@@ -32,8 +32,11 @@ Maintainer: \packageMaintainer{hr}
 ~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
 }
 \examples{
+require(tseries)
 ## Generate a series with a unit root
 set.seed(42)
-x <- ts(cumsum(rnorm(100)))
+x <- arima.sim(list(order=c(0,1,1),ma=-0.8),n=100)
 hr.test(x,B=99)
+## The Phillips-Perron test rejects 100% of the time for this DGP
+pp.test(x)
 }

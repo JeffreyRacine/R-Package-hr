@@ -27,18 +27,18 @@ hr.test(x = NULL,
 We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the automatic dependent bootstrap procedure, \code{\link[quadprog]{solve.QP}} from the \pkg{quadprog} package, \code{\link[boot]{tsboot}} from the \pkg{boot} package, and the \code{\link[fUnitRoots]{adfTest}} function from the \pkg{fUnitRoots} package. These packages must be installed.
 }
 \value{
-\item{tau }{model averaged test statistic}
-\item{tau.alpha.low }{lower critical value}
-\item{tau.alpha.up }{upper critical value}
-\item{decision }{outcome of test}
-\item{reject }{1 if reject, 0 otherwise}
-\item{quantiles }{vector of nonparametric null quantiles}
-\item{alpha }{size of test}
-\item{trend }{whether to include a deterministic trend or not}
-\item{mma.weights }{vector of Mallows model average weights}
-\item{tau.boot }{vector of bootstrapped test statistics generated under the null of a unit root}
-\item{e.block.length }{expected block length for geometric bootstrap returned by \code{\link{b.star}}}
-\item{adf.lags }{vector of lags used for the augmented models}
+\item{tau}{model averaged test statistic}
+\item{tau.alpha.low}{lower critical value}
+\item{tau.alpha.up}{upper critical value}
+\item{decision}{outcome of test}
+\item{reject}{1 if reject, 0 otherwise}
+\item{quantiles}{vector of nonparametric null quantiles}
+\item{alpha}{size of test}
+\item{trend}{whether to include a deterministic trend or not}
+\item{mma.weights}{vector of Mallows model average weights}
+\item{tau.boot}{vector of bootstrapped test statistics generated under the null of a unit root}
+\item{e.block.length}{expected block length for geometric bootstrap returned by \code{\link{b.star}}}
+\item{adf.lags}{vector of lags used for the augmented models}
 }
 \references{
 Hansen and Racine (2017)
@@ -54,10 +54,13 @@ This function is in beta mode until further notice.
 \code{\link[tseries]{pp.test}}
 }
 \examples{
+require(tseries)
 ## Generate a series with a unit root
 set.seed(42)
-x <- ts(cumsum(rnorm(100)))
+x <- arima.sim(list(order=c(0,1,1),ma=-0.8),n=100)
 hr.test(x,B=99)
+## The Phillips-Perron test rejects 100% of the time for this DGP
+pp.test(x)
 }
 
 \keyword{ nonparametric }

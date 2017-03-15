@@ -107,9 +107,9 @@ hr.test <- function(x=NULL,
     }
     if(verbose) cat("\r                               ")
 
-    decision <- paste("Fail to reject at the",100*alpha,"% level (unit root)")
-    if(t.stat.mma < quantile(t.stat.boot.mma,probs=alpha/2,type=1)) decision <- paste("Reject at the",100*alpha,"% level (stationary)")
-    if(t.stat.mma > quantile(t.stat.boot.mma,probs=1-alpha/2,type=1)) decision <- paste("Reject at the",100*alpha,"% level (explosive)")
+    decision <- paste("Fail to reject at the ",100*alpha,"% level (unit root)",sep="")
+    if(t.stat.mma < quantile(t.stat.boot.mma,probs=alpha/2,type=1)) decision <- paste("Reject at the ",100*alpha,"% level (stationary)",sep="")
+    if(t.stat.mma > quantile(t.stat.boot.mma,probs=1-alpha/2,type=1)) decision <- paste("Reject at the ",100*alpha,"% level (explosive)",sep="")
 
     reject <- as.numeric(ifelse(t.stat.mma < quantile(t.stat.boot.mma,probs=alpha/2,type=1) |
                                 t.stat.mma > quantile(t.stat.boot.mma,probs=1-alpha/2,type=1),1,0))
@@ -172,7 +172,7 @@ print.hrtest <- function(x, ...){
         "\nalpha = ",100*x$alpha,"% critical values = (",x$tau.alpha.low,",",x$tau.alpha.up,")",
         "\n",x$decision,
         "\nThere were ",x$boot.num," bootstrap replications conducted",
-        "\nThe automatic expected block length = ",x$e.block.length," (Patton, Politis & White (2004), Politis & Romano (1994))",sep="")
+        "\nThe automatic expected block length = ",x$e.block.length," (Patton, Politis & White (2004), Politis & Romano (1994))\n",sep="")
 }
 
 summary.hrtest <- function(object, ...) {
