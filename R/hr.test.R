@@ -154,51 +154,51 @@ hr.test <- function(x=NULL,
 
     if(exists.seed) assign(".Random.seed", save.seed, .GlobalEnv)
     
-    sigtest(tau=t.stat.mma,
-            tau.alpha.low = quantile(t.stat.boot.mma,probs=alpha/2,type=1),
-            tau.alpha.up = quantile(t.stat.boot.mma,probs=1-alpha/2,type=1),
-            decision=decision,
-            reject=reject,
-            quantiles=quantile(t.stat.boot.mma,q,type=1),
-            alpha=alpha,
-            trend=trend,
-            mma.weights=w.hat.mma,
-            tau.boot=t.stat.boot.mma,
-            e.block.length=l,
-            boot.num=B,
-            adf.lags=K.vec)
+    hrtest(tau = t.stat.mma,
+           tau.alpha.low = quantile(t.stat.boot.mma,probs=alpha/2,type=1),
+           tau.alpha.up = quantile(t.stat.boot.mma,probs=1-alpha/2,type=1),
+           decision = decision,
+           reject = reject,
+           quantiles = quantile(t.stat.boot.mma,q,type=1),
+           alpha = alpha,
+           trend = trend,
+           mma.weights = w.hat.mma,
+           tau.boot = sort(t.stat.boot.mma),
+           e.block.length = l,
+           boot.num = B,
+           adf.lags = K.vec)
 
 }
 
 ## S3 functions for summary() and print()
 
-sigtest <- function(tau,
-                    tau.alpha.low,
-                    tau.alpha.up,
-                    decision,
-                    reject,
-                    quantiles,
-                    alpha,
-                    trend,
-                    mma.weights,
-                    tau.boot,
-                    e.block.length,
-                    boot.num,
-                    adf.lags) {
-    
-    tsig <- list(tau=tau,
-                 tau.alpha.low=tau.alpha.low,
-                 tau.alpha.up=tau.alpha.up,
-                 decision=decision,
-                 reject=reject,
-                 quantiles=quantiles,
-                 alpha=alpha,
-                 trend=trend,
-                 mma.weights=mma.weights,
-                 tau.boot=sort(tau.boot),
-                 e.block.length=e.block.length,
-                 boot.num=boot.num,
-                 adf.lags=adf.lags)
+hrtest <- function(tau,
+                   tau.alpha.low,
+                   tau.alpha.up,
+                   decision,
+                   reject,
+                   quantiles,
+                   alpha,
+                   trend,
+                   mma.weights,
+                   tau.boot,
+                   e.block.length,
+                   boot.num,
+                   adf.lags) {
+   
+    tsig <- list(tau = tau,
+                 tau.alpha.low = tau.alpha.low,
+                 tau.alpha.up = tau.alpha.up,
+                 decision = decision,
+                 reject = reject,
+                 quantiles = quantiles,
+                 alpha = alpha,
+                 trend = trend,
+                 mma.weights = mma.weights,
+                 tau.boot = tau.boot,
+                 e.block.length = e.block.length,
+                 boot.num = boot.num,
+                 adf.lags = adf.lags)
 
      class(tsig) = "hrtest"
     
@@ -211,7 +211,7 @@ print.hrtest <- function(x, ...){
         "\nalpha = ",100*x$alpha,"% critical values = (",x$tau.alpha.low,",",x$tau.alpha.up,")",
         "\n",x$decision,
         "\nThere were ",x$boot.num," bootstrap replications conducted",
-        "\nThe automatic expected block length = ",x$e.block.length," (Patton, Politis & White (2004), Politis & Romano (1994))\n",sep="")
+        "\nAutomatic expected block length = ",x$e.block.length,sep="")
 }
 
 summary.hrtest <- function(object, ...) {
