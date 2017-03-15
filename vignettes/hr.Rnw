@@ -1,0 +1,67 @@
+%\VignetteIndexEntry{The hr Package}
+%\VignetteDepends{boot,np,quadprog,tseries}
+%\VignetteKeywords{nonparametric, unit root.}
+%\VignettePackage{hr}
+
+\documentclass[nojss]{jss}
+
+\usepackage{amsmath}
+\usepackage[utf8x]{inputenc} 
+
+\newcommand{\field}[1]{\mathbb{#1}}
+\newcommand{\R}{\field{R}}
+
+\author{Jeffrey S.~Racine\\McMaster University}
+
+\title{The \pkg{hr} Package}
+
+\Plainauthor{Jeffrey S.~Racine}
+
+\Plaintitle{The hr Package}
+
+%\Shorttitle{The hr Package}
+
+\Abstract{ 
+  
+  We describe the \proglang{R} \pkg{hr} package via a series of
+  applications that may be of interest to applied econometricians.
+
+}
+
+\Keywords{nonparametric, unit root.}
+
+\Plainkeywords{Nonparametric, unit root.}
+
+\Address{Jeffrey S.~Racine\\
+  Department of Economics\\
+  McMaster University\\
+  Hamilton, Ontario, Canada, L8S 4L8\\
+  E-mail: \email{racinej@mcmaster.ca}\\
+  URL: \url{http://www.mcmaster.ca/economics/racine/}\\
+}
+
+\begin{document}
+
+%% Note that you should use the \pkg{}, \proglang{} and \code{} commands.
+
+%% Note - fragile using \label{} in \section{} - must be outside
+
+%% For graphics
+
+\setkeys{Gin}{width=\textwidth}
+
+%% Achim's request for R prompt set invisibly at the beginning of the
+%% paper
+
+<<eval=TRUE,echo=FALSE,keep.source=TRUE>>=
+options(prompt = "R> ", np.messages = FALSE, digits = 3)
+@ 
+
+%% Achim asks for making use of <<..., height= ..., width = ...>>= for
+%% better aspect ratios and better pen-to-paper ratios...
+
+%% <<fig=TRUE,eval=TRUE, height=, width=>>=
+
+\section{Introduction}
+
+\end{document}
