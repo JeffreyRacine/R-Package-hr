@@ -1,5 +1,4 @@
-hr.test <-
-function(x=NULL,
+hr.test <- function(x=NULL,
                     K.vec=NULL,
                     random.seed=42,
                     B=399,
@@ -18,6 +17,8 @@ function(x=NULL,
     if(verbose) cat("\rLoading required packages")
     
     suppressMessages(require(fUnitRoots))
+    suppressMessages(require(boot))
+    suppressMessages(require(quadoprog))
     suppressMessages(require(np))
 
     if(exists(".Random.seed", .GlobalEnv)) {
@@ -74,7 +75,7 @@ function(x=NULL,
     Amat <- cbind(rep(1,M.dim),diag(1,M.dim,M.dim))
     bvec <- c(1,rep(0,M.dim))
     dvec <- -rank.vec*sigsq.largest
-    w.hat.mma <- quadprog::solve.QP(Dmat,dvec,Amat,bvec,1)$solution
+    w.hat.mma <- solve.QP(Dmat,dvec,Amat,bvec,1)$solution
 
     t.stat.mma <- sum(t.stat*w.hat.mma)
 
@@ -87,7 +88,7 @@ function(x=NULL,
 
     for(b in 1:B) {
         if(verbose) cat(paste("\rBootstrap replication",b,"of",B))
-        x.boot <- ts(c(x[1],cumsum(boot::tsboot(e,stat,R=1,l=l,sim="geom")$t)),
+        x.boot <- ts(c(x[1],cumsum(tsboot(e,stat,R=1,l=l,sim="geom")$t)),
                      frequency=frequency(x),
                      start=start(x))
         t.stat.boot <- c(suppressWarnings(adfTest(x.boot,lags=0,type="nc")@test$statistic),
