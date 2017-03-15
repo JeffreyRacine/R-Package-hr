@@ -12,7 +12,7 @@ hr.test <- function(x=NULL,
     ## Some basic input checking
     
     if(is.null(x)) stop("You must provide data")
-    if(!is.ts(x)) stop("You must provide a time series data object")
+    if(!is.ts(x)) x <- ts(x)
     if(is.unsorted(K.vec)) stop("Lag vector K.vec must be sorted")
     if(alpha <= 0 | alpha >= 0.5) stop("Size (alpha) must lie in (0,0.5)")
     if(B < 1) stop("Number of bootstrap replications (B) must be a positive integer (e.g. 399)")

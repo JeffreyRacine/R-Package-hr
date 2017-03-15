@@ -13,8 +13,7 @@
 The DESCRIPTION file:
 \packageDESCRIPTION{hr}
 \packageIndices{hr}
-~~ An overview of how to use the package, including the most important ~~
-~~ functions ~~
+Kindly see ?hr.test
 }
 \author{
 \packageAuthor{hr}
@@ -22,17 +21,15 @@ The DESCRIPTION file:
 Maintainer: \packageMaintainer{hr}
 }
 \references{
-~~ Literature or other references for background information ~~
+Hansen and Racine (2017)
 }
-~~ Optionally other standard keywords, one per line, from file KEYWORDS in ~~
-~~ the R documentation directory ~~
+
 \keyword{ package }
 \seealso{
-~~ Optional links to other man pages, e.g. ~~
-~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
+ \code{\link[tseries]{pp.test}}
 }
 \examples{
-require(tseries)
+library(tseries)
 ## Generate a series with a unit root, MA errors
 set.seed(42)
 x <- arima.sim(list(order=c(0,1,1),ma=-0.8),n=100)
