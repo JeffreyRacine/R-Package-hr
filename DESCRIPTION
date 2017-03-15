@@ -7,4 +7,4 @@ Imports: boot, fUnitRoots, np, quadprog
 Author: Jeffrey S. Racine
 Maintainer: <racinej@mcmaster.ca>
 Description: This package implements the nonparametric bootstrap model averaging unit root test of Hansen and Racine (2017)
-License: GPL2
+License: GPL-2

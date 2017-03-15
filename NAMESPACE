@@ -1,1 +1,4 @@
-exportPattern("^[[:alpha:]]+")
+import(stats, boot, fUnitRoots, np, quadprog)
+export(hr.test)
+S3method(print, hrtest)
+S3method(summary, hrtest)

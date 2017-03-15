@@ -117,7 +117,7 @@ hr.test <- function(x=NULL,
 
     if(exists.seed) assign(".Random.seed", save.seed, .GlobalEnv)
     
-    return(list(tau=t.stat.mma,
+    sigtest(tau=t.stat.mma,
                 decision=decision,
                 reject=reject,
                 quantiles=quantile(t.stat.boot.mma,q,type=1),
@@ -126,6 +126,45 @@ hr.test <- function(x=NULL,
                 mma.weights=w.hat.mma,
                 tau.boot=t.stat.boot.mma,
                 e.block.length=l,
-                adf.lags=K.vec))
+                boot.num=B,
+                adf.lags=K.vec)
 
+}
+
+sigtest <- function(tau,
+                    decision,
+                    reject,
+                    quantiles,
+                    alpha,
+                    trend,
+                    mma.weights,
+                    tau.boot,
+                    e.block.length,
+                    boot.num,
+                    adf.lags) {
+    
+    tsig <- list(tau=tau,
+                 decision=decision,
+                 reject=reject,
+                 quantiles=quantiles,
+                 alpha=alpha,
+                 trend=trend,
+                 mma.weights=mma.weights,
+                 tau.boot=tau.boot,
+                 e.block.length=e.block.length,
+                 boot.num=boot.num,
+                 adf.lags=adf.lags)
+
+     class(tsig) = "hrtest"
+    
+    tsig
+}
+
+print.hrtest <- function(x, ...){
+    cat("\nHansen-Racine Nonparametric Unit Root Test",
+        "\nBootstrap (",x$boot.num," replications,")
+}
+
+summary.hrtest <- function(object, ...) {
+    print(object)
 }

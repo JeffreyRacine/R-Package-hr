@@ -57,7 +57,7 @@ This function is in beta mode until further notice.
 ## Generate a series with a unit root
 set.seed(42)
 x <- ts(cumsum(rnorm(100)))
-hr.test(x,B=99)$decision
+hr.test(x,B=99)
 }
 
 \keyword{ ~nonparametric }
