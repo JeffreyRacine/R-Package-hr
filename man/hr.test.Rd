@@ -28,6 +28,8 @@ We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the a
 }
 \value{
 \item{tau }{model averaged test statistic}
+\item{tau.alpha.low }{lower critical value}
+\item{tau.alpha.up }{upper critical value}
 \item{decision }{outcome of test}
 \item{reject }{1 if reject, 0 otherwise}
 \item{quantiles }{vector of nonparametric null quantiles}
@@ -48,10 +50,8 @@ Jeffrey S. Racine
 This function is in beta mode until further notice.
 }
 
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link[tseries]{pp.test}}
 }
 \examples{
 ## Generate a series with a unit root
@@ -60,4 +60,4 @@ x <- ts(cumsum(rnorm(100)))
 hr.test(x,B=99)
 }
 
-\keyword{ ~nonparametric }
+\keyword{ nonparametric }

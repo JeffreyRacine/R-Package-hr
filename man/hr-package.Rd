@@ -32,5 +32,8 @@ Maintainer: \packageMaintainer{hr}
 ~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
 }
 \examples{
-~~ simple examples of the most important functions ~~
+## Generate a series with a unit root
+set.seed(42)
+x <- ts(cumsum(rnorm(100)))
+hr.test(x,B=99)
 }

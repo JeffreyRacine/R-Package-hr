@@ -107,9 +107,9 @@ hr.test <- function(x=NULL,
     }
     if(verbose) cat("\r                               ")
 
-    decision <- paste("Fail to reject at the",alpha,"level (unit root)")
-    if(t.stat.mma < quantile(t.stat.boot.mma,probs=alpha/2,type=1)) decision <- paste("Reject at the",alpha,"level (stationary)")
-    if(t.stat.mma > quantile(t.stat.boot.mma,probs=1-alpha/2,type=1)) decision <- paste("Reject at the",alpha,"level (explosive)")
+    decision <- paste("Fail to reject at the",100*alpha,"% level (unit root)")
+    if(t.stat.mma < quantile(t.stat.boot.mma,probs=alpha/2,type=1)) decision <- paste("Reject at the",100*alpha,"% level (stationary)")
+    if(t.stat.mma > quantile(t.stat.boot.mma,probs=1-alpha/2,type=1)) decision <- paste("Reject at the",100*alpha,"% level (explosive)")
 
     reject <- as.numeric(ifelse(t.stat.mma < quantile(t.stat.boot.mma,probs=alpha/2,type=1) |
                                 t.stat.mma > quantile(t.stat.boot.mma,probs=1-alpha/2,type=1),1,0))
@@ -118,20 +118,24 @@ hr.test <- function(x=NULL,
     if(exists.seed) assign(".Random.seed", save.seed, .GlobalEnv)
     
     sigtest(tau=t.stat.mma,
-                decision=decision,
-                reject=reject,
-                quantiles=quantile(t.stat.boot.mma,q,type=1),
-                alpha=alpha,
-                trend=trend,
-                mma.weights=w.hat.mma,
-                tau.boot=t.stat.boot.mma,
-                e.block.length=l,
-                boot.num=B,
-                adf.lags=K.vec)
+            tau.alpha.low = quantile(t.stat.boot.mma,probs=alpha/2,type=1),
+            tau.alpha.up = quantile(t.stat.boot.mma,probs=1-alpha/2,type=1),
+            decision=decision,
+            reject=reject,
+            quantiles=quantile(t.stat.boot.mma,q,type=1),
+            alpha=alpha,
+            trend=trend,
+            mma.weights=w.hat.mma,
+            tau.boot=t.stat.boot.mma,
+            e.block.length=l,
+            boot.num=B,
+            adf.lags=K.vec)
 
 }
 
 sigtest <- function(tau,
+                    tau.alpha.low,
+                    tau.alpha.up,
                     decision,
                     reject,
                     quantiles,
@@ -144,13 +148,15 @@ sigtest <- function(tau,
                     adf.lags) {
     
     tsig <- list(tau=tau,
+                 tau.alpha.low=tau.alpha.low,
+                 tau.alpha.up=tau.alpha.up,
                  decision=decision,
                  reject=reject,
                  quantiles=quantiles,
                  alpha=alpha,
                  trend=trend,
                  mma.weights=mma.weights,
-                 tau.boot=tau.boot,
+                 tau.boot=sort(tau.boot),
                  e.block.length=e.block.length,
                  boot.num=boot.num,
                  adf.lags=adf.lags)
@@ -162,7 +168,11 @@ sigtest <- function(tau,
 
 print.hrtest <- function(x, ...){
     cat("\nHansen-Racine Nonparametric Unit Root Test",
-        "\nBootstrap (",x$boot.num," replications,")
+        "\nTest statistic = ",x$tau,
+        "\nalpha = ",100*x$alpha,"% critical values = (",x$tau.alpha.low,",",x$tau.alpha.up,")",
+        "\n",x$decision,
+        "\nThere were ",x$boot.num," bootstrap replications conducted",
+        "\nThe automatic expected block length = ",x$e.block.length," (Patton, Politis & White (2004), Politis & Romano (1994))",sep="")
 }
 
 summary.hrtest <- function(object, ...) {
