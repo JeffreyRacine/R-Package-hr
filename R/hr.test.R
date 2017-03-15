@@ -64,19 +64,20 @@ hr.test <- function(x=NULL,
     }
     
     ## Augmented Dickey-Fuller models
-
+    
     for(k in 1:K) {
         if(trend) {
             out <- suppressWarnings(adfTest(x,lags=K.vec[k],type="ct"))
         } else {
             out <- suppressWarnings(adfTest(x,lags=K.vec[k],type="c"))
         }
-        ## Residual vector shorter with lags, need to line up properly
-        if(k==1) {
-            residual.mat <- cbind(residual.mat[(1+K.vec[k]):nrow(residual.mat),],residuals(out@test$lm))
-        } else {
-            residual.mat <- cbind(residual.mat[(1+K.vec[k]-K.vec[k-1]):nrow(residual.mat),],residuals(out@test$lm))
-        }
+        ## Residual vector shorter with lags, need to line up properly (discard 
+        ## residuals from 1...K.vec[k] when we bind the columns to the residual
+        ## matrix)
+        r <- residuals(out@test$lm)
+        n.r <- length(r)
+        n.rm <- nrow(residual.mat)
+        residual.mat <- cbind(residual.mat[(n.rm-n.r+1):n.rm,],r)
         rank.vec <- c(rank.vec,out@test$lm$rank)
         t.stat <- c(t.stat,out@test$statistic)
     }
