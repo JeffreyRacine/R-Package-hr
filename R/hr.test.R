@@ -1,3 +1,5 @@
+## The Hansen-Racine nonparametric bootstrap model average unit root test
+
 hr.test <- function(x=NULL,
                     K.vec=NULL,
                     random.seed=42,
@@ -7,19 +9,16 @@ hr.test <- function(x=NULL,
                     verbose=TRUE,
                     q=c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995)) {
 
+    ## Some basic input checking
+    
     if(is.null(x)) stop("You must provide data")
     if(!is.ts(x)) stop("You must provide a time series data object")
     if(is.unsorted(K.vec)) stop("Lag vector K.vec must be sorted")
     if(alpha <= 0 | alpha >= 0.5) stop("Size (alpha) must lie in (0,0.5)")
     if(B < 1) stop("Number of bootstrap replications (B) must be a positive integer (e.g. 399)")
     if(any(q<=0) | any(q>=1)) stop("The quantile vector entries must lie in (0,1)")
-
-    if(verbose) cat("\rLoading required packages")
     
-    suppressMessages(require(fUnitRoots))
-    suppressMessages(require(boot))
-    suppressMessages(require(quadprog))
-    suppressMessages(require(np))
+    ## Save any existing random seed and restore upon exit
 
     if(exists(".Random.seed", .GlobalEnv)) {
       save.seed <- get(".Random.seed", .GlobalEnv)
@@ -28,15 +27,27 @@ hr.test <- function(x=NULL,
       exists.seed = FALSE
     }
     
+    ## Set the random seed
+    
     set.seed(random.seed)
 
+    ## Set the length of the vector
+    
     n <- length(x)
+    
+    ## Use Schwert's ad-hoc rule for the maximum lag for the candidate models 
+    ## if none is provided
+    
     if(is.null(K.vec)) K.vec <- 1:round(12*(n/100)^0.25)
     K <- length(K.vec)
 
+    ## A simple function that returns its argument for the tsboot() call
+    
     stat <- function(s) {s}
 
     if(verbose) cat("\rComputing statistics and model averaging weights")
+    
+    ## Standard Dickey-Fuller models
 
     out.nc <- suppressWarnings(adfTest(x,lags=0,type="nc"))
     out.c <- suppressWarnings(adfTest(x,lags=0,type="c"))
@@ -51,6 +62,8 @@ hr.test <- function(x=NULL,
         rank.vec <- c(rank.vec,out.ct@test$lm$rank)
         t.stat <- c(t.stat,out.ct@test$statistic)
     }
+    
+    ## Augmented Dickey-Fuller models
 
     for(k in 1:K) {
         if(trend) {
@@ -67,6 +80,8 @@ hr.test <- function(x=NULL,
         rank.vec <- c(rank.vec,out@test$lm$rank)
         t.stat <- c(t.stat,out@test$statistic)
     }
+    
+    ## Mallows model average weights (solve a simple quadratic program)
 
     M.dim <- ncol(residual.mat)
     sigsq.largest <- summary(out@test$lm)$sigma**2
@@ -76,21 +91,37 @@ hr.test <- function(x=NULL,
     bvec <- c(1,rep(0,M.dim))
     dvec <- -rank.vec*sigsq.largest
     w.hat.mma <- solve.QP(Dmat,dvec,Amat,bvec,1)$solution
+    
+    ## The MMA test statistic is a weighted average of each of the above candidate
+    ## model's test statistics (all t-statistics for the coefficient on the first 
+    ## lag of the series)
 
     t.stat.mma <- sum(t.stat*w.hat.mma)
+    
+    ## Impose the null with a model-free difference (See Swensen (2003) for a 
+    ## similar procedure)
 
     e <- diff(x,1)
     l <- b.star(e,round=TRUE)[1,1]
+    
+    ## Vector to hold the bootstrap statistics
 
     t.stat.boot.mma <- numeric(length=B)
     
     if(verbose) cat("\r                                                ")
 
     for(b in 1:B) {
+        
         if(verbose) cat(paste("\rBootstrap replication",b,"of",B))
+        
+        ## Generate a bootstrap resample under the null
+        
         x.boot <- ts(c(x[1],cumsum(tsboot(e,stat,R=1,l=l,sim="geom")$t)),
                      frequency=frequency(x),
                      start=start(x))
+        
+        ## Recompute all candidate models and their test statistics
+        
         t.stat.boot <- c(suppressWarnings(adfTest(x.boot,lags=0,type="nc")@test$statistic),
                          suppressWarnings(adfTest(x.boot,lags=0,type="c")@test$statistic))
         if(trend) t.stat.boot <- c(t.stat.boot,suppressWarnings(adfTest(x.boot,lags=0,type="ct")@test$statistic))
@@ -101,10 +132,15 @@ hr.test <- function(x=NULL,
                 t.stat.boot <- c(t.stat.boot,suppressWarnings(adfTest(x.boot,lags=K.vec[k],type="c")@test$statistic))
             }
         }
+        
+        ## Compute the MMA bootstrap statistics
 
         t.stat.boot.mma[b] <- sum(t.stat.boot*w.hat.mma)
         
     }
+    
+    ## Set return objects
+
     if(verbose) cat("\r                               ")
 
     decision <- paste("Fail to reject at the ",100*alpha,"% level (unit root)",sep="")
@@ -132,6 +168,8 @@ hr.test <- function(x=NULL,
             adf.lags=K.vec)
 
 }
+
+## S3 functions for summary() and print()
 
 sigtest <- function(tau,
                     tau.alpha.low,
