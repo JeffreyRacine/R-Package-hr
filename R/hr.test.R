@@ -18,7 +18,7 @@ hr.test <- function(x=NULL,
     
     suppressMessages(require(fUnitRoots))
     suppressMessages(require(boot))
-    suppressMessages(require(quadoprog))
+    suppressMessages(require(quadprog))
     suppressMessages(require(np))
 
     if(exists(".Random.seed", .GlobalEnv)) {

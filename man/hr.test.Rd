@@ -23,7 +23,9 @@ hr.test(x = NULL,
   \item{verbose}{whether to display progress or not}
   \item{q}{vector of probabilities for the quantiles returned}
   }
-\details{We use the function \code{\link{b.star}} from the np package for the automatic dependent bootstrap procedure}
+\details{
+We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the automatic dependent bootstrap procedure, \code{\link[quadprog]{solve.QP}} from the \pkg{quadprog} package, \code{\link[boot]{tsboot}} from the \pkg{boot} package, and the \code{\link[fUnitRoots]{adfTest}} function from the \pkg{fUnitRoots} package. These packages must be installed.
+}
 \value{
 \item{tau }{model averaged test statistic}
 \item{decision }{outcome of test}
@@ -54,8 +56,8 @@ This function is in beta mode until further notice.
 \examples{
 ## Generate a series with a unit root
 set.seed(42)
-x <- ts(cumsum(rnorm(100))
-hr.test(x)
+x <- ts(cumsum(rnorm(100)))
+hr.test(x,B=99)$decision
 }
 
-\keyword{ ~nonparametric 
+\keyword{ ~nonparametric }

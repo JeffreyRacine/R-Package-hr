@@ -1,9 +1,10 @@
 Package: hr
 Type: Package
-Title: What the package does (short line)
+Title: Unit Root Test of Racine and Hansen (2017)
 Version: 1.0
 Date: 2017-03-15
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Imports: boot, fUnitRoots, np, quadprog
+Author: Jeffrey S. Racine
+Maintainer: <racinej@mcmaster.ca>
+Description: This package implements the nonparametric bootstrap model averaging unit root test of Hansen and Racine (2017)
+License: GPL2
