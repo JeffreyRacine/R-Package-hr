@@ -1,0 +1,679 @@
+%% $Id: bmmaur.tex,v 1.7 2017/03/15 11:31:01 jracine Exp jracine $
+
+%\VignetteIndexEntry{bmmaur}
+%\VignetteDepends{boot,np,quadprog,tseries}
+%\VignetteKeywords{nonparametric, unit root.}
+%\VignettePackage{hr}
+
+\documentclass[11pt]{amsart}
+
+\usepackage{setspace}
+\usepackage[agsm]{harvard}
+\usepackage{pdflscape}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+%% Change the default page sizes.
+
+\setlength{\topmargin}{-0.25in}
+\setlength{\textheight}{8.5in}
+\setlength{\oddsidemargin}{.0in}
+\setlength{\evensidemargin}{.0in}
+\setlength{\textwidth}{6.5in}
+\setlength{\footskip}{.5in}
+
+\title{Bootstrap Mallows Model Averaging Unit Root Inference}
+\date{\today}
+\author{Jeffrey S.\ Racine}
+
+\address[Jeffrey S.\ Racine]{Department of Economics and Graduate
+  Program in Statistics, McMaster University, racinej@mcmaster.ca;
+  Department of Economics and Finance, La Trobe University;
+  Info-Metrics Institute, American University; Rimini Center for
+  Economic Analysis; Center for Research in Econometric Analysis of
+  TimE Series (CREATES), Aarhus University.}
+
+\thanks{Racine would like to gratefully acknowledge support from the
+  Natural Sciences and Engineering Research Council of Canada
+  (NSERC:www.nserc.ca), the Social Sciences and Humanities Research
+  Council of Canada (SSHRC:www.sshrc.ca), and the Shared Hierarchical
+  Academic Research Computing Network (SHARCNET:www.sharcnet.ca). I
+  would like to thank but not implicate James MacKinnon, Bruce Hansen,
+  and In Choi for their insight and encouragement.}
+
+\pagestyle{plain}
+
+\begin{document}
+
+\begin{abstract}
+  Classical unit root tests are known to suffer from potentially
+  crippling size distortions, and a range of procedures have been
+  proposed to attenuate this problem, including the use of bootstrap
+  procedures.  It is also known that the selection of the estimating
+  equation affects the outcome of the test, and various model
+  selection procedures have been proposed to overcome this
+  limitation. In this paper we propose a model-free bootstrap
+  procedure where the null is imposed by simple differencing, and we
+  adopt recent developments in automatic block length selection for
+  the `geometric' bootstrap procedure invoked. To deal with model
+  uncertainty at the testing stage, we adopt a Mallows Model Averaging
+  (MMA) procedure. Simulations indicate that the MMA approach is
+  correctly sized in the presence of a unit root for a range of
+  settings that confound existing approaches, while it has better
+  power than its peers. There are no nuisance parameters that have to
+  be set by the user, which ought to appeal to practitioners.
+\end{abstract}
+
+\maketitle
+
+\doublespacing
+
+\section{Introduction}
+
+Though unit root tests were developed over four decades ago, problems
+with the various approaches that have been proposed persist and,
+perhaps surprisingly, there remains room for improvement. When testing
+for a unit root, the null is that the series contains a unit root,
+with rejection of the null indicating that a series is stationary. If
+these tests exhibit large upwards size distortions, practitioners may
+wrongly conclude that a time series is stationary when in fact it is
+not, which can render subsequent inference invalid. Size distortions
+surface surprisingly often in this setting, estimating equation model
+misspecification leads to bias in estimated parameters, and
+practitioners must select from among a range of candidate estimating
+equations when testing for the presence of a unit root. To deal with
+the size distortions arising from model misspecification, bootstrap
+procedures have been proposed \cite{PALM_ET_AL:2008} but, for many of
+these tests, size distortions and sub-optimal power concerns persist in
+part because they rely on a \textsl{solitary} model which must be
+selected by the practitioner.  To address the size distortions arising
+from the choice of a misspecified model, the use of model selection
+criteria such as the Bayes Information Criterion (BIC)
+\cite{SCHWARZ:1978} has been advocated. \citeasnoun{NG_PERRON:2001}
+assert that the BIC selects overly parsimonious models and propose a
+Modified Information Criteria (MIC). For
+\possessivecite{NG_PERRON:2001} approach, size distortions are
+attenuated as the dimension of the selected model increases, however
+power suffers accordingly, while the maximum lag that must be set by
+the practitioner affects the outcome of the test (ad-hoc rules are
+frequently adopted for its selection \cite{SCHWERT:1989}).
+
+As an alternative to model selection, we could instead exploit recent
+developments in (frequentist) model averaging \cite[Mallows Model
+Averaging (MMA)]{HANSEN:2007}, as it is known that model averaging can
+overcome limitations arising from the use of model selection. In the
+present context, we propose a unit root statistic that is a weighted
+average of those taken from a set of candidate models that are the
+same models that would be used for \possessivecite{NG_PERRON:2001} or
+\possessivecite{DICKEY_FULLER:1979} approaches. We also adopt an
+automatic, model-free, dependent bootstrap procedure in order to
+construct the null distribution of this statistic and compute
+nonparametric critical values or nonparametric $P$-values.  Most
+existing bootstrap unit root procedures are model-based, and one
+problem with model-based resampling is that the data generating
+process (DGP) is unknown and must be identified from the series at
+hand. In order to ensure that the bootstrap samples have the same
+structure as the series at hand, this identification must be
+correct. \citeasnoun{SWENSEN:2003} considers both a model-based and
+model-free bootstrap approaches and demonstrates that a
+difference-based model-free approach along the lines of that
+considered herein delivers a bootstrap distribution that approaches
+the true asymptotic distribution under the null of a unit root (see
+also \citeasnoun[Section 2.4]{PALM_ET_AL:2008}).  We will see that
+when model averaging is combined with a model-free, automatic,
+dependent bootstrap procedure
+\cite{POLITIS_ROMANO:1994,POLITIS_WHITE:2004,PATTON_POLITIS_WHITE:2009}),
+we can obtain a fully automatic data-driven procedure that has better
+size \textsl{and} power than its peers, while the sensitivity to the
+dimension of the model is attenuated by the averaging over a set of
+candidate models. Furthermore, unlike its peers, the procedure is
+remarkably robust to the number and maximum dimension of the candidate
+models over which the averaging is performed (size and power are
+remarkably insensitive to whether you use augmented Dickey-Fuller
+models with, e.g., one through four, eight, sixteen, or thirty two
+differenced lags of the time series).
+
+We compare the proposed bootstrap MMA approach with the classic
+\citeasnoun{DICKEY_FULLER:1979} method and with
+\possessivecite{NG_PERRON:2001} procedure (using the detrending
+approach of \citeasnoun{PERRON_QU:2007}) which is a state-of-the-art
+procedure that appears to be the go-to method for most
+practitioners. The proposed bootstrap model averaging approach emerges
+as the test of choice based upon a fairly extensive Monte Carlo
+comparison with the existing go-to and classical approaches.
+
+The rest of this paper proceeds as follows. Section
+\ref{sec:background} presents some background on unit root
+inference. Section \ref{sec:bmma} outlines the proposed
+approach. Section \ref{sec:mc} presents results from a Monte Carlo
+simulation that compares the proposed approach with the classic
+\citeasnoun{DICKEY_FULLER:1979} procedure, that of
+\possessivecite{NG_PERRON:2001}, and a bootstrap BIC model selection
+procedure. R code for implementing the procedure appears in the
+appendices and is available upon request.
+
+\section{\label{sec:background}Background - Testing for the Presence
+  of a Unit Root}
+
+Consider a time series of the form
+\begin{equation}
+y_t=y_{t-1}+\epsilon_t
+\end{equation}
+where $\epsilon_t$ is white noise. This process is a simple random
+walk, while a time series of the form
+\begin{equation}
+y_t=d+y_{t-1}+\epsilon_t
+\end{equation}
+is a random walk with drift $d$. These processes contain a unit root
+(i.e., the coefficient on $y_{t-1}$ is unity). Unit roots play a key
+role in the analysis of time series
+data. \citeasnoun{DICKEY_FULLER:1979} considered inference in the
+model
+\begin{align*}
+\Delta y_t&=\beta y_{t-1}+\epsilon_t-y_{t-1}\\
+&=(\beta -1)y_{t-1}+\epsilon_t\\
+&=\gamma y_{t-1}+\epsilon_t
+\end{align*}
+(note that under the null the dependent variable is stationary).
+
+They demonstrated how we can test the hypothesis $H_0\colon\beta=1$ by
+testing the hypothesis $H_0\colon\gamma=0$. They considered a number
+of different estimating equations which can be used to test for the
+presence of a unit root, including
+\begin{align*}
+\text{[DF(nc)]}\quad\Delta y_t&=\gamma_1 y_{t-1}+\epsilon_t,\\
+\text{[DF(c)]}\quad\Delta y_t&=\gamma_0+\gamma_1 y_{t-1}+\epsilon_t,\\
+\text{[DF(ct)]}\quad\Delta y_t&=\gamma_0+\gamma_1 y_{t-1}+\gamma_2 t+\epsilon_t,\\
+\text{[ADF(k)]}\quad\Delta y_t&=\gamma_0+\gamma_1 y_{t-1}+\gamma_2 t+\sum_{j=1}^{k-1}\gamma_{j+2}\Delta y_{t-j}+\epsilon_t.
+\end{align*}
+When $\gamma_1=0$, the first equation is a standard random walk, the
+second a random walk with drift, the third a random walk with drift
+and a time trend, and the fourth an augmented model with $k-1$ lagged
+differences. Practitioners ought to be aware of the fact that which of
+the above models is used to test for the presence of a unit root will
+affect the outcome of the test, i.e., there exists a latent model
+uncertainty problem.  \citeasnoun{DICKEY_FULLER:1979} computed the
+critical values for the $t$ statistic
+$\tau=\hat\gamma_1/SE(\hat\gamma_1)$ under the null of a unit root,
+i.e., $H_0\colon\gamma_1=0$, while \citeasnoun{MACKINNON:1996} refined
+the tabulated critical values.
+
+It is known that the classical approach \cite{DICKEY_FULLER:1979} that
+uses tabulated critical values sometimes suffers from crippling size
+distortions. \citeasnoun{MACKINNON:1996} constructed improved
+tabulated critical values but these do not attenuate the size
+distortions outlined above. \citeasnoun{SCHWERT:1989} conducted
+extensive Monte Carlo simulations and demonstrated how there can exist
+considerable bias present in a misspecified model for unit root
+testing in the presence of a moving average error process (i.e., in
+the presence of a large negative moving average root). In such cases,
+the critical values depend on the unknown parameters hence tabulated
+Dickey-Fuller critical values should be avoided, and appropriate
+bootstrap procedures may be necessary for sound inference in this
+setting. \citeasnoun{DEJONG1992323}, again via extensive simulations,
+demonstrate that the augmented Dickey-Fuller tests have low power in
+the presence of a large autoregressive root. One important practical
+aspect for augmented Dickey-Fuller unit root tests is the
+specification of the lag length. If it is too small, then the
+remaining serial correlation in the errors will bias the test. If it
+is too large, then the power of the test will
+suffer. \citeasnoun{HANSEN:1995} demonstrates how large power gains
+can be achieved by including correlated stationary covariates in the
+estimating equation (this could be trivially incorporated in the
+proposed bootstrap model average
+approach). \citeasnoun{NG_PERRON:2001} point out that a high order
+augmented autoregression is often necessary for unit root tests to
+have good size, but that information criteria such as the BIC tend to
+select a truncation lag that is small, and propose a Modified
+Information Criteria (MIC) along with GLS detrended data and
+demonstrate how this improves size but can lead to a loss in
+power. \citeasnoun{PERRON_QU:2007} propose an improved method for
+detrending for the \citeasnoun{NG_PERRON:2001} approach. We direct the
+interested reader to \citeasnoun{CHOI:2015} who presents a
+state-of-the art treatment of unit root inference.
+
+Turning to the issue of model uncertainty, one always has the option
+to pre-select the variant/model via, say, the BIC or MIC criterion (we
+include the BIC variant in the Monte Carlo simulations that follow,
+but it and the MIC approach suffer from quite substantial size
+distortions in small sample settings for the DGPs we consider
+below). The other option would be to adopt a model averaging approach,
+and we propose a bootstrap Mallow's model averaging procedure (MMA,
+see \citeasnoun{Hansen2010142} for the use of a Mallows criterion for
+combining forecasts local to a unit root)). For the MMA-based unit
+root test, we use a Mallows criterion to average over the test
+statistics taken from the set of models outlined above (e.g., a model
+with no constant DF(nc), a constant DF(c), a constant and time trend
+DF(ct), and a range of augmented models with lagged differences
+(ADF(1), ADF(2), etc.).  Note that we do not attempt the model
+averaging approach for the classical test as it is not at all obvious
+how one would use the model average weights to adjust, e.g., classical
+$P$ values (and since the classical test is grossly oversized for
+e.g.\ the ARIMA(0,1,1) DGP, it is not all all clear that such a
+procedure would attenuate the size distortions present in the
+classical approach).
+
+In what follows we consider testing for the presence of a unit root
+with the alternative being that the series is either stationary or
+explosive. Many questions arise in this framework:
+
+\begin{enumerate}
+
+\item Should classical tabulated critical values by used in practice,
+  or should instead bootstrap critical values be adopted?
+
+\item If a bootstrap procedure is adopted, should it be model based or
+  model-free? If the latter, how does one impose the null of a unit
+  root?
+
+\item If a bootstrap procedure is adopted, a time series bootstrap
+  procedure is required. Such procedures require the selection of
+  nuisance parameters (e.g., the block length). How should these be
+  chosen?
+
+\item The test outcome can change from model to model (e.g., whether
+  one uses the $t$-statistic from the Dickey-Fuller model with a
+  constant and a time trend, or the $t$-statistic from an augmented
+  Dickey-Fuller model with a constant, time trend, and $k-1$ lags of
+  the differenced series. Which model should be used to conduct the
+  test?
+
+\item Should a model selection criterion be used to select the model?
+
+\item Would a model averaging procedure be preferred to a model
+  selection criterion? Will this impact negatively on power?
+
+\end{enumerate}
+
+We now outline the proposed approach and then proceed to an analysis
+of its finite-sample performance relative to its peers.
+
+\section{\label{sec:bmma}A Model Averaging Bootstrap Procedure}
+
+\subsection{A Unit Root Bootstrap Procedure}
+
+We consider a first-difference-based bootstrap procedure to obtain the
+sampling distribution of $\tau$ under the null of a unit root along
+the lines of \citeasnoun{SWENSEN:2003}, who proves the consistency of
+the tests without deterministic components based on the stationary
+bootstrap (deterministic components can be added in the same manner as
+in \citeasnoun{PSARADAKIS:2001}; see \citeasnoun[page
+382]{PALM_ET_AL:2008}). The bootstrap procedure is as follows:
+
+\begin{enumerate}
+
+\item Take the first difference of the series at hand
+  $\epsilon_t=(1-B)y_t$ (the ``residuals'' under the null or ``drift
+  plus residuals'')\footnote{If the DGP is, say,
+    $y_t=\gamma_0+\gamma_1 y_{t-1}+\gamma_2 t+u_t+\theta_1u_{t-1}$,
+    then the ``residuals'' remaining after first-differencing are
+    $\epsilon_t=\gamma_0+(\gamma_1-1) y_{t-1}+\gamma_2
+    t+u_t+\theta_1u_{t-1}$.
+    Presuming these ``residuals'' are stationary, then applying a
+    stationary bootstrap procedure ought to preserve any dependence
+    remaining. Taking the cumulative sum of these bootstrap
+    ``residuals'' $\epsilon^*_t$ generates a bootstrap series
+    containing a unit root possessing the same dependence present in
+    the first difference of the series at hand, i.e.,
+    $x_t=x_{t-1}+\epsilon^*_t$.}
+
+\item Apply a time series bootstrap with automated block length choice
+  to $\epsilon_t$ ($l$ is the expected block length obtained for the
+  geometric bootstrap; see \citeasnoun{PATTON_POLITIS_WHITE:2009}, 
+\citeasnoun{POLITIS_WHITE:2004}, \citeasnoun{POLITIS_ROMANO:1994})
+
+\item Take the cumulative sum of this bootstrap residual which will
+  generate a bootstrap series containing a unit root, i.e.,
+  $y^*_t=y_1+\sum_{i=2}^t\epsilon^*_i=y^*_{t-1}+\epsilon^*_t$ where
+  $\epsilon^*_t$ could be, e.g., an ARMA process etc.
+
+\item Now that we have a null resampling procedure, we generate $B$
+  bootstrap resamples each time computing the bootstrap $t$-statistic
+  $\tau^*_b$, $b=1,\dots,B$, estimated from the null bootstrap
+  resample, for a given estimating equation
+
+\item We then compute critical values for the nominal level $\alpha$,
+  i.e., ($\tau^*_{\alpha/2}$,$\tau^*_{1-\alpha/2})$, and compare
+  these to the test statistic for the series at hand, $\tau$ (or
+  compute a bootstrap $P$ value and compare this with the nominal
+  level of the test)
+
+\end{enumerate}
+
+\subsection{A Unit Root Bootstrap Model Average Test}
+
+If we wish to take a model averaging approach, we modify the above
+procedure as follows. 
+
+\begin{enumerate}
+
+\item The Mallows Criterion for the model average estimator
+  \cite{HANSEN:2007} is
+  \begin{equation*}
+    C_n(w)=w'\hat E'\hat Ew+2\sigma^2K'w,
+  \end{equation*}
+  where $\hat E$ is the $N\times M$ matrix with columns containing the
+  residual vector from the $m$th candidate model, $K$ the $M\times 1$
+  vector of the number of parameters in each model, and $\sigma^2$ the
+  variance from the largest dimensional model.\footnote{Note that the
+    residual vectors will be of different lengths when the model
+    incorporates lags, so some care must be exercised when populating
+    $\hat E$, i.e., the first $k-1$ elements from the residual vector
+    for the estimating equation models not containing lags will be
+    discarded, etc.} This criterion is used to select the weight
+  vector $\hat w$,
+  \begin{equation*}
+    \hat w = \argmin_w C_n(w).
+  \end{equation*}
+  The solution involves constrained minimization subject to
+  non-negativity and summation constraints, which constitutes a class
+  quadratic programming problem. This criterion involves nothing more
+  than computing the residuals for each candidate model, obtaining the
+  rank of each candidate model, and solving a simple quadratic
+  program. We direct the interested reader to \citeasnoun{HANSEN:2007}
+  for further details. 
+
+\item Next, take the $\tau$ statistic from each of the $M$ candidate
+  models and average them using the weight vector $\hat w$, and call this
+  scalar $\tau_M$.
+
+\item Keeping the weight vector for the original series fixed, repeat
+  this process for the bootstrap replicates averaging over each of the
+  $M$ candidate models' bootstrap $\tau$ statistics, and compute the
+  bootstrap critical values as you would do for the $\tau$ statistic
+  from any single estimating equation as outlined above.
+
+\end{enumerate}
+
+\section{\label{sec:mc}Monte Carlo Simulation for Bootstrap Unit Root Test}
+
+\subsection{Data Generating Processes (DGPs)}
+
+We consider two non-stationary series containing a unit root (a DGP
+considered in \citeasnoun{PALM_ET_AL:2008},
+$y_t=y_{t-1}+\epsilon_t-0.8\epsilon_{t-1}$, and a random walk), and
+two stationary series that do not contain unit roots (a stationary
+white noise process, $y_t=\epsilon_t$, where $\epsilon_t$ is i.i.d.\
+$N(0,1)$ and a stationary ARMA(2,2),
+$y_t=0.4y_{t-1}+0.2y_{t-2}+\epsilon_t+0.3\epsilon_{t-1}-0.2\epsilon_{t-2}$).
+
+\begin{align*}
+\text{[ARIMA(0,1,1)]}\quad y_t & =y_{t-1}+\epsilon_t+\theta_1\epsilon_{t-1}\\
+\text{[Random Walk]}\quad y_t & =y_{t-1}+\epsilon_t\\
+\text{[White Noise]}\quad y_t&=\epsilon_t\\
+\text{[ARMA(2,2)]}\quad y_t & = \rho_1y_{t-1}+\rho_2y_{t-2}+\epsilon_t+\theta_1\epsilon_{t-1}+\theta_2\epsilon_{t-2}\\
+%\text{[Random Walk/Drift]}\quad y_t & =y_{t-1}+d+\epsilon_t
+\end{align*}
+
+The R code for this simulation appears in the Appendix.
+
+\subsection{The Monte Carlo Parameters and Estimating Equations}
+
+We conduct $B=399$ bootstrap replications and $M=10000$ Monte Carlo
+replications for sample sizes $N=(100,200,400)$. We then conduct the
+bootstrap test described above and report the empirical size for tests
+with levels $\alpha=0.05$ for the bootstrap unit root test for models
+with no constant DF(nc), a constant DF(c), a constant and time trend
+DF(ct), and a range of augmented models with lagged differences
+(ADF(1), ADF(2), etc.).
+
+%% Extensive results are summarized in the appendices, while abbreviated
+%% summary tables appear below. Appendix \ref{app:bmma} presents results
+%% for the proposed approach, Appendix \ref{app:adf} for the classical
+%% approach, and Appendix \ref{app:ngperron} for the
+%% \possessivecite{NG_PERRON:2001} procedure (using the detrending
+%% approach of \citeasnoun{PERRON_QU:2007}).
+
+\subsection{Discussion}
+
+Table \ref{tab:maic_mma_comp} presents a summary of the Monte Carlo
+simulations. \citeasnoun[p.\ 344]{PHILLIPS_PERRON:1988} point out a
+limitation of their approach writing that their tests ``have
+significant size distortions and are too liberal to be useful for
+$\theta=-0.5,-0.8$'' (here $\theta=-0.8$ is the MA coefficient used in
+the simulations for the ARIMA(0,1,1) DGP). The simulations indeed
+reveal that this approach rejects the non-stationary ARIMA(0,1,1) DGP
+100\% of the time incorrectly indicating that it is stationary when in
+fact it contains a unit root. Furthermore, it is evident that similar
+behaviour is manifest in the ADF test as well.  These tests are unable
+to distinguish between the non-stationary ARIMA(0,1,1) DGP that
+contains a unit root and, e.g., the stationary ARMA(2,2) DGP, though
+the Ng-Perron and the proposed test can successfully discriminate
+between these two DGPs. Given the inability of the Phillips-Perron and
+ADF tests to distinguish between such cases, it would be difficult to
+recommend these approaches to practitioners as they may incorrectly
+indicate that a series is stationary when in fact it contains a unit
+root. 
+
+\begin{table}[!ht]
+\caption{\label{tab:maic_mma_comp}Empirical rejection probabilities
+  for testing whether or not a series contains a unit root (nominal
+  level $\alpha=0.05$). We compare the Phillips-Perron test (P-P), the
+  ADF test based upon BIC model selection (ADF), Ng-Perron's test
+  using Perron-Qu detrending (N-P), and the proposed Bootstrap Mallows
+  Model Averaging test (MMA). The N-P, MMA, and ADF-BIC methods use
+  the same set of candidate models determined by Schwert's ad-hoc lag
+  selection rule, $k=1,\dots,12(N/100)^{1/4}$. R code to replicate can
+  be found in Appendix \ref{app:R}.}
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_12_trend/tex/reject_3f
+\quad
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_12_trend/tex/reject_2f
+\end{table}
+
+The choice of tests therefore comes down to either Ng-Perron or the
+proposed bootstrap model averaging approach. The proposed approach
+displays the smallest size distortions for the ARIMA(0,1,1) DGP, has
+size closer to nominal size for the random walk, and has higher power
+for the stationary ARMA(2,2) and white noise DGPs.  On the basis of
+our simulation results, we therefore recommend the MMA procedure for
+testing for the presence of a unit root. It attenuates the large size
+distortions present in the classical approach that relies on tabulated
+critical values and still present (though muted) in
+\possessivecite{NG_PERRON:2001} approach, exhibits higher power, does
+not require specification of the model from which the bootstrap
+resamples are drawn, and uses an automatic block length selection
+procedure for the dependent bootstrap method. This procedure ought to
+appeal to practitioners as there are no unknown parameters that must
+be specified by the user.
+
+Appendix \ref{app:mma} summarizes the MMA weights selected by the
+proposed procedure.
+
+\section{Conclusion}
+
+We propose a bootstrap model averaging procedure to attenuate known
+size distortions that arise when testing for the presence of a unit
+root. We adopt a model-free bootstrap procedure where the null is
+imposed by simple differencing, and we exploit recent developments in
+automatic block length selection for the `geometric' bootstrap
+procedure invoked. We adopt a Mallows Model Averaging (MMA) procedure,
+and simulations indicate that the proposed approach has both better
+size and power than its peers. Since there are no nuisance parameters
+to be set by the user, we are optimistic that the proposed approach
+will be appealing for practitioners.
+
+\clearpage
+
+\appendix
+
+\singlespacing
+
+\begin{landscape}
+\section{\label{app:mma}Mallows Model Average Weight Summary}
+
+Table \ref{tab:mma} presents the mean weights accorded to each of the
+candidate models over the $M$ Monte Carlo replications. The use of
+Schwert's ad-hoc rule ($k=1,\dots,12(N/100)^{1/4}$) results in models
+having from 1 through 12, 14, 16, and 17 lags being used for the
+procedures for N=(100,200,300,400).
+
+\vskip 1in
+
+\begin{table}[!ht]
+\centering
+\caption{\label{tab:mma}Model Averaging Weights (mean over all
+  $M$ Monte Carlo replications).}
+\tiny
+\centerline{$n=100$}
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_12_trend/tex/mma_n_100
+\centerline{$n=200$}
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_12_trend/tex/mma_n_200
+\centerline{$n=300$}
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_12_trend/tex/mma_n_300
+\centerline{$n=400$}
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_12_trend/tex/mma_n_400
+\end{table}
+\end{landscape}
+
+\clearpage
+
+\section{Effect of Changing the Number of Candidate Models}
+
+\begin{table}[!ht]
+  \caption{Empirical rejection probabilities
+    for testing whether or not a series contains a unit root (nominal
+    level $\alpha=0.05$). We compare the Phillips-Perron test (P-P), the
+    ADF test based upon BIC model selection (ADF), Ng-Perron's test
+    using Perron-Qu detrending (N-P), and the proposed Bootstrap Mallows
+    Model Averaging test (MMA). The N-P, MMA, and ADF-BIC methods use
+    the same set of candidate models determined by Schwert's ad-hoc lag
+    selection rule, $k=1,\dots,j(N/100)^{1/4}$, $j=4,8,12,24$
+    (clockwise from top left), deterministic trend incorporated in all
+    models.}
+\Tiny
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_4_trend/tex/reject_2f
+\quad
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_8_trend/tex/reject_2f
+
+\bigskip
+
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_12_trend/tex/reject_2f
+\quad
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_24_trend/tex/reject_2f
+\end{table}
+
+\clearpage
+
+\begin{table}[!ht]
+  \caption{Empirical rejection probabilities
+    for testing whether or not a series contains a unit root (nominal
+    level $\alpha=0.05$). We compare the Phillips-Perron test (P-P), the
+    ADF test based upon BIC model selection (ADF), Ng-Perron's test
+    using Perron-Qu detrending (N-P), and the proposed Bootstrap Mallows
+    Model Averaging test (MMA). The N-P, MMA, and ADF-BIC methods use
+    the same set of candidate models determined by Schwert's ad-hoc lag
+    selection rule, $k=1,\dots,j(N/100)^{1/4}$, $j=4,8,12,24$
+    (clockwise from top left), no deterministic trend in any model.}
+\Tiny
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_4_no_trend/tex/reject_2f
+\quad
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_8_no_trend/tex/reject_2f
+
+\bigskip
+
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_12_no_trend/tex/reject_2f
+\quad
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_24_no_trend/tex/reject_2f
+\end{table}
+
+
+\clearpage
+
+\section{\label{app:R}R Simulation Code}
+
+The following R code conducts the Monte Carlo simulation and calls the
+code above (\texttt{func.R}). It requires the packages
+\texttt{tseries} \cite{tseries} and \texttt{CADFtest} \cite{CADF}. It
+also requires the package \texttt{hr} which is in beta testing
+(contact the author for a copy).
+
+\scriptsize
+\begin{verbatim}
+require(CADFtest)
+require(tseries)
+require(hr)
+
+set.seed(42)
+
+n <- scan("num_obs.dat")
+M <- scan("num_monte.dat")
+DGP <- scan("dgp.dat",character())
+
+system("rm *.out *.bak *~")
+
+## We use five DGPs
+
+dgp.func <- function(n,DGP=c("rw","rwd","wn","arma","ma")) {
+    DGP <- match.arg(DGP)
+    if(DGP=="rw") {
+        ## Random walk (null)
+        ts(cumsum(rnorm(n)))
+    } else if(DGP=="rwd") {
+        ## Random walk with drift (null)
+        ts(cumsum(rnorm(n,mean=0.1)))
+    } else if(DGP=="wn") {
+        ## White noise (alternative)
+        ts(rnorm(n))
+    } else if(DGP=="arma") {
+        ## ARMA(2,2) (alternative)
+        arima.sim(n=n,list(ar=c(0.4,0.2),ma=c(0.3,-0.2)))
+    } else if(DGP=="ma") {
+        ## Unit root with MA error (James MacKinnon, largest alpha
+        ## from Palm et al)
+        arima.sim(list(order=c(0,1,1),ma=-0.8),n=n)
+    }
+}
+
+## Monte Carlo begins
+
+p.vec <- numeric()
+reject.bmma <- numeric()
+reject.pp <- numeric()
+reject.maic <- numeric()
+reject.bic <- numeric()
+
+for(m in 1:M) {
+
+    x <- dgp.func(n,DGP)
+
+    ## Bootstrap Mallow Model Average, jxSchwert's ad-hoc rule
+    
+    max.lag <- round(12*(n/100)^0.25)
+
+    out <- hr.test(x,verbose=FALSE,K.vec=1:max.lag)
+    reject.bmma[m] <- out$reject
+    write(mean(reject.bmma[1:m]),file="bmma_reject.out")
+    write(out$mma.weights,file="mma_weights.out",ncol=length(out$mma.weights),append=TRUE)
+    write(out$tau,file="tau.out",append=TRUE)
+    write(out$e.block.length,file="expected_block_length.out",append=TRUE)
+    write(out$decision,file="decision.out",append=TRUE)
+    write(out$reject,file="bmma_reject_01.out",append=TRUE)            
+    write(out$quantiles,file="tau_quantiles.out",ncol=length(out$quantiles),append=TRUE)
+
+    ## Phillips-Perron (tseries)
+
+    reject.pp[m] <- ifelse(suppressWarnings(pp.test(x)$p.value)<0.05,1,0)
+    write(mean(reject.pp[1:m]),file="pp_reject.out")
+
+    ## Ng-Perron with Perron-Qu detrending, 2xSchwert's ad-hoc rule (CADFtest)
+
+    reject.maic[m] <- ifelse(suppressWarnings(CADFtest(x,max.lag.y=max.lag,criterion="MAIC")$p.value)<0.05,1,0)
+    write(mean(reject.maic[1:m]),file="maic_reject.out")
+
+    ## ADF, MacKinnon P-values, BIC model selection, 2xSchwert's ad-hoc rule (CADFtest)
+    
+    reject.bic[m] <- ifelse(suppressWarnings(CADFtest(x,max.lag.y=max.lag,criterion="BIC")$p.value)<0.05,1,0)
+    write(mean(reject.bic[1:m]),file="bic_reject.out")
+    
+    
+}
+\end{verbatim}
+\normalsize
+
+\clearpage
+
+\singlespacing
+
+\bibliography{bmmaur}
+
+\end{document}
