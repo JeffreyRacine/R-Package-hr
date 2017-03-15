@@ -33,7 +33,7 @@ Maintainer: \packageMaintainer{hr}
 }
 \examples{
 require(tseries)
-## Generate a series with a unit root
+## Generate a series with a unit root, MA errors
 set.seed(42)
 x <- arima.sim(list(order=c(0,1,1),ma=-0.8),n=100)
 hr.test(x,B=99)
