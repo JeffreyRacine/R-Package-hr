@@ -74,7 +74,7 @@ For a preliminary technical report on the methodology run \code{vignette("bmmaur
 \examples{
 library(tseries)
 
-## Generate a series with a unit root, MA errors
+## Generate a series that contains a unit root and has moving average errors
 
 set.seed(42)
 x <- arima.sim(list(order=c(0,1,1),ma=-0.8),n=100)
@@ -83,7 +83,8 @@ x <- arima.sim(list(order=c(0,1,1),ma=-0.8),n=100)
 
 hr.test(x,B=99)
 
-## The Phillips-Perron test rejects 100% of the time for this DGP
+## The Phillips-Perron test incorrectly rejects the null 100% of the time for 
+## this DGP
 
 pp.test(x)
 }
