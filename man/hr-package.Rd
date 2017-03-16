@@ -9,11 +9,10 @@
 \packageDescription{hr}
 }
 \details{
-
 The DESCRIPTION file:
 \packageDESCRIPTION{hr}
 \packageIndices{hr}
-Kindly see ?hr.test
+\code{vignette("bmmaur", package = "hr")}
 }
 \author{
 \packageAuthor{hr}
@@ -21,7 +20,7 @@ Kindly see ?hr.test
 Maintainer: \packageMaintainer{hr}
 }
 \references{
-Hansen and Racine (2017), \dQuote{Bootstrap Mallows Model Averaging Unit Root Inference,} Technical Report.
+Racine (2017), \dQuote{Bootstrap Mallows Model Averaging Unit Root Inference,} Technical Report.
 }
 
 \keyword{ package }
@@ -36,7 +35,7 @@ library(tseries)
 set.seed(42)
 x <- arima.sim(list(order=c(0,1,1),ma=-0.8),n=100)
 
-## Compute the Hansen-Racine test
+## Compute the test
 
 hr.test(x,B=99)
 

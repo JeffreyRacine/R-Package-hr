@@ -454,8 +454,12 @@ root.
   Model Averaging test (MMA). The N-P, MMA, and ADF-BIC methods use
   the same set of candidate models determined by Schwert's ad-hoc lag
   selection rule, $k=1,\dots,12(N/100)^{1/4}$. R code to replicate can
-  be found in Appendix \ref{app:R}.}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_12_trend/tex/reject_3f
+  be found in Appendix \ref{app:R}. Results on the left are for
+  candidate models without a deterministic trend, on the right with a
+  deterministic trend (the DGPs used in the Monte Carlo do not contain
+  deterministic trends, the P-P test contains a trend in
+  both tables).}
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_12_no_trend/tex/reject_2f
 \quad
 \input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_12_trend/tex/reject_2f
 \end{table}
@@ -530,24 +534,25 @@ procedures for N=(100,200,300,400).
 \section{Effect of Changing the Number of Candidate Models}
 
 \begin{table}[!ht]
-  \caption{Empirical rejection probabilities
-    for testing whether or not a series contains a unit root (nominal
-    level $\alpha=0.05$). We compare the Phillips-Perron test (P-P), the
-    ADF test based upon BIC model selection (ADF), Ng-Perron's test
-    using Perron-Qu detrending (N-P), and the proposed Bootstrap Mallows
-    Model Averaging test (MMA). The N-P, MMA, and ADF-BIC methods use
-    the same set of candidate models determined by Schwert's ad-hoc lag
-    selection rule, $k=1,\dots,j(N/100)^{1/4}$, $j=4,8,12,24$
+  \caption{Empirical rejection probabilities for testing whether or not
+    a series contains a unit root (nominal level $\alpha=0.05$). We
+    compare the Phillips-Perron test (P-P), the ADF test based upon BIC
+    model selection (ADF), Ng-Perron's test using Perron-Qu detrending
+    (N-P), and the proposed Bootstrap Mallows Model Averaging test
+    (MMA). The N-P, MMA, and ADF-BIC methods use the same set of
+    candidate models determined by modifying the constant in Schwert's
+    ad-hoc lag selection rule, $k=1,\dots,j(N/100)^{1/4}$, $j=2,4,8,24$
     (clockwise from top left), deterministic trend incorporated in all
-    models.}
+    models (for $j=2$, $k=(2,2,3,3)$, $j=4$, $k=(4,5,5,6)$, $j=9$,
+    $k=(8,10,11,11)$, $j=24$, $k=(24,29,32,34)$).}
 \Tiny
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_4_trend/tex/reject_2f
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_2_trend/tex/reject_2f
 \quad
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_8_trend/tex/reject_2f
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_4_trend/tex/reject_2f
 
 \bigskip
 
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_12_trend/tex/reject_2f
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_8_trend/tex/reject_2f
 \quad
 \input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_24_trend/tex/reject_2f
 \end{table}
@@ -555,23 +560,25 @@ procedures for N=(100,200,300,400).
 \clearpage
 
 \begin{table}[!ht]
-  \caption{Empirical rejection probabilities
-    for testing whether or not a series contains a unit root (nominal
-    level $\alpha=0.05$). We compare the Phillips-Perron test (P-P), the
-    ADF test based upon BIC model selection (ADF), Ng-Perron's test
-    using Perron-Qu detrending (N-P), and the proposed Bootstrap Mallows
-    Model Averaging test (MMA). The N-P, MMA, and ADF-BIC methods use
-    the same set of candidate models determined by Schwert's ad-hoc lag
-    selection rule, $k=1,\dots,j(N/100)^{1/4}$, $j=4,8,12,24$
-    (clockwise from top left), no deterministic trend in any model.}
+  \caption{Empirical rejection probabilities for testing whether or not
+    a series contains a unit root (nominal level $\alpha=0.05$). We
+    compare the Phillips-Perron test (P-P), the ADF test based upon BIC
+    model selection (ADF), Ng-Perron's test using Perron-Qu detrending
+    (N-P), and the proposed Bootstrap Mallows Model Averaging test
+    (MMA). The N-P, MMA, and ADF-BIC methods use the same set of
+    candidate models determined by modifying the constant in Schwert's
+    ad-hoc lag selection rule, $k=1,\dots,j(N/100)^{1/4}$, $j=2,4,8,24$
+    (clockwise from top left), no deterministic trend in any model (for
+    $j=2$, $k=(2,2,3,3)$, $j=4$, $k=(4,5,5,6)$, $j=9$, $k=(8,10,11,11)$,
+    $j=24$, $k=(24,29,32,34)$).}
 \Tiny
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_4_no_trend/tex/reject_2f
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_2_no_trend/tex/reject_2f
 \quad
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_8_no_trend/tex/reject_2f
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_4_no_trend/tex/reject_2f
 
 \bigskip
 
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_12_no_trend/tex/reject_2f
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_8_no_trend/tex/reject_2f
 \quad
 \input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_24_no_trend/tex/reject_2f
 \end{table}

@@ -2,9 +2,9 @@
 
 \alias{hr.test}
 
-\title{Hansen-Racine Unit Root Test}
+\title{Bootstrap Model Averaged Unit Root Test}
 
-\description{This function takes a univariate time series object and performs Hansen and Racine's (2017) nonparametric bootstrap frequentist model average unit root test.}
+\description{This function takes a univariate time series object and performs a nonparametric bootstrap model average test for the null hypothesis that x has a unit root.}
 
 \usage{
 hr.test(x = NULL, 
@@ -30,6 +30,9 @@ hr.test(x = NULL,
 
 \details{
 We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the automatic dependent bootstrap procedure, \code{\link[quadprog]{solve.QP}} from the \pkg{quadprog} package, \code{\link[boot]{tsboot}} from the \pkg{boot} package, and the \code{\link[fUnitRoots]{adfTest}} function from the \pkg{fUnitRoots} package. These packages must be installed.
+
+Given a set of candidate estimating equation models that include a model with only a constant, a model with a constant, a model with a constant and trend (when trend=TRUE) and models with constant, trend, and up to k lags of the differenced series, the unit root test statistic obtained when regressing the difference of a series on the above covariates is averaged over the candidate models.
+
 }
 
 \value{
@@ -48,7 +51,7 @@ We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the a
 }
 
 \references{
-Hansen and Racine (2017), \dQuote{Bootstrap Mallows Model Averaging Unit Root Inference,} Technical Report.
+Racine (2017), \dQuote{Bootstrap Mallows Model Averaging Unit Root Inference,} Technical Report.
 }
 
 \author{
@@ -56,11 +59,11 @@ Jeffrey S. Racine
 }
 
 \note{
-This function is in beta mode until further notice.
+For a technical report on the methodolgy run \code{vignette("bmmaur", package = "hr")}. This function is in beta mode until further notice.
 }
 
 \seealso{
-\code{\link[tseries]{pp.test}}, \code{\link[fUnitRoots]{adfTest}}, \code{\link[fUnitRoots]{unitrootTest}}
+\code{\link[tseries]{pp.test}},  \code{\link[stats]{PP.test}}, \code{\link[tseries]{adf.test}}, \code{\link[fUnitRoots]{adfTest}}, \code{\link[fUnitRoots]{unitrootTest}}, \code{\link[urca]{ur.df}}
 }
 
 \examples{
@@ -71,7 +74,7 @@ library(tseries)
 set.seed(42)
 x <- arima.sim(list(order=c(0,1,1),ma=-0.8),n=100)
 
-## Compute the Hansen-Racine test
+## Compute the test
 
 hr.test(x,B=99)
 
