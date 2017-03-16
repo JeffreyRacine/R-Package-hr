@@ -35,6 +35,7 @@ Given a set of candidate estimating equation models that include a model with no
 
 The null distribution is obtained via a model-free bootstrap constructed from residuals of the differenced series. The bootstrap is a geometric bootstrap with automatic block length selection. See \code{vignette("bmmaur", package = "hr")} for details.
 
+Simulations reveal that the test's performance is quite balanced regardless of how large the number of candidate models may be, unlike its peers, and it also has more balanced size than its peers in cases known to confound existing tests. To the best of our knowledge, this is the first such unit root test based on model averaging.
 }
 
 \value{
