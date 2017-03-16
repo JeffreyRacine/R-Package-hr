@@ -34,11 +34,11 @@ Take a set of (augmented) Dickey-Fuller candidate estimating equations that incl
 
 When \code{trend=TRUE} there are 3+k candidate estimating equations, otherwise there are 2+k. By default, Schwert's (1989) ad-hoc rule is used to determine the maximum lag k to be used (\code{round(12*(n/100)^0.25)} where n is the length of x). By way of illustration, for n=100 there would be 15 estimating equations when a trend is included, 14 otherwise.
 
-The null distribution of the test statistic is constructed using a model-free nonparametric bootstrap constructed the differenced x. A geometric bootstrap with automatic expected block length selection is employed, and the null is imposed by taking the cumulative sum of the bootstrap values initialized to the first value of x; see \code{vignette("bmmaur", package = "hr")} for details.
+The null distribution of the test statistic is constructed using a model-free nonparametric bootstrap applied to the differenced x. A geometric bootstrap with automatic expected block length selection is employed, and the null is imposed by taking the cumulative sum of the bootstrap values initialized to the first value of x; see \code{vignette("bmmaur", package = "hr")} for details.
 
-Simulations reveal that the test's size and power is balanced regardless of how large the number of estimating equations may be, unlike its peers, particularly in cases known to confound existing tests. To the best of our knowledge, this is the first such unit root test based on model averaging.
+Simulations reveal that the test's size and power is balanced regardless of how large the number of estimating equations may be, unlike its peers, particularly in cases known to confound existing tests. To the best of our knowledge, this is the first such unit root test that is based on model averaging.
 
-We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the automatic dependent bootstrap procedure, \code{\link[quadprog]{solve.QP}} from the \pkg{quadprog} package to solve the quadratic program for the Mallow model average weights, \code{\link[boot]{tsboot}} from the \pkg{boot} package to generate the geometric bootstrap resample, and the \code{\link[fUnitRoots]{adfTest}} function from the \pkg{fUnitRoots} package to generate the statistics that are averaged.
+We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the automatic dependent bootstrap procedure, \code{\link[quadprog]{solve.QP}} from the \pkg{quadprog} package to solve the quadratic program for the Mallow model average weights (Hansen (2007)), \code{\link[boot]{tsboot}} from the \pkg{boot} package to generate the geometric bootstrap resample, and the \code{\link[fUnitRoots]{adfTest}} function from the \pkg{fUnitRoots} package to generate the statistics that are averaged.
 
 }
 
@@ -61,11 +61,13 @@ We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the a
 
 Dickey, D. A. & Fuller, W. A. (1979), \dQuote{Distribution of the estimators for autoregressive time series with a unit root,} Journal of the American Statistical Association 74(366), 427-431.
 
-Phillips, P. C. B. & Perron, P. (1988), \dQuote{esting for a unit root in time series regression,} Biometrika 75(2), 335-346.
+Hansen, B. E. (2007), \dQuote{Least squares model averaging,} Econometrica 75, 1175-1189.
+
+Phillips, P. C. B. & Perron, P. (1988), \dQuote{Testing for a unit root in time series regression,} Biometrika 75(2), 335-346.
 
 Racine, J. S. (2017), \dQuote{Bootstrap Mallows Model Averaging Unit Root Inference,} Technical Report.
 
-Schwert, G. W. (1989), \dQuote{Tests for unit roots: A monte carlo investigation,} Journal of Business & Economic Statistics7(2), 147-159.
+Schwert, G. W. (1989), \dQuote{Tests for unit roots: A Monte Carlo investigation,} Journal of Business & Economic Statistics 7(2), 147-159.
 }
 
 \author{
