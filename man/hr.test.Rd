@@ -32,7 +32,7 @@ hr.test(x = NULL,
 
 Take a set of (augmented) Dickey-Fuller candidate estimating equations that include as covariates i) no constant and the first lag of x, ii) a constant and the first lag of x, iii) a constant, trend and the first lag of x (when trend=TRUE) and iv) a constant, trend, the first lag of x and up to k lags of the differenced x (when trend=TRUE, otherwise iii) is omitted and no trend is included in iv)). Next, take the unit root test statistics obtained when regressing the first difference on the above covariates. Finally, average these statistics using a Mallows criterion. 
 
-When \code{trend=TRUE} there are 3+k candidate estimating equations, otherwise there are 2+k. By default Schwert's ad-hoc rule is used to determine the maximum lag k to be used (\code{round(12*(n/100)^0.25)} where n is the length of x). By way of illustration, for n=100 there would be 15 estimating equations when a trend is included, 14 otherwise.
+When \code{trend=TRUE} there are 3+k candidate estimating equations, otherwise there are 2+k. By default, Schwert's (1989) ad-hoc rule is used to determine the maximum lag k to be used (\code{round(12*(n/100)^0.25)} where n is the length of x). By way of illustration, for n=100 there would be 15 estimating equations when a trend is included, 14 otherwise.
 
 The null distribution of the test statistic is constructed using a model-free nonparametric bootstrap constructed the differenced x. A geometric bootstrap with automatic expected block length selection is employed, and the null is imposed by taking the cumulative sum of the bootstrap values initialized to the first value of x; see \code{vignette("bmmaur", package = "hr")} for details.
 
@@ -58,7 +58,14 @@ We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the a
 }
 
 \references{
-Racine (2017), \dQuote{Bootstrap Mallows Model Averaging Unit Root Inference,} Technical Report.
+
+Dickey, D. A. & Fuller, W. A. (1979), \dQuote{Distribution of the estimators for autoregressive time series with a unit root,} Journal of the American Statistical Association 74(366), 427-431.
+
+Phillips, P. C. B. & Perron, P. (1988), \dQuote{esting for a unit root in time series regression,} Biometrika 75(2), 335-346.
+
+Racine, J. S. (2017), \dQuote{Bootstrap Mallows Model Averaging Unit Root Inference,} Technical Report.
+
+Schwert, G. W. (1989), \dQuote{Tests for unit roots: A monte carlo investigation,} Journal of Business & Economic Statistics7(2), 147-159.
 }
 
 \author{
