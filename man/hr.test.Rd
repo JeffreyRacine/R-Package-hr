@@ -77,6 +77,7 @@ For a preliminary technical report on the methodology run \code{vignette("bmmaur
 library(tseries)
 
 ## Generate a series that contains a unit root and has moving average errors
+## with a large negative coefficient (this can confound existing tests)
 
 set.seed(42)
 x <- arima.sim(list(order=c(0,1,1),ma=-0.8),n=100)
@@ -88,7 +89,7 @@ hr.test(x,B=99)
 ## The Phillips-Perron test incorrectly rejects the null 100% of the time for 
 ## this DGP
 
-pp.test(x)
+PP.test(x)
 }
 
 \keyword{ nonparametric }
