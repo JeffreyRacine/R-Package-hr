@@ -4,7 +4,7 @@
 
 \title{Bootstrap Model Averaged Unit Root Test}
 
-\description{This function takes a univariate time series object and performs a nonparametric bootstrap model average test for the null hypothesis that x has a unit root.}
+\description{Computes a nonparametric bootstrap model average test for the null hypothesis that x has a unit root against stationary and explosive alternatives.}
 
 \usage{
 hr.test(x = NULL, 
@@ -18,27 +18,27 @@ hr.test(x = NULL,
 }
 
 \arguments{
-  \item{x}{a univariate time series (if not a time series it will be converted into one)}
-  \item{K.vec}{optional vector of lags for the augmented Dickey-Fuller candidate models}
-  \item{random.seed}{seed for random number generator}
+  \item{x}{a univariate time series (\code{numeric} will be converted automatically)}
+  \item{K.vec}{optional vector of lags for the augmented Dickey-Fuller estimating equations}
+  \item{random.seed}{random seed for the procedure}
   \item{B}{number of bootstrap replications}
-  \item{alpha}{size of test}
-  \item{trend}{whether to include a deterministic trend in the candidate models or not}
+  \item{alpha}{size of the test}
+  \item{trend}{whether to include a deterministic trend in the estimating equations or not}
   \item{verbose}{whether to display progress or not}
   \item{q}{vector of probabilities for the quantiles returned}
 }
 
 \details{
 
-Given a set of candidate estimating equation models that include i) a model with no constant and first lag of the series, ii) a model with a constant and first lag of the series, iii) a model with a constant, trend and first lag of the series (when trend=TRUE) and iv) models with a constant, trend, first lag of the series and up to k lags of the differenced series (when trend=TRUE), the unit root test statistics obtained when regressing the difference of a series on the above covariates are averaged over the candidate models using a Mallows criterion. 
+Take a set of (augmented) Dickey-Fuller candidate estimating equations that include i) no constant and first lag of x, ii) constant and first lag of x, iii) a constant, trend and first lag of x (when trend=TRUE) and iv) a constant, trend, first lag of x and up to k lags of the differenced x (when trend=TRUE). Then take the unit root test statistics obtained when regressing the first difference on the above covariates. Finally, average these statistics using a Mallows criterion. 
 
-When \code{trend=TRUE} there are 3+k candidate models that we average over, otherwise there are 2+k candidate models. By default Schwert's ad-hoc rule is used to determine the maximum lag k to be used (\code{round(12*(n/100)^0.25)} where n is the length of the series). By way of illustration, for n=100 there would be 15 candidate models when a trend is included, 14 otherwise.
+When \code{trend=TRUE} there are 3+k candidate estimating equations, otherwise there are 2+k. By default Schwert's ad-hoc rule is used to determine the maximum lag k to be used (\code{round(12*(n/100)^0.25)} where n is the length of x). By way of illustration, for n=100 there would be 15 estimating equations when a trend is included, 14 otherwise.
 
-The null distribution of the model average unit root statistic is obtained via a model-free bootstrap constructed from residuals of the differenced series. The bootstrap applied to these residuals is a geometric bootstrap with automatic block length selection, and the null is imposed by taking the cumulative sum (\code{cumsum()}) of these residuals starting from the first value of the series. See \code{vignette("bmmaur", package = "hr")} for details.
+The null distribution of the test statistic is constructed using a model-free nonparametric bootstrap constructed the differenced x. A geometric bootstrap with automatic expected block length selection is employed, and the null is imposed by taking the cumulative sum of the bootstrap values initialized to the first value of x; see \code{vignette("bmmaur", package = "hr")} for details.
 
-Simulations reveal that the test's performance is quite balanced regardless of how large the number of candidate models may be, unlike its peers, and it also has more balanced size than its peers in cases known to confound existing tests. To the best of our knowledge, this is the first such unit root test based on model averaging.
+Simulations reveal that the test's size and power is balanced regardless of how large the number of estimating equations may be, unlike its peers, particularly in cases known to confound existing tests. To the best of our knowledge, this is the first such unit root test based on model averaging.
 
-We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the automatic dependent bootstrap procedure, \code{\link[quadprog]{solve.QP}} from the \pkg{quadprog} package to solve the quadratic program for the Mallow model average weights, \code{\link[boot]{tsboot}} from the \pkg{boot} package to generate the geometric bootstrap series, and the \code{\link[fUnitRoots]{adfTest}} function from the \pkg{fUnitRoots} package to generate the statistics that are averaged.
+We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the automatic dependent bootstrap procedure, \code{\link[quadprog]{solve.QP}} from the \pkg{quadprog} package to solve the quadratic program for the Mallow model average weights, \code{\link[boot]{tsboot}} from the \pkg{boot} package to generate the geometric bootstrap resample, and the \code{\link[fUnitRoots]{adfTest}} function from the \pkg{fUnitRoots} package to generate the statistics that are averaged.
 
 }
 
