@@ -19,13 +19,13 @@ hr.test(x = NULL,
 
 \arguments{
   \item{x}{a univariate time series (\code{numeric} will be converted automatically)}
-  \item{K.vec}{optional vector of lags for the augmented Dickey-Fuller estimating equations}
+  \item{K.vec}{optional vector of lags for the (augmented) Dickey-Fuller estimating equations}
   \item{random.seed}{random seed for the procedure}
   \item{B}{number of bootstrap replications}
   \item{alpha}{size of the test}
-  \item{trend}{whether to include a deterministic trend in the estimating equations or not}
-  \item{verbose}{whether to display progress or not}
-  \item{q}{vector of probabilities for the quantiles returned}
+  \item{trend}{whether or not to include a deterministic trend in the estimating equations}
+  \item{verbose}{whether or not to display progress}
+  \item{q}{vector of probabilities for the null quantile values returned}
 }
 
 \details{
@@ -34,7 +34,7 @@ Take a set of (augmented) Dickey-Fuller candidate estimating equations that incl
 
 When \code{trend=TRUE} there are 3+k candidate estimating equations, otherwise there are 2+k. By default, Schwert's (1989) ad-hoc rule is used to determine the maximum lag k to be used (\code{round(12*(n/100)^0.25)} where n is the length of x). By way of illustration, for n=100 there would be 15 estimating equations when a trend is included, 14 otherwise.
 
-The null distribution of the test statistic is constructed using a model-free nonparametric bootstrap applied to the differenced x. A geometric bootstrap with automatic expected block length selection is employed, and the null is imposed by taking the cumulative sum of the bootstrap values initialized to the first value of x; see \code{vignette("bmmaur", package = "hr")} for details.
+The null distribution of the test statistic is constructed using a model-free nonparametric bootstrap applied to the differenced x. A geometric bootstrap (Politis and Romano (1994)) with automatic expected block length selection (Patton, Politis and White (2009)) is employed, and the null is imposed by taking the cumulative sum of the bootstrap values initialized to the first value of x; see \code{vignette("bmmaur", package = "hr")} for details.
 
 Simulations reveal that the test's size and power is balanced regardless of how large the number of estimating equations may be, unlike its peers, particularly in cases known to confound existing tests. To the best of our knowledge, this is the first such unit root test that is based on model averaging.
 
@@ -63,7 +63,13 @@ Dickey, D. A. & Fuller, W. A. (1979), \dQuote{Distribution of the estimators for
 
 Hansen, B. E. (2007), \dQuote{Least squares model averaging,} Econometrica 75, 1175-1189.
 
+Patton, A. and D.N. Politis and H. White (2009), \dQuote{CORRECTION TO "Automatic block-length selection for the dependent bootstrap" by D. Politis and H. White}, Econometric Reviews 28(4), 372-375.
+
 Phillips, P. C. B. & Perron, P. (1988), \dQuote{Testing for a unit root in time series regression,} Biometrika 75(2), 335-346.
+
+Politis, D.N. and J.P. Romano (1994), \dQuote{Limit theorems for weakly dependent Hilbert space valued random variables with applications to the stationary bootstrap}, Statistica Sinica 4, 461-476.
+
+Politis, D.N. and H. White (2004), \dQuote{Automatic block-length selection for the dependent bootstrap}, Econometric Reviews 23(1), 53-70.
 
 Racine, J. S. (2017), \dQuote{Bootstrap Mallows Model Averaging Unit Root Inference,} Technical Report.
 
