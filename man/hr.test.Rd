@@ -30,7 +30,9 @@ hr.test(x = NULL,
 
 \details{
 
-Given a set of candidate estimating equation models that include i) a model with no constant and first lag of the series, ii) a model with a constant and first lag of the series, iii) a model with a constant, trend and first lag of the series (when trend=TRUE) and iv) models with constant, trend, first lag of the series and up to k lags of the differenced series (when trend=TRUE), the unit root test statistics obtained when regressing the difference of a series on the above covariates are averaged over the candidate models using a Mallows criterion.
+Given a set of candidate estimating equation models that include i) a model with no constant and first lag of the series, ii) a model with a constant and first lag of the series, iii) a model with a constant, trend and first lag of the series (when trend=TRUE) and iv) models with constant, trend, first lag of the series and up to k lags of the differenced series (when trend=TRUE), the unit root test statistics obtained when regressing the difference of a series on the above covariates are averaged over the candidate models using a Mallows criterion. 
+
+When \code{trend=TRUE} there are 3+k candidate models that we average over, otherwise there are 2+k candidate models. By default Schwert's ad-hoc rule is used to determine the maximum lag k to be used is adopted (\code{round(12*(n/100)^0.25)} where n is the length of the series). By way of illustration, for n=100 there would be 15 candidate models when a trend is included, 14 otherwise.
 
 The null distribution of the model average unit root statistic is obtained via a model-free bootstrap constructed from residuals of the differenced series. The bootstrap applied to these residuals is a geometric bootstrap with automatic block length selection, and the null is imposed by taking the cumulative sum (\code{cumsum()}) of these residuals starting from the first value of the series. See \code{vignette("bmmaur", package = "hr")} for details.
 
