@@ -30,7 +30,7 @@ hr.test(x = NULL,
 
 \details{
 
-Take a set of (augmented) Dickey-Fuller candidate estimating equations that include i) no constant and first lag of x, ii) constant and first lag of x, iii) a constant, trend and first lag of x (when trend=TRUE) and iv) a constant, trend, first lag of x and up to k lags of the differenced x (when trend=TRUE). Then take the unit root test statistics obtained when regressing the first difference on the above covariates. Finally, average these statistics using a Mallows criterion. 
+Take a set of (augmented) Dickey-Fuller candidate estimating equations that include as covariates i) no constant and the first lag of x, ii) a constant and the first lag of x, iii) a constant, trend and the first lag of x (when trend=TRUE) and iv) a constant, trend, the first lag of x and up to k lags of the differenced x (when trend=TRUE, otherwise iii) is omitted and no trend is included in iv)). Next, take the unit root test statistics obtained when regressing the first difference on the above covariates. Finally, average these statistics using a Mallows criterion. 
 
 When \code{trend=TRUE} there are 3+k candidate estimating equations, otherwise there are 2+k. By default Schwert's ad-hoc rule is used to determine the maximum lag k to be used (\code{round(12*(n/100)^0.25)} where n is the length of x). By way of illustration, for n=100 there would be 15 estimating equations when a trend is included, 14 otherwise.
 
