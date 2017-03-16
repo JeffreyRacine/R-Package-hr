@@ -89,7 +89,7 @@ hr.test(x,B=99)
 ## The Phillips-Perron test incorrectly rejects the null 100% of the time for 
 ## this DGP
 
-PP.test(x)
+pp.test(x)
 }
 
 \keyword{ nonparametric }
