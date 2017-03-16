@@ -31,7 +31,9 @@ hr.test(x = NULL,
 \details{
 We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the automatic dependent bootstrap procedure, \code{\link[quadprog]{solve.QP}} from the \pkg{quadprog} package, \code{\link[boot]{tsboot}} from the \pkg{boot} package, and the \code{\link[fUnitRoots]{adfTest}} function from the \pkg{fUnitRoots} package. These packages must be installed.
 
-Given a set of candidate estimating equation models that include a model with only a constant, a model with a constant, a model with a constant and trend (when trend=TRUE) and models with constant, trend, and up to k lags of the differenced series, the unit root test statistic obtained when regressing the difference of a series on the above covariates is averaged over the candidate models.
+Given a set of candidate estimating equation models that include a model with no constant and first lag of the series, a model with a constant and first lag of the series, a model with a constant, trend and first lag of the series (when trend=TRUE) and models with constant, trend, first lag of the series and up to k lags of the differenced series, the unit root test statistics obtained when regressing the difference of a series on the above covariates is averaged over the candidate models using a Mallows criterion.
+
+The null distribution is obtained via a model-free bootstrap constructed from residuals of the differenced series. The bootstrap is a geometric bootstrap with automatic block length selection. See \code{vignette("bmmaur", package = "hr")} for details.
 
 }
 
@@ -59,7 +61,7 @@ Jeffrey S. Racine
 }
 
 \note{
-For a technical report on the methodolgy run \code{vignette("bmmaur", package = "hr")}. This function is in beta mode until further notice.
+For a technical report on the methodology run \code{vignette("bmmaur", package = "hr")}. This function is in beta mode until further notice.
 }
 
 \seealso{
