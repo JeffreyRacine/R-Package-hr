@@ -29,13 +29,15 @@ hr.test(x = NULL,
 }
 
 \details{
-We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the automatic dependent bootstrap procedure, \code{\link[quadprog]{solve.QP}} from the \pkg{quadprog} package, \code{\link[boot]{tsboot}} from the \pkg{boot} package, and the \code{\link[fUnitRoots]{adfTest}} function from the \pkg{fUnitRoots} package. These packages must be installed.
 
-Given a set of candidate estimating equation models that include a model with no constant and first lag of the series, a model with a constant and first lag of the series, a model with a constant, trend and first lag of the series (when trend=TRUE) and models with constant, trend, first lag of the series and up to k lags of the differenced series, the unit root test statistics obtained when regressing the difference of a series on the above covariates is averaged over the candidate models using a Mallows criterion.
+Given a set of candidate estimating equation models that include i) a model with no constant and first lag of the series, ii) a model with a constant and first lag of the series, iii) a model with a constant, trend and first lag of the series (when trend=TRUE) and iv) models with constant, trend, first lag of the series and up to k lags of the differenced series (when trend=TRUE), the unit root test statistics obtained when regressing the difference of a series on the above covariates are averaged over the candidate models using a Mallows criterion.
 
-The null distribution is obtained via a model-free bootstrap constructed from residuals of the differenced series. The bootstrap is a geometric bootstrap with automatic block length selection. See \code{vignette("bmmaur", package = "hr")} for details.
+The null distribution of the model average unit root statistic is obtained via a model-free bootstrap constructed from residuals of the differenced series. The bootstrap applied to these residuals is a geometric bootstrap with automatic block length selection, and the null is imposed by taking the cumulative sum (\code{cumsum()}) of these residuals starting from the first value of the series. See \code{vignette("bmmaur", package = "hr")} for details.
 
 Simulations reveal that the test's performance is quite balanced regardless of how large the number of candidate models may be, unlike its peers, and it also has more balanced size than its peers in cases known to confound existing tests. To the best of our knowledge, this is the first such unit root test based on model averaging.
+
+We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the automatic dependent bootstrap procedure, \code{\link[quadprog]{solve.QP}} from the \pkg{quadprog} package to solve the quadratic program for the Mallow model average weights, \code{\link[boot]{tsboot}} from the \pkg{boot} package to generate the geometric bootstrap series, and the \code{\link[fUnitRoots]{adfTest}} function from the \pkg{fUnitRoots} package to generate the statistics that are averaged.
+
 }
 
 \value{
@@ -62,7 +64,7 @@ Jeffrey S. Racine
 }
 
 \note{
-For a technical report on the methodology run \code{vignette("bmmaur", package = "hr")}. This function is in beta mode until further notice.
+For a preliminary technical report on the methodology run \code{vignette("bmmaur", package = "hr")}. This function is in beta mode until further notice.
 }
 
 \seealso{
