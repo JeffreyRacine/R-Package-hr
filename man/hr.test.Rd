@@ -70,6 +70,8 @@ Dickey, D. A. & Fuller, W. A. (1979), \dQuote{Distribution of the estimators for
 
 Hansen, B. E. (2007), \dQuote{Least squares model averaging,} Econometrica 75, 1175-1189.
 
+Hansen, B. E. & Racine, J. S. (2012), \dQuote{Jackknife model averaging,} Journal of Econometrics 167(1), 38-46.
+
 Patton, A. and D.N. Politis and H. White (2009), \dQuote{CORRECTION TO "Automatic block-length selection for the dependent bootstrap" by D. Politis and H. White}, Econometric Reviews 28(4), 372-375.
 
 Phillips, P. C. B. & Perron, P. (1988), \dQuote{Testing for a unit root in time series regression,} Biometrika 75(2), 335-346.
