@@ -57,13 +57,22 @@ hr.test <- function(x=NULL,
     out.nc <- suppressWarnings(adfTest(x,lags=0,type="nc"))
     out.c <- suppressWarnings(adfTest(x,lags=0,type="c"))
 
-    residual.mat <- cbind(residuals(out.nc@test$lm),residuals(out.c@test$lm))
+    if(type=="mma") {
+        ma.mat <- cbind(residuals(out.nc@test$lm),residuals(out.c@test$lm))
+    } else {
+        ma.mat <- cbind(jackknife.prediction(out.nc@test$lm),jackknife.prediction(out.c@test$lm))        
+    }    
+
     rank.vec <- c(out.nc@test$lm$rank,out.c@test$lm$rank)
     t.stat <- c(out.nc@test$statistic,out.c@test$statistic)
 
     if(trend) {
         out.ct <- suppressWarnings(adfTest(x,lags=0,type="ct"))
-        residual.mat <- cbind(residual.mat,residuals(out.ct@test$lm))
+        if(type=="mma") {
+            ma.mat <- cbind(ma.mat,residuals(out.ct@test$lm))
+        } else {
+            ma.mat <- cbind(ma.mat,jackknife.prediction(out.ct@test$lm))           
+        }
         rank.vec <- c(rank.vec,out.ct@test$lm$rank)
         t.stat <- c(t.stat,out.ct@test$statistic)
     }
@@ -76,33 +85,33 @@ hr.test <- function(x=NULL,
         } else {
             out <- suppressWarnings(adfTest(x,lags=K.vec[k],type="c"))
         }
-        ## Residual vector shorter with lags, need to line up properly (discard 
-        ## residuals from 1...K.vec[k] when we bind the columns to the residual
-        ## matrix)
+        ## Residual/predictor vector shorter with lags, need to line up properly (discard 
+        ## residuals/predictor from 1...K.vec[k] when we bind the columns to the 
+        ## residual/predictor matrix)
         if(type=="mma") {
             r <- residuals(out@test$lm)
         } else {
            r <-  jackknife.prediction(out@test$lm) 
         }
         n.r <- length(r)
-        n.rm <- nrow(residual.mat)
-        residual.mat <- cbind(residual.mat[(n.rm-n.r+1):n.rm,],r)
+        n.rm <- nrow(ma.mat)
+        ma.mat <- cbind(ma.mat[(n.rm-n.r+1):n.rm,],r)
         rank.vec <- c(rank.vec,out@test$lm$rank)
         t.stat <- c(t.stat,out@test$statistic)
     }
     
     ## Mallows model average weights (solve a simple quadratic program)
 
-    M.dim <- ncol(residual.mat)
+    M.dim <- ncol(ma.mat)
     sigsq.largest <- summary(out@test$lm)$sigma**2
-    Dmat <- t(residual.mat)%*%residual.mat
+    Dmat <- t(ma.mat)%*%ma.mat
     if(qr(Dmat)$rank<M.dim) Dmat <- Dmat + diag(1e-10,M.dim,M.dim)
     Amat <- cbind(rep(1,M.dim),diag(1,M.dim,M.dim))
     bvec <- c(1,rep(0,M.dim))
     if(type=="mma") {
         dvec <- -rank.vec*sigsq.largest
     } else {
-        dvec <- t(as.matrix(x[(n-nrow(residual.mat)+1):n]))%*%residual.mat
+        dvec <- t(as.matrix(x[(n-nrow(ma.mat)+1):n]))%*%ma.mat
     }
     w.hat.ma <- solve.QP(Dmat,dvec,Amat,bvec,1)$solution
     
