@@ -30,11 +30,18 @@ hr.test(x = NULL,
 
 \details{
 
-Take a set of (augmented) Dickey-Fuller estimating equations with covariates i) the first lag of x, ii) a constant and the first lag of x, iii) a constant, a deterministic trend and the first lag of x (when trend=TRUE) and iv) a constant, a deterministic trend, the first lag of x and up to k lags of the differenced x (when trend=TRUE, otherwise no deterministic trend is included). Next, take the unit root test statistics from each of the estimating equations (in each estimating equation the first difference of x is regressed on the covariates). Finally, average these statistics using a Mallows criterion  (Hansen (2007)). 
+Typical usages are
+\preformatted{
+    hr.test(x)
+    hr.test(x,B=99)
+    hr.test(x,K.vec=1:4)
+}
 
-The null distribution of the test statistic is constructed using a model-free nonparametric bootstrap applied to the first difference of x. A stationary geometric bootstrap (Politis and Romano (1994)) with automatic expected block length selection (Patton, Politis and White (2009)) is employed, and the null is imposed by taking the cumulative sum of the bootstrap values initialized to the first value of x; see \code{vignette("bmmaur", package = "hr")} for details.
+Take a set of (augmented) Dickey-Fuller estimating equations with covariates i) the first lag of x, ii) a constant and the first lag of x, iii) a constant, a deterministic trend and the first lag of x (when trend=TRUE) and iv) a constant, a deterministic trend, the first lag of x and 1,2,...,k lags of the differenced x yielding k such models (when trend=TRUE, otherwise no deterministic trend is included). Next, take the unit root test statistics from each of the estimating equations (in each estimating equation the first difference of x is regressed on the covariates). Finally, average these statistics using a Mallows criterion  (Hansen (2007)). 
 
-When \code{trend=TRUE} there are 3+k estimating equations, otherwis 2+k. By default, Schwert's (1989) ad-hoc rule is used to determine the maximum lag k to be used (\code{round(12*(T/100)^0.25)} where T is the length of x). By way of illustration, for T=100 there would be 15 estimating equations when a trend is included, 14 otherwise.
+The null distribution of the test statistic is constructed using a model-free nonparametric bootstrap applied to the first difference of x similar to that outlined in Swensen (2003). A stationary geometric bootstrap (Politis and Romano (1994)) with automatic expected block length selection (Patton, Politis and White (2009)) is employed, and the null is imposed by taking the cumulative sum of the bootstrap values initialized to the first value of x; see \code{vignette("bmmaur", package = "hr")} for further details.
+
+When \code{trend=TRUE} there are 3+k estimating equations, otherwise 2+k. By default, Schwert's (1989) ad-hoc rule is used to determine the maximum lag k to be used (\code{round(12*(T/100)^0.25)} where T is the length of x). By way of illustration, for T=100 there would be 15 estimating equations when a trend is included, 14 otherwise.
 
 Simulations reveal that the test's size and power is balanced regardless of how large the number of estimating equations may be, unlike its peers, particularly in cases known to confound existing tests. To the best of our knowledge, this is the first such unit root test that is based on model averaging.
 
@@ -74,6 +81,9 @@ Politis, D.N. and H. White (2004), \dQuote{Automatic block-length selection for 
 Racine, J. S. (2017), \dQuote{Bootstrap Mallows Model Averaging Unit Root Inference,} Technical Report.
 
 Schwert, G. W. (1989), \dQuote{Tests for unit roots: A Monte Carlo investigation,} Journal of Business & Economic Statistics 7(2), 147-159.
+
+Swensen, A. R. (2003), \dQuote{Bootstrapping unit root tests for integrated processes,} Journal of Time Series Analysis 24(1), 99-126.
+
 }
 
 \author{
