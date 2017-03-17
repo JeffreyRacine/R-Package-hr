@@ -13,7 +13,8 @@ hr.test(x = NULL,
         B = 399, 
         alpha = 0.05, 
         trend = TRUE, 
-        verbose = TRUE, 
+        verbose = TRUE,
+        S = 12,
         q = c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995))
 }
 
@@ -25,6 +26,7 @@ hr.test(x = NULL,
   \item{alpha}{size of the test}
   \item{trend}{whether or not to include a deterministic trend in the estimating equations}
   \item{verbose}{whether or not to display progress}
+  \item{S}{The constant in Schwert's ad-hoc formula for maximum lag selection}
   \item{q}{vector of probabilities for the null quantile values returned}
 }
 

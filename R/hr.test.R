@@ -7,6 +7,7 @@ hr.test <- function(x=NULL,
                     alpha=0.05,
                     trend=TRUE,
                     verbose=TRUE,
+                    S=12,
                     q=c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995)) {
 
     ## Some basic input checking
@@ -14,6 +15,7 @@ hr.test <- function(x=NULL,
     if(is.null(x)) stop("You must provide data")
     if(!is.ts(x)) x <- ts(x)
     if(is.unsorted(K.vec)) stop("Lag vector K.vec must be sorted")
+    if(any(K.vec<1)) stop("Lag vector K.vec must contain positive integers")
     if(alpha <= 0 | alpha >= 0.5) stop("Size (alpha) must lie in (0,0.5)")
     if(B < 1) stop("Number of bootstrap replications (B) must be a positive integer (e.g. 399)")
     if(any(q<=0) | any(q>=1)) stop("The quantile vector entries must lie in (0,1)")
@@ -38,7 +40,7 @@ hr.test <- function(x=NULL,
     ## Use Schwert's ad-hoc rule for the maximum lag for the candidate models 
     ## if none is provided
     
-    if(is.null(K.vec)) K.vec <- 1:round(12*(n/100)^0.25)
+    if(is.null(K.vec)) K.vec <- 1:round(S*(n/100)^0.25)
     K <- length(K.vec)
 
     ## A simple function that returns its argument for the tsboot() call
