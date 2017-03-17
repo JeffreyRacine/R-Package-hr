@@ -32,13 +32,13 @@ hr.test(x = NULL,
 
 Take a set of (augmented) Dickey-Fuller estimating equations with covariates i) the first lag of x, ii) a constant and the first lag of x, iii) a constant, a deterministic trend and the first lag of x (when trend=TRUE) and iv) a constant, a deterministic trend, the first lag of x and up to k lags of the differenced x (when trend=TRUE, otherwise no deterministic trend is included). Next, take the unit root test statistics from each of the estimating equations (in each estimating equation the first difference of x is regressed on the covariates). Finally, average these statistics using a Mallows criterion. 
 
-The null distribution of the test statistic is constructed using a model-free nonparametric bootstrap applied to the first difference of x. A geometric bootstrap (Politis and Romano (1994)) with automatic expected block length selection (Patton, Politis and White (2009)) is employed, and the null is imposed by taking the cumulative sum of the bootstrap values initialized to the first value of x; see \code{vignette("bmmaur", package = "hr")} for details.
+The null distribution of the test statistic is constructed using a model-free nonparametric bootstrap applied to the first difference of x. A stationary geometric bootstrap (Politis and Romano (1994)) with automatic expected block length selection (Patton, Politis and White (2009)) is employed, and the null is imposed by taking the cumulative sum of the bootstrap values initialized to the first value of x; see \code{vignette("bmmaur", package = "hr")} for details.
 
 When \code{trend=TRUE} there are 3+k estimating equations, otherwise there are 2+k. By default, Schwert's (1989) ad-hoc rule is used to determine the maximum lag k to be used (\code{round(12*(T/100)^0.25)} where T is the length of x). By way of illustration, for T=100 there would be 15 estimating equations when a trend is included, 14 otherwise.
 
 Simulations reveal that the test's size and power is balanced regardless of how large the number of estimating equations may be, unlike its peers, particularly in cases known to confound existing tests. To the best of our knowledge, this is the first such unit root test that is based on model averaging.
 
-We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the automatic dependent bootstrap procedure, \code{\link[quadprog]{solve.QP}} from the \pkg{quadprog} package to solve the quadratic program for the Mallows model average weights (Hansen (2007)), \code{\link[boot]{tsboot}} from the \pkg{boot} package to generate the geometric bootstrap resample, and the \code{\link[fUnitRoots]{adfTest}} function from the \pkg{fUnitRoots} package to generate the statistics that are averaged.
+We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the automatic dependent bootstrap procedure, \code{\link[quadprog]{solve.QP}} from the \pkg{quadprog} package to solve the quadratic program for the Mallows model average weights (Hansen (2007)), \code{\link[boot]{tsboot}} from the \pkg{boot} package to generate the stationary geometric bootstrap resample, and the \code{\link[fUnitRoots]{adfTest}} function from the \pkg{fUnitRoots} package to generate the statistics that are averaged.
 
 }
 
@@ -53,7 +53,7 @@ We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the a
 \item{trend}{whether to include a deterministic trend or not}
 \item{mma.weights}{vector of Mallows model average weights}
 \item{tau.boot}{vector of bootstrapped test statistics generated under the null of a unit root}
-\item{e.block.length}{expected block length for geometric bootstrap returned by \code{\link[np]{b.star}}}
+\item{e.block.length}{expected block length for the stationary geometric bootstrap returned by \code{\link[np]{b.star}}}
 \item{adf.lags}{vector of lags used for the augmented models}
 }
 
