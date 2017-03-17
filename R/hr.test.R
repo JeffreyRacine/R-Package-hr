@@ -206,12 +206,12 @@ hrtest <- function(tau,
 }
 
 print.hrtest <- function(x, ...){
-    cat("\nHansen-Racine Nonparametric Unit Root Test",
-        "\nTest statistic = ",x$tau,
-        "\nalpha = ",100*x$alpha,"% critical values = (",x$tau.alpha.low,",",x$tau.alpha.up,")",
+    cat("\n        Bootstrap Model Averaged Unit Root Test\n",
+        "\nTest statistic: ",x$tau,
+        "\n",100*x$alpha,"% critical values: (",x$tau.alpha.low,",",x$tau.alpha.up,")",
         "\n",x$decision,
-        "\nThere were ",x$boot.num," bootstrap replications conducted",
-        "\nAutomatic expected block length = ",x$e.block.length,sep="")
+        "\nBootstrap replications: ",x$boot.num,
+        "\nAutomatic expected block length: ",x$e.block.length,"\n",sep="")
 }
 
 summary.hrtest <- function(object, ...) {
