@@ -43,7 +43,7 @@ The null distribution of the test statistic is constructed using a model-free no
 
 When \code{trend=TRUE} there are 3+k estimating equations, otherwise 2+k. By default, Schwert's (1989) ad-hoc rule is used to determine the maximum lag k to be used (\code{round(12*(T/100)^0.25)} where T is the length of x). By way of illustration, for T=100 there would be 15 estimating equations when a trend is included, 14 otherwise.
 
-Simulations reveal that the test's size and power is balanced regardless of how large the number of estimating equations may be, unlike its peers, particularly in cases known to confound existing tests. To the best of our knowledge, this is the first such unit root test that is based on model averaging.
+Simulations reveal that the test's size and power is balanced regardless of how large the number of estimating equations may be, unlike its peers, particularly in cases known to confound existing tests. To the best of our knowledge, this is the first such unit root test to be proposed that is based on model averaging.
 
 We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the automatic dependent bootstrap procedure, \code{\link[quadprog]{solve.QP}} from the \pkg{quadprog} package to solve the quadratic program for the Mallows model average weights (Hansen (2007)), \code{\link[boot]{tsboot}} from the \pkg{boot} package to generate the stationary geometric bootstrap resample, and the \code{\link[fUnitRoots]{adfTest}} function from the \pkg{fUnitRoots} package to generate the statistics that are averaged.
 
@@ -91,7 +91,7 @@ Jeffrey S. Racine
 }
 
 \note{
-For a draft of the methodology run \code{vignette("bmmaur", package = "hr")}. This function and related material is in beta mode until further notice; there is nothing useful to be found here; use at your own peril.
+For a draft of the methodology run \code{vignette("bmmaur", package = "hr")}. This function and related material is in beta mode until further notice.
 }
 
 \seealso{
