@@ -14,7 +14,7 @@ hr.test(x = NULL,
         alpha = 0.05, 
         trend = TRUE, 
         verbose = TRUE, 
-        q = c(0.005, 0.01, 0.025, 0.05, 0.95, 0.975, 0.99, 0.995))
+        q = c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995))
 }
 
 \arguments{
@@ -30,7 +30,7 @@ hr.test(x = NULL,
 
 \details{
 
-Take a set of (augmented) Dickey-Fuller estimating equations with covariates i) the first lag of x, ii) a constant and the first lag of x, iii) a constant, a deterministic trend and the first lag of x (when trend=TRUE) and iv) a constant, a deterministic trend, the first lag of x and up to k lags of the differenced x (when trend=TRUE, otherwise no deterministic trend is included). Next, take the unit root test statistics from each of the estimating equations (in each estimating equation the first difference of x is regressed on the covariates). Finally, average these statistics using a Mallows criterion. 
+Take a set of (augmented) Dickey-Fuller estimating equations with covariates i) the first lag of x, ii) a constant and the first lag of x, iii) a constant, a deterministic trend and the first lag of x (when trend=TRUE) and iv) a constant, a deterministic trend, the first lag of x and up to k lags of the differenced x (when trend=TRUE, otherwise no deterministic trend is included). Next, take the unit root test statistics from each of the estimating equations (in each estimating equation the first difference of x is regressed on the covariates). Finally, average these statistics using a Mallows criterion  (Hansen (2007)). 
 
 The null distribution of the test statistic is constructed using a model-free nonparametric bootstrap applied to the first difference of x. A stationary geometric bootstrap (Politis and Romano (1994)) with automatic expected block length selection (Patton, Politis and White (2009)) is employed, and the null is imposed by taking the cumulative sum of the bootstrap values initialized to the first value of x; see \code{vignette("bmmaur", package = "hr")} for details.
 
@@ -81,7 +81,7 @@ Jeffrey S. Racine
 }
 
 \note{
-For a preliminary technical report on the methodology run \code{vignette("bmmaur", package = "hr")}. This function is in beta mode until further notice.
+For a draft of the methodology run \code{vignette("bmmaur", package = "hr")}. This function and related material is in beta mode until further notice; there is nothing useful to be found here; use at your own peril.
 }
 
 \seealso{
