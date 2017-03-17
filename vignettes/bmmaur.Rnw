@@ -22,7 +22,7 @@
 \setlength{\textwidth}{6.5in}
 \setlength{\footskip}{.5in}
 
-\title{Bootstrap Mallows Model Averaging Unit Root Inference}
+\title{Bootstrap Model Averaging Unit Root Inference}
 \date{\today}
 \author{Jeffrey S.\ Racine}
 
@@ -56,12 +56,12 @@
   procedure where the null is imposed by simple differencing, and we
   adopt recent developments in automatic block length selection for
   the geometric bootstrap procedure invoked. To deal with model
-  uncertainty at the testing stage, we adopt a Mallows Model Averaging
-  (MMA) procedure. Simulations indicate that the MMA approach is
-  correctly sized in the presence of a unit root for a range of
-  settings that confound existing approaches, while it has better
-  power than its peers. There are no nuisance parameters that have to
-  be set by the user, which ought to appeal to practitioners.
+  uncertainty at the testing stage, we adopt a model averaging
+  procedure. Simulations indicate that this approach is correctly
+  sized in the presence of a unit root for a range of settings that
+  confound existing approaches, while it has better power than its
+  peers. There are no nuisance parameters that have to be set by the
+  user, which ought to appeal to practitioners.
 \end{abstract}
 
 \maketitle
@@ -304,7 +304,16 @@ from the model average fit, and has been shown to be asymptotically
 optimal in the sense of achieving the lowest possible squared error in
 a class of model average estimators; see \citeasnoun{HANSEN:2007} for
 further details and see also \citeasnoun{HANSEN_RACINE:2012} for a
-jackknife model averaging procedure.
+jackknife model averaging procedure who propose a jackknife criterion
+for the model average estimator given by
+\begin{equation*}
+  CV_{n}(w)=\frac{1}{n}w'\tilde E'\tilde Ew
+\end{equation*}
+where $\tilde E$ is the $T\times M$ matrix with columns containing the
+jackknife residual vector from the $m$th candidate estimating equation
+formed by deleting the $t$ observation when constructing the $t$th
+residual. Both the Mallows and jackknife criterion could be used in
+what follows.
 
 To obtain a model average test statistic, we take the $\tau$ statistic
 from each of the $M$ candidate estimating equations and average them using the
@@ -438,9 +447,9 @@ root.
   deterministic trend, on the right with a deterministic trend (the
   DGPs used in the Monte Carlo do not contain deterministic trends,
   the P-P test contains a trend in both tables).}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_12_no_trend/tex/reject_2f
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_no_trend/tex/reject_2f
 \quad
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_12_trend/tex/reject_2f
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_trend/tex/reject_2f
 \end{table}
 
 Table \ref{tab:norm_size} presents the normed size distortions,
@@ -473,9 +482,9 @@ with acceptable size, but it results in a clear loss in power.
     with a deterministic trend (the DGPs used in the Monte Carlo do not
     contain deterministic trends, the P-P test contains a trend in both
     tables)}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/tex/norm_size_no_trend
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_size_no_trend
 \quad
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/tex/norm_size_trend
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_size_trend
 \end{table}
 
 \begin{table}[!ht]
@@ -489,9 +498,9 @@ with acceptable size, but it results in a clear loss in power.
     with a deterministic trend (the DGPs used in the Monte Carlo do not
     contain deterministic trends, the P-P test contains a trend in both
     tables)}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/tex/norm_power_no_trend
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_power_no_trend
 \quad
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/tex/norm_power_trend
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_power_trend
 \end{table}
 
 The choice of tests therefore comes down to either Ng-Perron or the
@@ -552,13 +561,13 @@ T=(100,200,300,400).
   $M$ Monte Carlo replications).}
 \tiny
 \centerline{$T=100$}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_12_trend/tex/mma_n_100
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_trend/tex/mma_n_100
 \centerline{$T=200$}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_12_trend/tex/mma_n_200
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_trend/tex/mma_n_200
 \centerline{$T=300$}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_12_trend/tex/mma_n_300
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_trend/tex/mma_n_300
 \centerline{$T=400$}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_12_trend/tex/mma_n_400
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_trend/tex/mma_n_400
 \end{table}
 \end{landscape}
 
@@ -579,15 +588,15 @@ T=(100,200,300,400).
     any model (for $j=2$, $k=(2,2,3,3)$, $j=4$, $k=(4,5,5,6)$, $j=9$,
     $k=(8,10,11,11)$, $j=24$, $k=(24,29,32,34)$).}
 \Tiny
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_2_no_trend/tex/reject_2f
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_2_no_trend/tex/reject_2f
 \quad
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_4_no_trend/tex/reject_2f
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_4_no_trend/tex/reject_2f
 
 \bigskip
 
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_8_no_trend/tex/reject_2f
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_8_no_trend/tex/reject_2f
 \quad
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_24_no_trend/tex/reject_2f
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_24_no_trend/tex/reject_2f
 \end{table}
 
 \clearpage
@@ -605,15 +614,15 @@ T=(100,200,300,400).
   incorporated in all models (for $j=2$, $k=(2,2,3,3)$, $j=4$,
   $k=(4,5,5,6)$, $j=9$, $k=(8,10,11,11)$, $j=24$, $k=(24,29,32,34)$).}
 \Tiny
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_2_trend/tex/reject_2f
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_2_trend/tex/reject_2f
 \quad
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_4_trend/tex/reject_2f
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_4_trend/tex/reject_2f
 
 \bigskip
 
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_8_trend/tex/reject_2f
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_8_trend/tex/reject_2f
 \quad
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work/Schwert_24_trend/tex/reject_2f
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_24_trend/tex/reject_2f
 \end{table}
 
 \clearpage

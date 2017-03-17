@@ -37,11 +37,12 @@ hr.test(x = NULL,
 Typical usages are
 \preformatted{
     hr.test(x)
-    hr.test(x,B=99)
+    hr.test(x,B=999)
     hr.test(x,K.vec=1:4)
+    hr.test(x,type="jma")
 }
 
-Take a set of (augmented) Dickey-Fuller estimating equations with covariates i) the first lag of x, ii) a constant and the first lag of x, iii) a constant, a deterministic trend and the first lag of x  (when trend=TRUE) and iv) a constant, a deterministic trend (when trend=TRUE), the first lag of x and 1,2,...,k lags of the differenced x yielding k such models. Next, take the unit root test statistics from each of the estimating equations (in each estimating equation the first difference of x is regressed on the covariates). Finally, average these statistics using either a Mallows criterion  (Hansen (2007)) or a jackknife criterion (Hansen and Racine (2012)). 
+Take a set of (augmented) Dickey-Fuller estimating equations with covariates i) the first lag of x, ii) a constant and the first lag of x, iii) a constant, a deterministic trend and the first lag of x  (when trend=TRUE) and iv) a constant, a deterministic trend (when trend=TRUE), the first lag of x and 1,2,...,k lags of the differenced x yielding k such models. Next, take the unit root test statistics from each of the estimating equations (in each estimating equation the first difference of x is regressed on the covariates). Finally, average these statistics using either a Mallows criterion (Hansen (2007)) or a jackknife criterion (Hansen and Racine (2012)). 
 
 The null distribution of the test statistic is constructed using a model-free nonparametric bootstrap applied to the first difference of x similar to that outlined in Swensen (2003). A stationary geometric bootstrap (Politis and Romano (1994)) with automatic expected block length selection (Patton, Politis and White (2009)) is employed, and the null is imposed by taking the cumulative sum of the bootstrap values initialized to the first value of x; see \code{vignette("bmmaur", package = "hr")} for further details.
 
@@ -65,7 +66,7 @@ A list with class "hrtest" containing the following components:
 \item{quantiles}{vector of nonparametric null quantiles}
 \item{alpha}{size of test}
 \item{trend}{whether to include a deterministic trend or not}
-\item{mma.weights}{vector of Mallows model average weights}
+\item{ma.weights}{vector of model average weights}
 \item{tau.boot}{vector of bootstrapped test statistics generated under the null of a unit root}
 \item{e.block.length}{expected block length for the stationary geometric bootstrap returned by \code{\link[np]{b.star}}}
 \item{adf.lags}{vector of lags used for the augmented models}

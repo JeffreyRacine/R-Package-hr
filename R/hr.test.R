@@ -100,7 +100,7 @@ hr.test <- function(x=NULL,
         t.stat <- c(t.stat,out@test$statistic)
     }
     
-    ## Mallows model average weights (solve a simple quadratic program)
+    ## Model average weights (solve a simple quadratic program)
 
     M.dim <- ncol(ma.mat)
     sigsq.largest <- summary(out@test$lm)$sigma**2
@@ -115,9 +115,9 @@ hr.test <- function(x=NULL,
     }
     w.hat.ma <- solve.QP(Dmat,dvec,Amat,bvec,1)$solution
     
-    ## The MMA test statistic is a weighted average of each of the above candidate
-    ## model's test statistics (all t-statistics for the coefficient on the first 
-    ## lag of the series)
+    ## The model average test statistic is a weighted average of each of the above 
+    ## candidate model's test statistics (all t-statistics for the coefficient on 
+    ## the first lag of the series)
 
     t.stat.ma <- sum(t.stat*w.hat.ma)
     
@@ -156,7 +156,7 @@ hr.test <- function(x=NULL,
             }
         }
         
-        ## Compute the MMA bootstrap statistics
+        ## Compute the model average bootstrap statistics
 
         t.stat.boot.ma[b] <- sum(t.stat.boot*w.hat.ma)
         
@@ -184,7 +184,7 @@ hr.test <- function(x=NULL,
            quantiles = quantile(t.stat.boot.ma,q,type=1),
            alpha = alpha,
            trend = trend,
-           mma.weights = w.hat.ma,
+           ma.weights = w.hat.ma,
            tau.boot = sort(t.stat.boot.ma),
            e.block.length = l,
            boot.num = B,
@@ -202,7 +202,7 @@ hrtest <- function(tau,
                    quantiles,
                    alpha,
                    trend,
-                   mma.weights,
+                   ma.weights,
                    tau.boot,
                    e.block.length,
                    boot.num,
@@ -216,7 +216,7 @@ hrtest <- function(tau,
                 quantiles = quantiles,
                 alpha = alpha,
                 trend = trend,
-                mma.weights = mma.weights,
+                ma.weights = ma.weights,
                 tau.boot = tau.boot,
                 e.block.length = e.block.length,
                 boot.num = boot.num,
@@ -242,10 +242,7 @@ summary.hrtest <- function(object, ...) {
 
 jackknife.prediction <- function(model) {
     
-    hat.model <- hatvalues(model)
-    fitted.model <- fitted(model)
-    residuals.model <- residuals(model)
-    
-    return(fitted.model - hat.model*residuals.model/(1-hat.model))
+    htt <- hatvalues(model)
+    return(fitted(model) - htt*residuals(model)/(1-htt))
     
 }
