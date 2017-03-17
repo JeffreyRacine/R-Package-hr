@@ -8,9 +8,12 @@ hr.test <- function(x=NULL,
                     trend=TRUE,
                     verbose=TRUE,
                     S=12,
+                    type=c("mma","jma"),
                     q=c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995)) {
 
     ## Some basic input checking
+    
+    type <- match.arg(type)
     
     if(is.null(x)) stop("You must provide data")
     if(!is.ts(x)) x <- ts(x)
@@ -76,7 +79,11 @@ hr.test <- function(x=NULL,
         ## Residual vector shorter with lags, need to line up properly (discard 
         ## residuals from 1...K.vec[k] when we bind the columns to the residual
         ## matrix)
-        r <- residuals(out@test$lm)
+        if(type=="mma") {
+            r <- residuals(out@test$lm)
+        } else {
+           r <-  jackknife.prediction(out@test$lm) 
+        }
         n.r <- length(r)
         n.rm <- nrow(residual.mat)
         residual.mat <- cbind(residual.mat[(n.rm-n.r+1):n.rm,],r)
@@ -92,14 +99,18 @@ hr.test <- function(x=NULL,
     if(qr(Dmat)$rank<M.dim) Dmat <- Dmat + diag(1e-10,M.dim,M.dim)
     Amat <- cbind(rep(1,M.dim),diag(1,M.dim,M.dim))
     bvec <- c(1,rep(0,M.dim))
-    dvec <- -rank.vec*sigsq.largest
-    w.hat.mma <- solve.QP(Dmat,dvec,Amat,bvec,1)$solution
+    if(type=="mma") {
+        dvec <- -rank.vec*sigsq.largest
+    } else {
+        dvec <- t(as.matrix(x[(n-nrow(residual.mat)+1):n]))%*%residual.mat
+    }
+    w.hat.ma <- solve.QP(Dmat,dvec,Amat,bvec,1)$solution
     
     ## The MMA test statistic is a weighted average of each of the above candidate
     ## model's test statistics (all t-statistics for the coefficient on the first 
     ## lag of the series)
 
-    t.stat.mma <- sum(t.stat*w.hat.mma)
+    t.stat.ma <- sum(t.stat*w.hat.ma)
     
     ## Impose the null with a model-free difference (See Swensen (2003) for a 
     ## similar procedure)
@@ -109,7 +120,7 @@ hr.test <- function(x=NULL,
     
     ## Vector to hold the bootstrap statistics
 
-    t.stat.boot.mma <- numeric(length=B)
+    t.stat.boot.ma <- numeric(length=B)
     
     if(verbose) cat("\r                                                ")
 
@@ -138,7 +149,7 @@ hr.test <- function(x=NULL,
         
         ## Compute the MMA bootstrap statistics
 
-        t.stat.boot.mma[b] <- sum(t.stat.boot*w.hat.mma)
+        t.stat.boot.ma[b] <- sum(t.stat.boot*w.hat.ma)
         
     }
     
@@ -147,25 +158,25 @@ hr.test <- function(x=NULL,
     if(verbose) cat("\r                               ")
 
     decision <- paste("Fail to reject at the ",100*alpha,"% level (unit root)",sep="")
-    if(t.stat.mma < quantile(t.stat.boot.mma,probs=alpha/2,type=1)) decision <- paste("Reject at the ",100*alpha,"% level (stationary)",sep="")
-    if(t.stat.mma > quantile(t.stat.boot.mma,probs=1-alpha/2,type=1)) decision <- paste("Reject at the ",100*alpha,"% level (explosive)",sep="")
+    if(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha/2,type=1)) decision <- paste("Reject at the ",100*alpha,"% level (stationary)",sep="")
+    if(t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha/2,type=1)) decision <- paste("Reject at the ",100*alpha,"% level (explosive)",sep="")
 
-    reject <- as.numeric(ifelse(t.stat.mma < quantile(t.stat.boot.mma,probs=alpha/2,type=1) |
-                                t.stat.mma > quantile(t.stat.boot.mma,probs=1-alpha/2,type=1),1,0))
+    reject <- as.numeric(ifelse(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha/2,type=1) |
+                                t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha/2,type=1),1,0))
                         
 
     if(exists.seed) assign(".Random.seed", save.seed, .GlobalEnv)
     
-    hrtest(tau = t.stat.mma,
-           tau.alpha.low = quantile(t.stat.boot.mma,probs=alpha/2,type=1),
-           tau.alpha.up = quantile(t.stat.boot.mma,probs=1-alpha/2,type=1),
+    hrtest(tau = t.stat.ma,
+           tau.alpha.low = quantile(t.stat.boot.ma,probs=alpha/2,type=1),
+           tau.alpha.up = quantile(t.stat.boot.ma,probs=1-alpha/2,type=1),
            decision = decision,
            reject = reject,
-           quantiles = quantile(t.stat.boot.mma,q,type=1),
+           quantiles = quantile(t.stat.boot.ma,q,type=1),
            alpha = alpha,
            trend = trend,
-           mma.weights = w.hat.mma,
-           tau.boot = sort(t.stat.boot.mma),
+           mma.weights = w.hat.ma,
+           tau.boot = sort(t.stat.boot.ma),
            e.block.length = l,
            boot.num = B,
            adf.lags = K.vec)
@@ -218,4 +229,14 @@ print.hrtest <- function(x, ...){
 
 summary.hrtest <- function(object, ...) {
     print(object)
+}
+
+jackknife.prediction <- function(model) {
+    
+    hat.model <- hatvalues(model)
+    fitted.model <- fitted(model)
+    residuals.model <- residuals(model)
+    
+    return(fitted.model - hat.model*residuals.model/(1-hat.model))
+    
 }

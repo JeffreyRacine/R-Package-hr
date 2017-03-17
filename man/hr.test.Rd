@@ -15,6 +15,7 @@ hr.test(x = NULL,
         trend = TRUE, 
         verbose = TRUE,
         S = 12,
+        type = c("mma","jma"),
         q = c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995))
 }
 
@@ -27,6 +28,7 @@ hr.test(x = NULL,
   \item{trend}{whether or not to include a deterministic trend in the estimating equations}
   \item{verbose}{whether or not to display progress}
   \item{S}{the constant in Schwert's ad-hoc formula for maximum lag selection}
+  \item{type}{whether to use Hansen (2007) or Hansen and Racine's (2012) model average procedure}
   \item{q}{vector of probabilities for the null quantile values returned}
 }
 
