@@ -34,7 +34,7 @@ Take a set of (augmented) Dickey-Fuller estimating equations with covariates i) 
 
 The null distribution of the test statistic is constructed using a model-free nonparametric bootstrap applied to the first difference of x. A stationary geometric bootstrap (Politis and Romano (1994)) with automatic expected block length selection (Patton, Politis and White (2009)) is employed, and the null is imposed by taking the cumulative sum of the bootstrap values initialized to the first value of x; see \code{vignette("bmmaur", package = "hr")} for details.
 
-When \code{trend=TRUE} there are 3+k estimating equations, otherwise there are 2+k. By default, Schwert's (1989) ad-hoc rule is used to determine the maximum lag k to be used (\code{round(12*(T/100)^0.25)} where T is the length of x). By way of illustration, for T=100 there would be 15 estimating equations when a trend is included, 14 otherwise.
+When \code{trend=TRUE} there are 3+k estimating equations, otherwis 2+k. By default, Schwert's (1989) ad-hoc rule is used to determine the maximum lag k to be used (\code{round(12*(T/100)^0.25)} where T is the length of x). By way of illustration, for T=100 there would be 15 estimating equations when a trend is included, 14 otherwise.
 
 Simulations reveal that the test's size and power is balanced regardless of how large the number of estimating equations may be, unlike its peers, particularly in cases known to confound existing tests. To the best of our knowledge, this is the first such unit root test that is based on model averaging.
 
