@@ -50,6 +50,9 @@ We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the a
 }
 
 \value{
+
+A list with class "hrtest" containing the following components:
+
 \item{tau}{model averaged test statistic}
 \item{tau.alpha.low}{lower critical value}
 \item{tau.alpha.up}{upper critical value}
@@ -93,7 +96,7 @@ Jeffrey S. Racine
 }
 
 \note{
-For a draft of the methodology run \code{vignette("bmmaur", package = "hr")}. This function and related material is in beta mode until further notice.
+This package is in beta status until further notice - proceed with caution.
 }
 
 \seealso{
