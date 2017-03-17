@@ -26,7 +26,7 @@ hr.test(x = NULL,
   \item{alpha}{size of the test}
   \item{trend}{whether or not to include a deterministic trend in the estimating equations}
   \item{verbose}{whether or not to display progress}
-  \item{S}{The constant in Schwert's ad-hoc formula for maximum lag selection}
+  \item{S}{the constant in Schwert's ad-hoc formula for maximum lag selection}
   \item{q}{vector of probabilities for the null quantile values returned}
 }
 
@@ -98,7 +98,7 @@ Jeffrey S. Racine
 }
 
 \note{
-This package is in beta status until further notice - proceed with caution.
+This package is in beta status until further notice - proceed accordingly.
 }
 
 \seealso{
