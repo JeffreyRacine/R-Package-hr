@@ -567,20 +567,34 @@ practitioners.
 \begin{landscape}
 \section{\label{app:mma}Mallows Model Average Weight Summary}
 
-Table \ref{tab:mma} presents the mean weights accorded to each of the
-candidate estimating equations over the $M$ Monte Carlo
-replications. The use of Schwert's ad-hoc rule
+Table \ref{tab:mma_no_trend} presents the mean weights accorded to
+each of the candidate estimating equations over the $M$ Monte Carlo
+replications for ADF models with no trend, Table \ref{tab:mma_trend}
+for those with a trend. The use of Schwert's ad-hoc rule
 ($k=1,\dots,12(T/100)^{1/4}$) results in models having from 1 through
 12, 14, 16, and 17 lags being used for the procedures for
 T=(100,200,300,400).
 
-\vskip 1in
-
 \begin{table}[!ht]
 \centering
-\caption{\label{tab:mma}Model Averaging Weights (mean over all
-  $M$ Monte Carlo replications).}
-\tiny
+\caption{\label{tab:mma_no_trend}Model Averaging Weights (mean over all
+  $M$ Monte Carlo replications, no trend).}
+\Tiny
+\centerline{$T=100$}
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_no_trend/tex/mma_n_100
+\centerline{$T=200$}
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_no_trend/tex/mma_n_200
+\centerline{$T=300$}
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_no_trend/tex/mma_n_300
+\centerline{$T=400$}
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_no_trend/tex/mma_n_400
+%\end{table}
+\bigskip
+%\begin{table}[!ht]
+%\centering
+\caption{\label{tab:mma_trend}Model Averaging Weights (mean over all
+  $M$ Monte Carlo replications, trend).}
+\Tiny
 \centerline{$T=100$}
 \input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_trend/tex/mma_n_100
 \centerline{$T=200$}
