@@ -4,7 +4,7 @@ hr.test <- function(x=NULL,
                     adf.type=c("c","ct","nc","all"),
                     alpha=0.05,
                     B=399,
-                    df.type=c("all","ct","c","nc"),
+                    df.type=c("ncc","nccct","nc","none"),
                     lag.vec=NULL,
                     method=c("mma","jma"),
                     quantile.vec=c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995),
@@ -19,7 +19,15 @@ hr.test <- function(x=NULL,
     adf.type <- match.arg(adf.type)
     if(adf.type=="all") adf.type <- c("nc", "c", "ct")
     df.type <- match.arg(df.type)
-    if(df.type=="all") df.type <- c("nc", "c", "ct")    
+    if(df.type=="nc") {
+        df.type <- c("nc") 
+    } else if(df.type=="ncc") {
+        df.type <- c("nc", "c")
+    } else if(df.type=="nccct") {
+        df.type <- c("nc", "c", "ct")        
+    } else if(df.type=="none") {
+        df.type <- NULL
+    }
     
     if(is.null(x)) stop("You must provide data")
     if(!is.ts(x)) x <- ts(x)
@@ -79,11 +87,17 @@ hr.test <- function(x=NULL,
         for(t in adf.type) {
             out <- suppressWarnings(adfTest(x,lags=lag.vec[k],type=t))
             r <- Dmat.func(out@test$lm,method=method) 
-            n.r <- length(r)
-            n.rm <- nrow(ma.mat)
-            ma.mat <- cbind(ma.mat[(n.rm-n.r+1):n.rm,],r)
-            rank.vec <- c(rank.vec,out@test$lm$rank)
-            t.stat <- c(t.stat,out@test$statistic)
+            if(!exists("ma.mat")) {
+                ma.mat <- as.matrix(r)
+                rank.vec <- out@test$lm$rank
+                t.stat <- out@test$statistic
+            } else {
+                n.r <- length(r)
+                n.rm <- nrow(ma.mat)
+                ma.mat <- cbind(ma.mat[(n.rm-n.r+1):n.rm,],r)
+                rank.vec <- c(rank.vec,out@test$lm$rank)
+                t.stat <- c(t.stat,out@test$statistic)
+            }
         }
     }
     

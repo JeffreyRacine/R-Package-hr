@@ -11,7 +11,7 @@ hr.test(x = NULL,
         adf.type = c("c", "ct", "nc", "all"),
         alpha = 0.05, 
         B = 399, 
-        df.type = c("all", "ct", "c", "nc"),
+        df.type = c("ncc", "nccct", "nc","none"),
         lag.vec = NULL, 
         method = c("mma","jma"),
         quantile.vec = c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995),
@@ -26,7 +26,7 @@ hr.test(x = NULL,
   \item{adf.type}{whether to average over augmented (lagged) models with no constant, constant or constant and trend, or all}
   \item{alpha}{size of the test}
   \item{B}{number of bootstrap replications}
-  \item{df.type}{whether to average over non-lagged models with no constant, constant or constant and trend, or all}
+  \item{df.type}{whether to average over non-lagged models with no constant (nc), no constant and constant (ncc) or no constant and constant and constant and trend (nccct), or ignore non-lagged models (none)}
   \item{lag.vec}{optional vector of lags for the (augmented) Dickey-Fuller estimating equations}
   \item{method}{whether to use Hansen (2007) or Hansen and Racine's (2012) model average procedure}
   \item{quantile.vec}{vector of probabilities for the null quantile values returned}
