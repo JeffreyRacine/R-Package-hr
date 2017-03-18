@@ -66,6 +66,9 @@
 
 \maketitle
 
+\centerline{\textit{** Preliminary and Incomplete - Not to be Quoted
+    or Circulated Without Permission **}}
+
 \doublespacing
 
 \section{Introduction}
@@ -100,26 +103,28 @@ that must be set by the practitioner affects the outcome of the test
 \cite{SCHWERT:1989}).
 
 As an alternative to model selection, we could instead exploit recent
-developments in (frequentist) model averaging \cite[Mallows Model
-Averaging (MMA)]{HANSEN:2007}, as it is known that model averaging can
-overcome limitations arising from the use of model selection. In the
-present context, we propose a unit root statistic that is a weighted
-average of those taken from a set of candidate estimating equations
-that are the same as those used for \possessivecite{NG_PERRON:2001} or
-\possessivecite{DICKEY_FULLER:1979} approaches. We also adopt an
-automatic, model-free, time series bootstrap in order to construct the
-null distribution of this statistic and compute nonparametric critical
-values or nonparametric $P$-values.  Most existing bootstrap unit root
-procedures are model-based, and one problem with model-based
-resampling is that the data generating process (DGP) is unknown and
-must be identified from the series at hand. In order to ensure that
-the bootstrap samples have the same structure as the series at hand,
-this identification must be correct. \citeasnoun{SWENSEN:2003}
-considers model-based and model-free bootstrap approaches and
-demonstrates that a difference-based model-free approach (along the
-lines of that proposed herein) delivers a bootstrap distribution that
-approaches the true asymptotic distribution under the null of a unit
-root (see also \citeasnoun[Section 2.4]{PALM_ET_AL:2008}).
+developments in (frequentist) model averaging (\citeasnoun[Mallows
+Model Averaging (MMA)]{HANSEN:2007}, \citeasnoun[Jackknife Model
+Averaging (JMA)]{HANSEN_RACINE:2012}, \citeasnoun{HANSEN:2014}), as it
+is known that model averaging can overcome limitations arising from
+the use of model selection. In the present context, we propose a unit
+root statistic that is a weighted average of those taken from a set of
+candidate estimating equations that are the same as those used for
+\possessivecite{NG_PERRON:2001} or \possessivecite{DICKEY_FULLER:1979}
+approaches. We also adopt an automatic, model-free, time series
+bootstrap in order to construct the null distribution of this
+statistic and compute nonparametric critical values or nonparametric
+$P$-values.  Most existing bootstrap unit root procedures are
+model-based, and one problem with model-based resampling is that the
+data generating process (DGP) is unknown and must be identified from
+the series at hand. In order to ensure that the bootstrap samples have
+the same structure as the series at hand, this identification must be
+correct. \citeasnoun{SWENSEN:2003} considers model-based and
+model-free bootstrap approaches and demonstrates that a
+difference-based model-free approach (along the lines of that proposed
+herein) delivers a bootstrap distribution that approaches the true
+asymptotic distribution under the null of a unit root (see also
+\citeasnoun[Section 2.4]{PALM_ET_AL:2008}).
 
 We will see that when model averaging is combined with a model-free,
 automatic, dependent bootstrap procedure
@@ -255,27 +260,19 @@ include the BIC variant in the Monte Carlo simulations that follow,
 but it and the MIC approach suffer from quite substantial size
 distortions in small sample settings for the DGPs we consider
 below). The other option would be to adopt a model averaging approach,
-and we propose a bootstrap Mallow's model averaging procedure (MMA,
-see \citeasnoun{Hansen2010142} for the use of a Mallows criterion
-\cite{MALLOWS:1973} for combining forecasts local to a unit root)). To
-the best of our knowledge, ours is the first to consider model
-averaging procedures in the unit root setting. For the MMA-based unit
-root test, we use a Mallows criterion to average over the test
-statistics taken from the set of models outlined above (e.g., a model
-with no constant DF(nc), a constant DF(c), a constant and time trend
-DF(ct), and a range of augmented models with lagged differences
-(ADF(1), ADF(2), etc.)).
-
-We now outline the proposed approach and then proceed to an analysis
-of its finite-sample performance relative to its peers.
+and we propose a bootstrap model averaging procedure.  To the best of
+our knowledge, ours is the first to consider model averaging
+procedures in the unit root setting.  We now outline the proposed
+approach and then proceed to an analysis of its finite-sample
+performance relative to its peers.
 
 \section{\label{sec:bmma}A Model Averaging Bootstrap Procedure}
 
-\subsection{The Mallows Criterion for the Model Average Estimator}
+\subsection{Model Average Estimators}
 
 The goal in model averaging is to reduce estimation variance while
-controlling misspecification bias. The Mallows Criterion for the model
-average estimator \cite{HANSEN:2007} is
+controlling misspecification bias. The Mallows \cite{MALLOWS:1973}
+Criterion for the model average estimator \cite{HANSEN:2007} is
 \begin{equation*}
   C_n(w)=w'\hat E'\hat Ew+2\sigma^2K'w,
 \end{equation*}
@@ -302,18 +299,26 @@ estimating equation, and solving a simple quadratic program. The MMA
 $C_n(w)$ criterion provides an estimate of the average squared error
 from the model average fit, and has been shown to be asymptotically
 optimal in the sense of achieving the lowest possible squared error in
-a class of model average estimators; see \citeasnoun{HANSEN:2007} for
-further details and see also \citeasnoun{HANSEN_RACINE:2012} for a
-jackknife model averaging procedure who propose a jackknife criterion
-for the model average estimator given by
+a class of model average estimators. See \citeasnoun{HANSEN:2007} for
+further details, \citeasnoun{HANSEN:2014} who explores the use of the
+Mallows criterion in a time series autoregression setting, and
+\citeasnoun{Hansen2010142} who uses a Mallows criterion for combining
+forecasts local to a unit root.
+
+\citeasnoun{HANSEN_RACINE:2012} propose an alternative jackknife model
+averaging (JMA) criterion for the model average estimator given by
 \begin{equation*}
-  CV_{n}(w)=\frac{1}{n}w'\tilde E'\tilde Ew
+  CV_{n}(w)=\frac{1}{n}(y-\tilde Xw)'(y-\tilde Xw),
 \end{equation*}
-where $\tilde E$ is the $T\times M$ matrix with columns containing the
-jackknife residual vector from the $m$th candidate estimating equation
+where $\tilde X$ is the $T\times M$ matrix with columns containing the
+jackknife estimator from the $m$th candidate estimating equation
 formed by deleting the $t$ observation when constructing the $t$th
-residual. Both the Mallows and jackknife criterion could be used in
-what follows.
+prediction. Like its Mallows counterpart, this involves solving a
+quadratic program where we minimize
+$(y-\tilde Xw)'(y-\tilde Xw)=y'y+w'\tilde X'\tilde Xw-2y'\tilde Xw$
+and the first term is ignorable. In the presence of homoskedastic
+errors, JMA and MMA are nearly equivalent, but when the errors are
+heteroskedastic, JMA has significantly lower MSE.
 
 To obtain a model average test statistic, we take the $\tau$ statistic
 from each of the $M$ candidate estimating equations and average them using the
@@ -501,6 +506,22 @@ with acceptable size, but it results in a clear loss in power.
 \input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_power_no_trend
 \quad
 \input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_power_trend
+\end{table}
+
+\begin{table}[!ht]
+  \caption{\label{tab:norm_power_size}Normed power and size for the
+    ARMA(2,2) and white noise DGPs over all sample sizes for a range of
+    constants $j$ in Schwerts' ad-hoc rule $k=1,\dots,j(T/100)^{1/4}$
+    (Schwert recommends $j=12$), where $\hat\alpha$ is the empirical
+    rejection probability. Smaller values indicate empirical power
+    closer to 1 overall. Results on the left are for candidate
+    estimating equations without a deterministic trend, on the right
+    with a deterministic trend (the DGPs used in the Monte Carlo do not
+    contain deterministic trends, the P-P test contains a trend in both
+    tables)}
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_power_size_no_trend
+\quad
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_power_size_trend
 \end{table}
 
 The choice of tests therefore comes down to either Ng-Perron or the

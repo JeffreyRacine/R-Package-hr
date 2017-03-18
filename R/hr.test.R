@@ -6,14 +6,17 @@ hr.test <- function(x=NULL,
                     B=399,
                     alpha=0.05,
                     trend=TRUE,
+                    type=c("ct","c","nc","all"),
                     verbose=TRUE,
                     S=12,
-                    type=c("mma","jma"),
+                    method=c("mma","jma"),
                     q=c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995)) {
 
     ## Some basic input checking
     
+    method <- match.arg(method)
     type <- match.arg(type)
+    if(type=="all") type <- c("nc", "c", "ct")
     
     if(is.null(x)) stop("You must provide data")
     if(!is.ts(x)) x <- ts(x)
@@ -43,7 +46,7 @@ hr.test <- function(x=NULL,
     ## Use Schwert's ad-hoc rule for the maximum lag for the candidate models 
     ## if none is provided
     
-    if(is.null(K.vec)) K.vec <- 1:round(S*(n/100)^0.25)
+    if(is.null(K.vec)) K.vec <- 0:round(S*(n/100)^0.25)
     K <- length(K.vec)
 
     ## A simple function that returns its argument for the tsboot() call
@@ -52,54 +55,33 @@ hr.test <- function(x=NULL,
 
     if(verbose) cat("\rComputing statistics and model averaging weights")
     
-    ## Standard Dickey-Fuller models
-
-    out.nc <- suppressWarnings(adfTest(x,lags=0,type="nc"))
-    out.c <- suppressWarnings(adfTest(x,lags=0,type="c"))
-
-    if(type=="mma") {
-        ma.mat <- cbind(residuals(out.nc@test$lm),residuals(out.c@test$lm))
-    } else {
-        ma.mat <- cbind(jackknife.prediction(out.nc@test$lm),jackknife.prediction(out.c@test$lm))        
-    }    
-
-    rank.vec <- c(out.nc@test$lm$rank,out.c@test$lm$rank)
-    t.stat <- c(out.nc@test$statistic,out.c@test$statistic)
-
-    if(trend) {
-        out.ct <- suppressWarnings(adfTest(x,lags=0,type="ct"))
-        if(type=="mma") {
-            ma.mat <- cbind(ma.mat,residuals(out.ct@test$lm))
-        } else {
-            ma.mat <- cbind(ma.mat,jackknife.prediction(out.ct@test$lm))           
-        }
-        rank.vec <- c(rank.vec,out.ct@test$lm$rank)
-        t.stat <- c(t.stat,out.ct@test$statistic)
-    }
+    t.stat <- NULL
+    rank.vec <- NULL
     
-    ## Augmented Dickey-Fuller models
-    
+    first <- TRUE
     for(k in 1:K) {
-        if(trend) {
-            out <- suppressWarnings(adfTest(x,lags=K.vec[k],type="ct"))
-        } else {
-            out <- suppressWarnings(adfTest(x,lags=K.vec[k],type="c"))
+        for(t in type) {
+            out <- suppressWarnings(adfTest(x,lags=K.vec[k],type=t))
+            if(method=="mma") {
+                r <- residuals(out@test$lm)
+            } else {
+                r <- jackknife.prediction(out@test$lm) 
+            }
+            if(first) {
+                ma.mat <- as.matrix(r)
+            } else {
+                n.r <- length(r)
+                n.rm <- nrow(ma.mat)
+                ma.mat <- cbind(ma.mat[(n.rm-n.r+1):n.rm,],r)
+            }
+            rank.vec <- c(rank.vec,out@test$lm$rank)
+            t.stat <- c(t.stat,out@test$statistic)
+            first <- FALSE
         }
-        ## Residual/predictor vector shorter with lags, need to line up properly (discard 
-        ## residuals/predictor from 1...K.vec[k] when we bind the columns to the 
-        ## residual/predictor matrix)
-        if(type=="mma") {
-            r <- residuals(out@test$lm)
-        } else {
-           r <-  jackknife.prediction(out@test$lm) 
-        }
-        n.r <- length(r)
-        n.rm <- nrow(ma.mat)
-        ma.mat <- cbind(ma.mat[(n.rm-n.r+1):n.rm,],r)
-        rank.vec <- c(rank.vec,out@test$lm$rank)
-        t.stat <- c(t.stat,out@test$statistic)
     }
     
+    print("Here we are")
+
     ## Model average weights (solve a simple quadratic program)
 
     M.dim <- ncol(ma.mat)
@@ -108,19 +90,29 @@ hr.test <- function(x=NULL,
     if(qr(Dmat)$rank<M.dim) Dmat <- Dmat + diag(1e-10,M.dim,M.dim)
     Amat <- cbind(rep(1,M.dim),diag(1,M.dim,M.dim))
     bvec <- c(1,rep(0,M.dim))
-    if(type=="mma") {
+    if(method=="mma") {
         dvec <- -rank.vec*sigsq.largest
     } else {
         dvec <- t(as.matrix(x[(n-nrow(ma.mat)+1):n]))%*%ma.mat
     }
+    print(K.vec)
+    print(dim(ma.mat))
+    print(dim(Dmat))
+    print(M.dim)
+    print(length(t.stat))
+    print(length(rank.vec))
     w.hat.ma <- solve.QP(Dmat,dvec,Amat,bvec,1)$solution
     
+    #print(dim(ma.mat))
+    #print(length(t.stat))
+    #print(length(K.vec))
+
     ## The model average test statistic is a weighted average of each of the above 
     ## candidate model's test statistics (all t-statistics for the coefficient on 
     ## the first lag of the series)
 
     t.stat.ma <- sum(t.stat*w.hat.ma)
-    
+
     ## Impose the null with a model-free difference (See Swensen (2003) for a 
     ## similar procedure)
 
@@ -145,14 +137,11 @@ hr.test <- function(x=NULL,
         
         ## Recompute all candidate models and their test statistics
         
-        t.stat.boot <- c(suppressWarnings(adfTest(x.boot,lags=0,type="nc")@test$statistic),
-                         suppressWarnings(adfTest(x.boot,lags=0,type="c")@test$statistic))
-        if(trend) t.stat.boot <- c(t.stat.boot,suppressWarnings(adfTest(x.boot,lags=0,type="ct")@test$statistic))
+        t.stat.boot <- NULL
+        
         for(k in 1:K) {
-            if(trend) {
-                t.stat.boot <- c(t.stat.boot,suppressWarnings(adfTest(x.boot,lags=K.vec[k],type="ct")@test$statistic))
-            } else {
-                t.stat.boot <- c(t.stat.boot,suppressWarnings(adfTest(x.boot,lags=K.vec[k],type="c")@test$statistic))
+            for(t in type) {
+                t.stat.boot <- c(t.stat.boot,suppressWarnings(adfTest(x.boot,lags=K.vec[k],type=t)@test$statistic))
             }
         }
         

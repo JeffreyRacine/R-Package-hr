@@ -2,7 +2,7 @@
 
 \alias{hr.test}
 
-\title{Bootstrap Model Averaged Unit Root Test}
+\title{Hansen-Racine Bootstrap Model Averaged Unit Root Test}
 
 \description{Computes a nonparametric bootstrap model average test for the null hypothesis that x has a unit root against stationary and explosive alternatives.}
 
