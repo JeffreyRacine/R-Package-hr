@@ -1,22 +1,25 @@
 ## The Hansen-Racine nonparametric bootstrap model average unit root test
 
 hr.test <- function(x=NULL,
+                    adf.type=c("c","ct","nc","all"),
                     alpha=0.05,
                     B=399,
+                    df.type=c("all","ct","c","nc"),
                     lag.vec=NULL,
                     method=c("mma","jma"),
                     quantile.vec=c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995),
                     random.seed=42,
                     S=12,
                     trend=TRUE,
-                    type=c("ct","c","nc","all"),
                     verbose=TRUE) {
 
     ## Some basic input checking
     
     method <- match.arg(method)
-    type <- match.arg(type)
-    if(type=="all") type <- c("nc", "c", "ct")
+    adf.type <- match.arg(adf.type)
+    if(adf.type=="all") adf.type <- c("nc", "c", "ct")
+    df.type <- match.arg(df.type)
+    if(df.type=="all") df.type <- c("nc", "c", "ct")    
     
     if(is.null(x)) stop("You must provide data")
     if(!is.ts(x)) x <- ts(x)
@@ -44,9 +47,10 @@ hr.test <- function(x=NULL,
     n <- length(x)
     
     ## Use Schwert's ad-hoc rule for the maximum lag for the candidate models 
-    ## if none is provided
+    ## if none is provided, minimum lag 0 (simple non-augmented Dickey-Fuller 
+    ## included)
     
-    if(is.null(lag.vec)) lag.vec <- 0:round(S*(n/100)^0.25)
+    if(is.null(lag.vec)) lag.vec <- 1:round(S*(n/100)^0.25)
     K <- length(lag.vec)
 
     ## A simple function that returns its argument for the tsboot() call
@@ -55,22 +59,29 @@ hr.test <- function(x=NULL,
 
     if(verbose) cat("\rComputing statistics and model averaging weights")
     
-    t.stat <- NULL
-    rank.vec <- NULL
+    ## Always include all DF models
     
-    first <- TRUE
+    for(t in df.type) {
+        out <- suppressWarnings(adfTest(x,lags=0,type=t))
+        r <- Dmat.func(out@test$lm,method=method) 
+        if(!exists("ma.mat")) {
+            ma.mat <- as.matrix(r)
+            rank.vec <- out@test$lm$rank
+            t.stat <- out@test$statistic
+        } else {
+            ma.mat <- cbind(ma.mat,r)            
+            rank.vec <- c(rank.vec,out@test$lm$rank)
+            t.stat <- c(t.stat,out@test$statistic)
+        }
+    }
+
     for(k in 1:K) {
-        for(t in type) {
+        for(t in adf.type) {
             out <- suppressWarnings(adfTest(x,lags=lag.vec[k],type=t))
             r <- Dmat.func(out@test$lm,method=method) 
-            if(first) {
-                ma.mat <- as.matrix(r)
-                first <- FALSE
-            } else {
-                n.r <- length(r)
-                n.rm <- nrow(ma.mat)
-                ma.mat <- cbind(ma.mat[(n.rm-n.r+1):n.rm,],r)
-            }
+            n.r <- length(r)
+            n.rm <- nrow(ma.mat)
+            ma.mat <- cbind(ma.mat[(n.rm-n.r+1):n.rm,],r)
             rank.vec <- c(rank.vec,out@test$lm$rank)
             t.stat <- c(t.stat,out@test$statistic)
         }
@@ -123,9 +134,12 @@ hr.test <- function(x=NULL,
         ## Recompute all candidate models and their test statistics
         
         t.stat.boot <- NULL
+        for(t in df.type) {
+            t.stat.boot <- c(t.stat.boot,suppressWarnings(adfTest(x.boot,lags=0,type=t)@test$statistic))
+        }        
         
         for(k in 1:K) {
-            for(t in type) {
+            for(t in adf.type) {
                 t.stat.boot <- c(t.stat.boot,suppressWarnings(adfTest(x.boot,lags=lag.vec[k],type=t)@test$statistic))
             }
         }
