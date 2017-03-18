@@ -1,4 +1,4 @@
-%% $Id: bmmaur.tex,v 1.14 2017/03/17 11:26:37 jracine Exp jracine $
+%% $Id: bmmaur.tex,v 1.15 2017/03/17 22:16:55 jracine Exp jracine $
 
 %\VignetteIndexEntry{bmmaur}
 %\VignetteDepends{boot,np,quadprog,tseries}

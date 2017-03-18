@@ -12,14 +12,12 @@ hr.test(x = NULL,
         B = 399, 
         lag.vec = NULL, 
         method = c("mma","jma"),
-        q = c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995),
+        quantile.vec = c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995),
         random.seed = 42, 
         S = 12,
         trend = TRUE, 
-        type=c("ct","c","nc","all"),
+        type = c("ct", "c", "nc", "all"),
         verbose = TRUE)
-
-
 }
 
 \arguments{
@@ -28,7 +26,7 @@ hr.test(x = NULL,
   \item{B}{number of bootstrap replications}
   \item{lag.vec}{optional vector of lags for the (augmented) Dickey-Fuller estimating equations}
   \item{method}{whether to use Hansen (2007) or Hansen and Racine's (2012) model average procedure}
-  \item{q}{vector of probabilities for the null quantile values returned}
+  \item{quantile.vec}{vector of probabilities for the null quantile values returned}
   \item{random.seed}{random seed for the procedure}
   \item{S}{the constant in Schwert's ad-hoc formula for maximum lag selection}
   \item{trend}{whether or not to include a deterministic trend in the estimating equations}
@@ -43,8 +41,9 @@ Typical usages are
     hr.test(x)
     hr.test(x,B=999)
     hr.test(x,lag.vec=1:4)
-    hr.test(x,type="jma")
-}
+    hr.test(x,S=2)
+    hr.test(x,method="jma")
+    hr.test(x,type="all")}
 
 Take a set of (augmented) Dickey-Fuller estimating equations with covariates i) the first lag of x, ii) a constant and the first lag of x, iii) a constant, a deterministic trend and the first lag of x  (when trend=TRUE) and iv) a constant, a deterministic trend (when trend=TRUE), the first lag of x and 1,2,...,k lags of the differenced x yielding k such models. Next, take the unit root test statistics from each of the estimating equations (in each estimating equation the first difference of x is regressed on the covariates). Finally, average these statistics using either a Mallows criterion (Hansen (2007)) or a jackknife criterion (Hansen and Racine (2012)). 
 

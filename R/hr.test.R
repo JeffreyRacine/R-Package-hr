@@ -5,7 +5,7 @@ hr.test <- function(x=NULL,
                     B=399,
                     lag.vec=NULL,
                     method=c("mma","jma"),
-                    q=c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995),
+                    quantile.vec=c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995),
                     random.seed=42,
                     S=12,
                     trend=TRUE,
@@ -24,7 +24,7 @@ hr.test <- function(x=NULL,
     if(any(lag.vec<1)) stop("Lag vector lag.vec must contain positive integers")
     if(alpha <= 0 | alpha >= 0.5) stop("Size (alpha) must lie in (0,0.5)")
     if(B < 1) stop("Number of bootstrap replications (B) must be a positive integer (e.g. 399)")
-    if(any(q<=0) | any(q>=1)) stop("The quantile vector entries must lie in (0,1)")
+    if(any(quantile.vec<=0) | any(quantile.vec>=1)) stop("The quantile vector entries must lie in (0,1)")
     
     ## Save any existing random seed and restore upon exit
 
@@ -62,13 +62,10 @@ hr.test <- function(x=NULL,
     for(k in 1:K) {
         for(t in type) {
             out <- suppressWarnings(adfTest(x,lags=lag.vec[k],type=t))
-            if(method=="mma") {
-                r <- residuals(out@test$lm)
-            } else {
-                r <- jackknife.prediction(out@test$lm) 
-            }
+            r <- Dmat.func(out@test$lm,method=method) 
             if(first) {
                 ma.mat <- as.matrix(r)
+                first <- FALSE
             } else {
                 n.r <- length(r)
                 n.rm <- nrow(ma.mat)
@@ -76,12 +73,9 @@ hr.test <- function(x=NULL,
             }
             rank.vec <- c(rank.vec,out@test$lm$rank)
             t.stat <- c(t.stat,out@test$statistic)
-            first <- FALSE
         }
     }
     
-    print("Here we are")
-
     ## Model average weights (solve a simple quadratic program)
 
     M.dim <- ncol(ma.mat)
@@ -161,7 +155,7 @@ hr.test <- function(x=NULL,
            tau.alpha.up = quantile(t.stat.boot.ma,probs=1-alpha/2,type=1),
            decision = decision,
            reject = reject,
-           quantiles = quantile(t.stat.boot.ma,q,type=1),
+           quantiles = quantile(t.stat.boot.ma,quantile.vec,type=1),
            alpha = alpha,
            trend = trend,
            ma.weights = w.hat.ma,
@@ -220,9 +214,9 @@ summary.hrtest <- function(object, ...) {
     print(object)
 }
 
-jackknife.prediction <- function(model) {
-    
+Dmat.func <- function(model,method=c("mma","jma")) {
+    method <- match.arg(method)
+    if(method=="mma") return(residuals(model))
     htt <- hatvalues(model)
-    return(fitted(model) - htt*residuals(model)/(1-htt))
-    
+    if(method=="jma") return(fitted(model) - htt*residuals(model)/(1-htt))    
 }
