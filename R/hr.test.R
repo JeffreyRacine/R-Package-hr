@@ -67,7 +67,7 @@ hr.test <- function(x=NULL,
 
     if(verbose) cat("\rComputing statistics and model averaging weights")
     
-    ## Always include all DF models
+    ## Dickey-Fuller models (no lags)
     
     for(t in df.type) {
         out <- suppressWarnings(adfTest(x,lags=0,type=t))
@@ -82,6 +82,8 @@ hr.test <- function(x=NULL,
             t.stat <- c(t.stat,out@test$statistic)
         }
     }
+    
+    ## Augmented Dickey-Fuller models (lagged first differences)
 
     for(k in 1:K) {
         for(t in adf.type) {
