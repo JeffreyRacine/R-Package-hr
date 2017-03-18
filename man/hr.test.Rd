@@ -8,28 +8,32 @@
 
 \usage{
 hr.test(x = NULL, 
-        K.vec = NULL, 
-        random.seed = 42, 
-        B = 399, 
         alpha = 0.05, 
-        trend = TRUE, 
-        verbose = TRUE,
+        B = 399, 
+        lag.vec = NULL, 
+        method = c("mma","jma"),
+        q = c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995),
+        random.seed = 42, 
         S = 12,
-        type = c("mma","jma"),
-        q = c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995))
+        trend = TRUE, 
+        type=c("ct","c","nc","all"),
+        verbose = TRUE)
+
+
 }
 
 \arguments{
   \item{x}{a univariate time series (\code{numeric} will be converted automatically)}
-  \item{K.vec}{optional vector of lags for the (augmented) Dickey-Fuller estimating equations}
-  \item{random.seed}{random seed for the procedure}
-  \item{B}{number of bootstrap replications}
   \item{alpha}{size of the test}
-  \item{trend}{whether or not to include a deterministic trend in the estimating equations}
-  \item{verbose}{whether or not to display progress}
-  \item{S}{the constant in Schwert's ad-hoc formula for maximum lag selection}
-  \item{type}{whether to use Hansen (2007) or Hansen and Racine's (2012) model average procedure}
+  \item{B}{number of bootstrap replications}
+  \item{lag.vec}{optional vector of lags for the (augmented) Dickey-Fuller estimating equations}
+  \item{method}{whether to use Hansen (2007) or Hansen and Racine's (2012) model average procedure}
   \item{q}{vector of probabilities for the null quantile values returned}
+  \item{random.seed}{random seed for the procedure}
+  \item{S}{the constant in Schwert's ad-hoc formula for maximum lag selection}
+  \item{trend}{whether or not to include a deterministic trend in the estimating equations}
+  \item{type}{whether to average over models with no constant, constant, constant and trend, or all}
+  \item{verbose}{whether or not to display progress}
 }
 
 \details{
@@ -38,7 +42,7 @@ Typical usages are
 \preformatted{
     hr.test(x)
     hr.test(x,B=999)
-    hr.test(x,K.vec=1:4)
+    hr.test(x,lag.vec=1:4)
     hr.test(x,type="jma")
 }
 

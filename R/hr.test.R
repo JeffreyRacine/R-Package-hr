@@ -1,16 +1,16 @@
 ## The Hansen-Racine nonparametric bootstrap model average unit root test
 
 hr.test <- function(x=NULL,
-                    K.vec=NULL,
-                    random.seed=42,
-                    B=399,
                     alpha=0.05,
+                    B=399,
+                    lag.vec=NULL,
+                    method=c("mma","jma"),
+                    q=c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995),
+                    random.seed=42,
+                    S=12,
                     trend=TRUE,
                     type=c("ct","c","nc","all"),
-                    verbose=TRUE,
-                    S=12,
-                    method=c("mma","jma"),
-                    q=c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995)) {
+                    verbose=TRUE) {
 
     ## Some basic input checking
     
@@ -20,8 +20,8 @@ hr.test <- function(x=NULL,
     
     if(is.null(x)) stop("You must provide data")
     if(!is.ts(x)) x <- ts(x)
-    if(is.unsorted(K.vec)) stop("Lag vector K.vec must be sorted")
-    if(any(K.vec<1)) stop("Lag vector K.vec must contain positive integers")
+    if(is.unsorted(lag.vec)) stop("Lag vector lag.vec must be sorted")
+    if(any(lag.vec<1)) stop("Lag vector lag.vec must contain positive integers")
     if(alpha <= 0 | alpha >= 0.5) stop("Size (alpha) must lie in (0,0.5)")
     if(B < 1) stop("Number of bootstrap replications (B) must be a positive integer (e.g. 399)")
     if(any(q<=0) | any(q>=1)) stop("The quantile vector entries must lie in (0,1)")
@@ -46,8 +46,8 @@ hr.test <- function(x=NULL,
     ## Use Schwert's ad-hoc rule for the maximum lag for the candidate models 
     ## if none is provided
     
-    if(is.null(K.vec)) K.vec <- 0:round(S*(n/100)^0.25)
-    K <- length(K.vec)
+    if(is.null(lag.vec)) lag.vec <- 0:round(S*(n/100)^0.25)
+    K <- length(lag.vec)
 
     ## A simple function that returns its argument for the tsboot() call
     
@@ -61,7 +61,7 @@ hr.test <- function(x=NULL,
     first <- TRUE
     for(k in 1:K) {
         for(t in type) {
-            out <- suppressWarnings(adfTest(x,lags=K.vec[k],type=t))
+            out <- suppressWarnings(adfTest(x,lags=lag.vec[k],type=t))
             if(method=="mma") {
                 r <- residuals(out@test$lm)
             } else {
@@ -95,17 +95,8 @@ hr.test <- function(x=NULL,
     } else {
         dvec <- t(as.matrix(x[(n-nrow(ma.mat)+1):n]))%*%ma.mat
     }
-    print(K.vec)
-    print(dim(ma.mat))
-    print(dim(Dmat))
-    print(M.dim)
-    print(length(t.stat))
-    print(length(rank.vec))
-    w.hat.ma <- solve.QP(Dmat,dvec,Amat,bvec,1)$solution
     
-    #print(dim(ma.mat))
-    #print(length(t.stat))
-    #print(length(K.vec))
+    w.hat.ma <- solve.QP(Dmat,dvec,Amat,bvec,1)$solution
 
     ## The model average test statistic is a weighted average of each of the above 
     ## candidate model's test statistics (all t-statistics for the coefficient on 
@@ -141,7 +132,7 @@ hr.test <- function(x=NULL,
         
         for(k in 1:K) {
             for(t in type) {
-                t.stat.boot <- c(t.stat.boot,suppressWarnings(adfTest(x.boot,lags=K.vec[k],type=t)@test$statistic))
+                t.stat.boot <- c(t.stat.boot,suppressWarnings(adfTest(x.boot,lags=lag.vec[k],type=t)@test$statistic))
             }
         }
         
@@ -177,7 +168,7 @@ hr.test <- function(x=NULL,
            tau.boot = sort(t.stat.boot.ma),
            e.block.length = l,
            boot.num = B,
-           adf.lags = K.vec)
+           adf.lags = lag.vec)
 
 }
 
