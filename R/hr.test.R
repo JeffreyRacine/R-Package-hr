@@ -170,21 +170,22 @@ hr.test <- function(x=NULL,
 
     if(verbose) cat("\r                               ")
 
-    decision <- paste("Fail to reject the null at the ",100*alpha,"% level (unit root)",sep="")
+    decision <- paste("Fail to reject the null hypothesis at the ",100*alpha,"% level (unit root)",sep="")
     if(alternative=="both") {
-        if(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha/2,type=1)) decision <- paste("Reject the null at the ",100*alpha,"% level (stationary)",sep="")
-        if(t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha/2,type=1)) decision <- paste("Reject the null at the ",100*alpha,"% level (explosive)",sep="")
+        if(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha/2,type=1)) decision <- paste("Reject the null hypothesis at the ",100*alpha,"% level (stationary)",sep="")
+        if(t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha/2,type=1)) decision <- paste("Reject the null hypothesis at the ",100*alpha,"% level (explosive)",sep="")
         reject <- as.numeric(ifelse(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha/2,type=1) |
                                     t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha/2,type=1),1,0))
         tau.alpha.low <- quantile(t.stat.boot.ma,probs=alpha/2,type=1)
         tau.alpha.up <- quantile(t.stat.boot.ma,probs=1-alpha/2,type=1)
+        alternative <- "stationary or explosive"
     } else if(alternative=="stationary") {
-        if(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha,type=1)) decision <- paste("Reject the null at the ",100*alpha,"% level (stationary)",sep="")
+        if(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha,type=1)) decision <- paste("Reject the null hypothesis at the ",100*alpha,"% level (stationary)",sep="")
         reject <- as.numeric(ifelse(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha,type=1),1,0))
         tau.alpha.low <- quantile(t.stat.boot.ma,probs=alpha,type=1)
         tau.alpha.up <- NA
     } else if(alternative=="explosive") {
-        if(t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha,type=1)) decision <- paste("Reject the null at the ",100*alpha,"% level (explosive)",sep="")
+        if(t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha,type=1)) decision <- paste("Reject the null hypothesis at the ",100*alpha,"% level (explosive)",sep="")
         reject <- as.numeric(ifelse(t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha,type=1),1,0))        
         tau.alpha.low <- NA
         tau.alpha.up <- quantile(t.stat.boot.ma,probs=1-alpha,type=1)
@@ -197,13 +198,15 @@ hr.test <- function(x=NULL,
            tau.alpha.up = tau.alpha.up,
            decision = decision,
            reject = reject,
+           alternative = alternative,
            quantiles = quantile(t.stat.boot.ma,quantile.vec,type=1),
            alpha = alpha,
            ma.weights = w.hat.ma,
            tau.boot = sort(t.stat.boot.ma),
            e.block.length = l,
            boot.num = B,
-           adf.lags = lag.vec)
+           adf.lags = lag.vec,
+           varname = deparse(substitute(x)))
 
 }
 
@@ -214,26 +217,30 @@ hrtest <- function(tau,
                    tau.alpha.up,
                    decision,
                    reject,
+                   alternative,
                    quantiles,
                    alpha,
                    ma.weights,
                    tau.boot,
                    e.block.length,
                    boot.num,
-                   adf.lags) {
+                   adf.lags,
+                   varname) {
    
     thr <- list(tau = tau,
                 tau.alpha.low = tau.alpha.low,
                 tau.alpha.up = tau.alpha.up,
                 decision = decision,
                 reject = reject,
+                alternative = alternative,
                 quantiles = quantiles,
                 alpha = alpha,
                 ma.weights = ma.weights,
                 tau.boot = tau.boot,
                 e.block.length = e.block.length,
                 boot.num = boot.num,
-                adf.lags = adf.lags)
+                adf.lags = adf.lags,
+                varname = varname)
 
     class(thr) <- "hrtest"
     
@@ -242,8 +249,10 @@ hrtest <- function(tau,
 
 print.hrtest <- function(x, ...){
     cat("\n        Hansen-Racine Bootstrap Model Averaged Unit Root Test\n",
+        "\nData: ",x$varname,
+        "\nAlternative hypothesis: ",x$alternative,
         "\nTest statistic: ",x$tau,
-        "\n",100*x$alpha,"% critical values: (",x$tau.alpha.low,",",x$tau.alpha.up,")",
+        "\n",100*x$alpha,"% critical value(s): (",x$tau.alpha.low,",",x$tau.alpha.up,")",
         "\n",x$decision,
         "\nBootstrap replications: ",x$boot.num,
         "\nAutomatic expected block length: ",x$e.block.length,"\n",sep="")
