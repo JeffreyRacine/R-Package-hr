@@ -28,12 +28,11 @@ Racine (2017), \dQuote{Bootstrap Mallows Model Averaging Unit Root Inference,} T
  \code{\link[tseries]{pp.test}}
 }
 \examples{
-library(tseries)
-
 ## Generate a series with a unit root, MA errors
 
 set.seed(42)
-x <- arima.sim(list(order=c(0,1,1),ma=-0.8),n=100)
+T <- 100
+x <- arima.sim(list(order=c(0,1,1),ma=-0.8),n=T)
 
 ## Compute the test
 
@@ -41,5 +40,14 @@ hr.test(x,B=99)
 
 ## The Phillips-Perron test rejects 100% of the time for this DGP
 
+suppressPackageStartupMessages(library("tseries"))
+
 pp.test(x)
+
+## The ADF test with BIC model selection incorrectly rejects the null a large 
+## fraction of the time for this DGP
+
+suppressPackageStartupMessages(library("CADFtest"))
+
+CADFtest(x,max.lag.y=round(12*(T/100)^0.25),criterion="BIC",type="drift")
 }

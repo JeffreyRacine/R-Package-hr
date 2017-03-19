@@ -12,6 +12,7 @@ hr.test(x = NULL,
         alpha = 0.05, 
         alternative = c("both","stationary","explosive"),
         B = 399, 
+        boot.method = c("geom","fixed"),
         df.type = c("ncc","nccct","nc","none"),
         lag.vec = NULL, 
         method = c("jma","mma"),
@@ -27,6 +28,7 @@ hr.test(x = NULL,
   \item{alpha}{size of the test}
   \item{alternative}{alternative hypothesis (null hypothesis is that x has a unit root)}
   \item{B}{number of bootstrap replications}
+  \item{boot.method}{whether to use \code{sim="geom"} or \code{sim="fixed"} in the call to \code{\link[boot]{tsboot}} (see \code{?tsboot} for details)}
   \item{df.type}{whether to average over (non-lagged) Dickey-Fuller (DF) models with no constant (nc), no constant and constant (ncc) or no constant and constant and constant and trend (nccct), or ignore non-lagged models (none)}
   \item{lag.vec}{optional vector of lags for the ADF estimating equations (default uses a modification of Schwert's (1989) ad hoc rule)}
   \item{method}{whether to use Hansen's (2007) Mallows model averaging criterion or Hansen and Racine's (2012) jackknife model averaging criterion}
@@ -117,28 +119,26 @@ This package is in beta status until further notice - proceed accordingly.
 }
 
 \examples{
-library(CADFtest)
-library(tseries)
-
-## Generate a series that contains a unit root and has moving average errors
-## with a large negative coefficient (this can confound existing tests)
-
-T <- 100
+## Generate a series with a unit root, MA errors
 
 set.seed(42)
+T <- 100
 x <- arima.sim(list(order=c(0,1,1),ma=-0.8),n=T)
 
 ## Compute the test
 
 hr.test(x,B=99)
 
-## The Phillips-Perron test incorrectly rejects the null 100% of the time for 
-## this DGP
+## The Phillips-Perron test rejects 100% of the time for this DGP
+
+suppressPackageStartupMessages(library("tseries"))
 
 pp.test(x)
 
 ## The ADF test with BIC model selection incorrectly rejects the null a large 
 ## fraction of the time for this DGP
+
+suppressPackageStartupMessages(library("CADFtest"))
 
 CADFtest(x,max.lag.y=round(12*(T/100)^0.25),criterion="BIC",type="drift")
 }

@@ -5,6 +5,7 @@ hr.test <- function(x=NULL,
                     alpha=0.05,
                     alternative=c("both","stationary","explosive"),
                     B=399,
+                    boot.method=c("geom","fixed"),
                     df.type=c("ncc","nccct","nc","none"),
                     lag.vec=NULL,
                     method=c("jma","mma"),
@@ -16,6 +17,7 @@ hr.test <- function(x=NULL,
     ## Some basic input checking and conversion
     
     alternative <- match.arg(alternative)
+    boot.method <- match.arg(boot.method)
     method <- match.arg(method)
     adf.type <- match.arg(adf.type)
     if(adf.type=="all") adf.type <- c("nc", "c", "ct")
@@ -143,7 +145,7 @@ hr.test <- function(x=NULL,
         
         ## Generate a bootstrap resample under the null
         
-        x.boot <- ts(c(x[1],cumsum(tsboot(e,stat,R=1,l=l,sim="geom")$t)),
+        x.boot <- ts(c(x[1],cumsum(tsboot(e,stat,R=1,l=l,sim=boot.method)$t)),
                      frequency=frequency(x),
                      start=start(x))
         
