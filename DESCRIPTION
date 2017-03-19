@@ -4,7 +4,7 @@ Title: Bootstrap Model Averaged Unit Root Test
 Version: 1.0
 Date: 2017-03-15
 Imports: boot, fUnitRoots, np, quadprog
-Suggests: tseries
+Suggests: CADFtest, tseries
 Author: Jeffrey S. Racine
 Maintainer: <racinej@mcmaster.ca>
 Description: This package implements the nonparametric bootstrap model averaging unit root test.

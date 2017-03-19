@@ -168,9 +168,9 @@ hr.test <- function(x=NULL,
 
     if(verbose) cat("\r                               ")
 
-    decision <- paste("Fail to reject at the ",100*alpha,"% level (unit root)",sep="")
-    if(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha/2,type=1)) decision <- paste("Reject at the ",100*alpha,"% level (stationary)",sep="")
-    if(t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha/2,type=1)) decision <- paste("Reject at the ",100*alpha,"% level (explosive)",sep="")
+    decision <- paste("Fail to reject the null at the ",100*alpha,"% level (unit root)",sep="")
+    if(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha/2,type=1)) decision <- paste("Reject the null at the ",100*alpha,"% level (stationary)",sep="")
+    if(t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha/2,type=1)) decision <- paste("Reject the null at the ",100*alpha,"% level (explosive)",sep="")
 
     reject <- as.numeric(ifelse(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha/2,type=1) |
                                 t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha/2,type=1),1,0))
@@ -227,7 +227,7 @@ hrtest <- function(tau,
 }
 
 print.hrtest <- function(x, ...){
-    cat("\n        Bootstrap Model Averaged Unit Root Test\n",
+    cat("\n        Hansen-Racine Bootstrap Model Averaged Unit Root Test\n",
         "\nTest statistic: ",x$tau,
         "\n",100*x$alpha,"% critical values: (",x$tau.alpha.low,",",x$tau.alpha.up,")",
         "\n",x$decision,
