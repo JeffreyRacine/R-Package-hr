@@ -6,14 +6,13 @@ hr.test <- function(x=NULL,
                     B=399,
                     df.type=c("ncc","nccct","nc","none"),
                     lag.vec=NULL,
-                    method=c("mma","jma"),
+                    method=c("jma","mma"),
                     quantile.vec=c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995),
                     random.seed=42,
-                    S=12,
-                    trend=TRUE,
+                    S=8,
                     verbose=TRUE) {
 
-    ## Some basic input checking
+    ## Some basic input checking and conversion
     
     method <- match.arg(method)
     adf.type <- match.arg(adf.type)
@@ -31,10 +30,11 @@ hr.test <- function(x=NULL,
     
     if(is.null(x)) stop("You must provide data")
     if(!is.ts(x)) x <- ts(x)
-    if(is.unsorted(lag.vec)) stop("Lag vector lag.vec must be sorted")
+    if(is.unsorted(lag.vec)) sort(lag.vec)
     if(any(lag.vec<1)) stop("Lag vector lag.vec must contain positive integers")
     if(alpha <= 0 | alpha >= 0.5) stop("Size (alpha) must lie in (0,0.5)")
-    if(B < 1) stop("Number of bootstrap replications (B) must be a positive integer (e.g. 399)")
+    if(B<0) stop("Number of bootstrap replications (B) must be positive")
+    if(alpha*(B+1)!=floor(alpha*(B+1))) stop("alpha*(B+1) must be an integer")
     if(any(quantile.vec<=0) | any(quantile.vec>=1)) stop("The quantile vector entries must lie in (0,1)")
     
     ## Save any existing random seed and restore upon exit
@@ -54,9 +54,8 @@ hr.test <- function(x=NULL,
     
     n <- length(x)
     
-    ## Use Schwert's ad-hoc rule for the maximum lag for the candidate models 
-    ## if none is provided, minimum lag 0 (simple non-augmented Dickey-Fuller 
-    ## included)
+    ## Schwert's ad-hoc rule for the maximum lag for the candidate models 
+    ## if none is provided (constant may differ from S=12 that he uses)
     
     if(is.null(lag.vec)) lag.vec <- 1:round(S*(n/100)^0.25)
     K <- length(lag.vec)
@@ -71,13 +70,12 @@ hr.test <- function(x=NULL,
     
     for(t in df.type) {
         out <- suppressWarnings(adfTest(x,lags=0,type=t))
-        r <- Dmat.func(out@test$lm,method=method) 
         if(!exists("ma.mat")) {
-            ma.mat <- as.matrix(r)
+            ma.mat <- as.matrix(Dmat.func(out@test$lm,method=method))
             rank.vec <- out@test$lm$rank
             t.stat <- out@test$statistic
         } else {
-            ma.mat <- cbind(ma.mat,r)            
+            ma.mat <- cbind(ma.mat,Dmat.func(out@test$lm,method=method))
             rank.vec <- c(rank.vec,out@test$lm$rank)
             t.stat <- c(t.stat,out@test$statistic)
         }
@@ -187,7 +185,6 @@ hr.test <- function(x=NULL,
            reject = reject,
            quantiles = quantile(t.stat.boot.ma,quantile.vec,type=1),
            alpha = alpha,
-           trend = trend,
            ma.weights = w.hat.ma,
            tau.boot = sort(t.stat.boot.ma),
            e.block.length = l,
@@ -205,7 +202,6 @@ hrtest <- function(tau,
                    reject,
                    quantiles,
                    alpha,
-                   trend,
                    ma.weights,
                    tau.boot,
                    e.block.length,
@@ -219,14 +215,13 @@ hrtest <- function(tau,
                 reject = reject,
                 quantiles = quantiles,
                 alpha = alpha,
-                trend = trend,
                 ma.weights = ma.weights,
                 tau.boot = tau.boot,
                 e.block.length = e.block.length,
                 boot.num = boot.num,
                 adf.lags = adf.lags)
 
-    class(thr) = "hrtest"
+    class(thr) <- "hrtest"
     
     thr
 }
@@ -246,7 +241,9 @@ summary.hrtest <- function(object, ...) {
 
 Dmat.func <- function(model,method=c("mma","jma")) {
     method <- match.arg(method)
+    ## Residuals (Mallows model averaging)
     if(method=="mma") return(residuals(model))
+    ## Jackknife fitted values (jackknife model averaging)
     htt <- hatvalues(model)
     if(method=="jma") return(fitted(model) - htt*residuals(model)/(1-htt))    
 }

@@ -1,4 +1,4 @@
-%% $Id: bmmaur.tex,v 1.15 2017/03/17 22:16:55 jracine Exp jracine $
+%% $Id: bmmaur.tex,v 1.16 2017/03/18 20:37:09 jracine Exp jracine $
 
 %\VignetteIndexEntry{bmmaur}
 %\VignetteDepends{boot,np,quadprog,tseries}
@@ -139,7 +139,7 @@ candidate estimating equations over which the averaging is performed
 Dickey-Fuller models with, e.g., one through two, four, eight,
 sixteen, or twenty four differenced lags of the time series).
 
-We compare the proposed bootstrap MMA approach with the classic
+We compare the proposed bootstrap MA approach with the classic
 \citeasnoun{DICKEY_FULLER:1979} method,
 \possessivecite{PHILLIPS_PERRON:1988} procedure, and with
 \possessivecite{NG_PERRON:2001} procedure (using the detrending
@@ -242,7 +242,7 @@ is too large, then the power of the test will
 suffer. \citeasnoun{HANSEN:1995} demonstrates how large power gains
 can be achieved by including correlated stationary covariates in the
 estimating equation (this could be trivially incorporated in the
-proposed bootstrap model average
+proposed bootstrap model average (MA)
 approach). \citeasnoun{NG_PERRON:2001} point out that a high order
 augmented autoregression is often necessary for unit root tests to
 have good size, but that information criteria such as the BIC tend to
@@ -443,8 +443,8 @@ root.
   for testing whether or not a series contains a unit root (nominal
   level $\alpha=0.05$). We compare the Phillips-Perron test (P-P), the
   ADF test based upon BIC model selection (ADF), Ng-Perron's test
-  using Perron-Qu detrending (N-P), and the proposed Bootstrap Mallows
-  Model Averaging test (MMA). The N-P, MMA, and ADF-BIC methods use
+  using Perron-Qu detrending (N-P), and the proposed Bootstrap 
+  Model Averaging test (MA). The N-P, MA, and ADF-BIC methods use
   the same set of candidate estimating equations determined by
   Schwert's ad-hoc lag selection rule, $k=1,\dots,12(T/100)^{1/4}$. R
   code to replicate can be found in Appendix \ref{app:R}. Results on
@@ -487,9 +487,9 @@ with acceptable size, but it results in a clear loss in power.
     with a deterministic trend (the DGPs used in the Monte Carlo do not
     contain deterministic trends, the P-P test contains a trend in both
     tables)}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_size_no_trend
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_size_no_trend_2f
 \quad
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_size_trend
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_size_trend_2f
 \end{table}
 
 \begin{table}[!ht]
@@ -503,32 +503,16 @@ with acceptable size, but it results in a clear loss in power.
     with a deterministic trend (the DGPs used in the Monte Carlo do not
     contain deterministic trends, the P-P test contains a trend in both
     tables)}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_power_no_trend
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_power_no_trend_2f
 \quad
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_power_trend
-\end{table}
-
-\begin{table}[!ht]
-  \caption{\label{tab:norm_power_size}Normed power and size for the
-    ARMA(2,2) and white noise DGPs over all sample sizes for a range of
-    constants $j$ in Schwerts' ad-hoc rule $k=1,\dots,j(T/100)^{1/4}$
-    (Schwert recommends $j=12$), where $\hat\alpha$ is the empirical
-    rejection probability. Smaller values indicate empirical power
-    closer to 1 overall. Results on the left are for candidate
-    estimating equations without a deterministic trend, on the right
-    with a deterministic trend (the DGPs used in the Monte Carlo do not
-    contain deterministic trends, the P-P test contains a trend in both
-    tables)}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_power_size_no_trend
-\quad
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_power_size_trend
+\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_power_trend_2f
 \end{table}
 
 The choice of tests therefore comes down to either Ng-Perron or the
 proposed bootstrap model averaging approach. The proposed approach
 displays the smallest size distortions and has higher power tan the
 Ng-Perron procedure.  On the basis of our simulation results, we
-therefore recommend the MMA procedure for testing for the presence of
+therefore recommend the MA procedure for testing for the presence of
 a unit root with only a handful of candidate estimating equations
 being necessary (use, e.g., $j=4$ in Schwert's ad-hoc rule). It
 attenuates the large size distortions present in the classical
@@ -540,7 +524,7 @@ selection procedure for the dependent bootstrap method. This procedure
 ought to appeal to practitioners as there are no unknown parameters
 that must be specified by the user.
 
-Appendix \ref{app:mma} summarizes the MMA weights selected by the
+Appendix \ref{app:mma} summarizes the MA weights selected by the
 proposed procedure for the interested reader.
 
 \section{Conclusion}
@@ -550,7 +534,7 @@ size distortions that arise when testing for the presence of a unit
 root. We adopt a model-free bootstrap procedure where the null is
 imposed by simple differencing, and we exploit recent developments in
 automatic block length selection for the geometric bootstrap
-procedure invoked. We adopt a Mallows model averaging procedure, and
+procedure invoked. We adopt a model averaging procedure, and
 simulations indicate that the proposed approach has acceptable size
 and higher power than its peers (excluding those that exhibit
 unacceptable size distortions such as the Phillips-Perron and ADF
@@ -565,7 +549,7 @@ practitioners.
 \singlespacing
 
 \begin{landscape}
-\section{\label{app:mma}Mallows Model Average Weight Summary}
+\section{\label{app:mma}Model Average Weight Summary}
 
 Table \ref{tab:mma_no_trend} presents the mean weights accorded to
 each of the candidate estimating equations over the $M$ Monte Carlo
@@ -615,8 +599,8 @@ T=(100,200,300,400).
     a series contains a unit root (nominal level $\alpha=0.05$). We
     compare the Phillips-Perron test (P-P), the ADF test based upon BIC
     model selection (ADF), Ng-Perron's test using Perron-Qu detrending
-    (N-P), and the proposed Bootstrap Mallows Model Averaging test
-    (MMA). The N-P, MMA, and ADF-BIC methods use the same set of
+    (N-P), and the proposed Bootstrap Model Averaging test
+    (MA). The N-P, MA, and ADF-BIC methods use the same set of
     candidate estimating equations determined by modifying the constant
     in Schwert's ad-hoc lag selection rule, $k=1,\dots,j(T/100)^{1/4}$,
     $j=2,4,8,24$ (clockwise from top left), no deterministic trend in
@@ -641,8 +625,8 @@ T=(100,200,300,400).
   a series contains a unit root (nominal level $\alpha=0.05$). We
   compare the Phillips-Perron test (P-P), the ADF test based upon BIC
   model selection (ADF), Ng-Perron's test using Perron-Qu detrending
-  (N-P), and the proposed Bootstrap Mallows Model Averaging test
-  (MMA). The N-P, MMA, and ADF-BIC methods use the same set of
+  (N-P), and the proposed Bootstrap Model Averaging test
+  (MA). The N-P, MA, and ADF-BIC methods use the same set of
   candidate estimating equations determined by modifying the constant
   in Schwert's ad-hoc lag selection rule, $k=1,\dots,j(T/100)^{1/4}$,
   $j=2,4,8,24$ (clockwise from top left), deterministic trend
