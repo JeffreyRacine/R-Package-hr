@@ -5,7 +5,7 @@ hr.test <- function(x=NULL,
                     alpha=0.05,
                     alternative=c("both","stationary","explosive"),
                     B=399,
-                    boot.method=c("geom","fixed"),
+                    boot.method=c("geom","fixed","iid"),
                     df.type=c("ncc","nccct","nc","none"),
                     lag.vec=NULL,
                     method=c("jma","mma"),
@@ -131,7 +131,14 @@ hr.test <- function(x=NULL,
     ## similar procedure)
 
     e <- diff(x,1)
-    l <- b.star(e,round=TRUE)[1,1]
+    if(boot.method == "iid") {
+        ## An IID bootstrap is obtained via a a fixed block bootstrap with a
+        ## block length of 1
+        l <- 1
+        boot.method <- "fixed"
+    } else {
+        l <- b.star(e,round=TRUE)[1,1]
+    }
     
     ## Vector to hold the bootstrap statistics
 
