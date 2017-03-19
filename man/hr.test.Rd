@@ -13,23 +13,27 @@ hr.test(x = NULL,
         alternative = c("both","stationary","explosive"),
         B = 399, 
         boot.method = c("geom","fixed","iid"),
-        df.type = c("ncc","nccct","nc","none"),
+        df.type = c("nc","nccct","ncc","c","ct","none"),
+        group.start = 4,
+        group.by = 4,        
         lag.vec = NULL, 
         method = c("jma","mma"),
         quantile.vec = c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995),
         random.seed = 42, 
-        S = 8,
+        S = 12,
         verbose = TRUE)
 }
 
 \arguments{
   \item{x}{a univariate time series (\code{numeric} will be converted automatically)}
-  \item{adf.type}{whether to average over (lagged) Augmented Dickey-Fuller (ADF) models with no constant, constant or constant and trend, or average over all three jointly}
+  \item{adf.type}{whether to include in the estimating equations Augmented Dickey-Fuller (ADF) models with no constant (nc), constant (c) or constant and trend (ct), or to include all three}
   \item{alpha}{size of the test}
   \item{alternative}{alternative hypothesis (null hypothesis is that x has a unit root)}
   \item{B}{number of bootstrap replications}
-  \item{boot.method}{whether to use \code{sim="geom"} or \code{sim="fixed"} in the call to \code{\link[boot]{tsboot}} (see \code{?tsboot} for details)}
-  \item{df.type}{whether to average over (non-lagged) Dickey-Fuller (DF) models with no constant (nc), no constant and constant (ncc) or no constant and constant and constant and trend (nccct), or ignore non-lagged models (none)}
+  \item{boot.method}{whether to use \code{sim="geom"} or \code{sim="fixed"} in the call to \code{\link[boot]{tsboot}} (\code{sim="iid"} generates a naive bootstrap)}
+  \item{df.type}{whether to include in the estimating equations a Dickey-Fuller (DF) model with no constant (nc), constant(c), or constant and a trend (ct), two DF models with no constant and constant (ncc) or three DF models with no constant and constant and constant and trend (nccct), or to include no DF models (none)}
+  \item{group.start}{starting group for Hansen (2014)}
+  \item{group.by}{group size for Hansen (2014)}  
   \item{lag.vec}{optional vector of lags for the ADF estimating equations (default uses a modification of Schwert's (1989) ad hoc rule)}
   \item{method}{whether to use Hansen's (2007) Mallows model averaging criterion or Hansen and Racine's (2012) jackknife model averaging criterion}
   \item{quantile.vec}{vector of probabilities for the null quantile values returned}
@@ -44,18 +48,18 @@ Typical usages are
 \preformatted{
     hr.test(x)
     hr.test(x,B=999)
-    hr.test(x,lag.vec=1:4)
+    hr.test(x,lag.vec=c(4,8,12))
     hr.test(x,S=2)
-    hr.test(x,method="jma")
-    hr.test(x,type="all")}
+    hr.test(x,method="mma")
+    hr.test(x,df.type="none",adf.type="nc")}
 
-The default involves taking a set of DF and ADF (Dickey-Fuller) estimating equations with covariates i) the first lag of x, ii) a constant and the first lag of x, and iii) a constant, the first lag of x and 1,2,...,k lags of the differenced x yielding k such models. Next, take the unit root test statistics from each of the estimating equations (in each estimating equation the first difference of x is regressed on the covariates). Finally, average these statistics using either a Mallows criterion (Hansen (2007)) or a jackknife criterion (Hansen and Racine (2012)). 
+The default involves taking a set of DF and ADF estimating equations (ADF contain k > 0 lags of the differenced series, DF contain 0 lags) with covariates i) the first lag of x, ii) a constant and the first lag of x, and iii) a constant, the first lag of x and 1,4,8,...,k lags of the differenced x yielding k/4 such models (Hansen (2014)). Next, take the unit root test statistics from each of the estimating equations (in each estimating equation the first difference of x is regressed on the covariates). Finally, average these statistics using either a Mallows criterion (Hansen (2007)) or a jackknife criterion (Hansen and Racine (2012)). 
 
 The null distribution of the model averaged test statistic is constructed using a model-free nonparametric bootstrap applied to the first difference of x similar to that outlined in Swensen (2003). A stationary geometric bootstrap (Politis and Romano (1994)) with automatic expected block length selection (Patton, Politis and White (2009)) is employed, and the null is imposed by taking the cumulative sum of the bootstrap values initialized to the first value of x; see \code{vignette("bmmaur", package = "hr")} for further details.
 
 By default, Schwert's (1989) ad-hoc rule is used to determine the maximum lag k to be used (\code{round(S*(T/100)^0.25)}) where T is the length of x). By way of illustration, for T=100 there would be 10 estimating equations using the default settings (lags 1-8 for the augmented equations (S=8, T=100), no lag and no constant/no lag and constant (ncc)). Simulations indicate that the choice of constant S=12, though reasonable, involves more candidate models that necessary, hence the default S=8.
 
-Simulations reveal that the test's size and power is balanced regardless of how large the number of estimating equations may be, unlike its peers, particularly in cases known to confound existing tests. The test displays the lowest size distortions in such cases among the range of tests considered (Phillips-Perron, Ng-Perron with modified AIC model selection, ADF with BIC model selection). Of these three peers, the Ng-Perron test exhibits the smallest size distortions in cases known to confound existing tests. Our model average test has the lowest size distortions in such cases among all tests considered while it exhibits higher power than Ng-Perron. The Phillips-Perron and ADF tests can fail to distinguish stationary from non-stationary cases even for large samples of data (see the example below) and therefore cannot be recommended for general application. To the best of our knowledge, this is the first such unit root test to be proposed that is based on model averaging.
+Simulations reveal that the test's size and power is balanced regardless of how large the number of estimating equations may be, unlike its peers, particularly in cases known to confound existing tests. The test displays the lowest size distortions in such cases among the range of tests considered (Phillips-Perron, Ng-Perron with modified AIC model selection, ADF with BIC model selection). Of these three peers, the Ng-Perron test exhibits the smallest size distortions in cases known to confound existing tests. Not only does our model average test have the lowest size distortions in such cases among all tests considered, but it also exhibits higher power than Ng-Perron's approach. The Phillips-Perron and ADF tests can fail to distinguish stationary from non-stationary cases even for large samples of data (see the example below) and therefore cannot be recommended for general application. To the best of our knowledge, this is the first such unit root test to be proposed that is based on model averaging.
 
 We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the automatic dependent bootstrap procedure, \code{\link[quadprog]{solve.QP}} from the \pkg{quadprog} package to solve the quadratic program for the model average weights), \code{\link[boot]{tsboot}} from the \pkg{boot} package to generate the stationary geometric bootstrap resample, and the \code{\link[fUnitRoots]{adfTest}} function from the \pkg{fUnitRoots} package to generate the statistics that are averaged.
 
@@ -82,6 +86,8 @@ A list with class "hrtest" containing the following components:
 Dickey, D. A. & Fuller, W. A. (1979), \dQuote{Distribution of the estimators for autoregressive time series with a unit root,} Journal of the American Statistical Association 74(366), 427-431.
 
 Hansen, B. E. (2007), \dQuote{Least squares model averaging,} Econometrica 75, 1175-1189.
+
+Hansen, B. E. (2014), \dQuote{Model averaging, asymptotic risk, and regressor groups,} Quantitative Economics 5(3), 495-530.
 
 Hansen, B. E. & Racine, J. S. (2012), \dQuote{Jackknife model averaging,} Journal of Econometrics 167(1), 38-46.
 

@@ -6,12 +6,14 @@ hr.test <- function(x=NULL,
                     alternative=c("both","stationary","explosive"),
                     B=399,
                     boot.method=c("geom","fixed","iid"),
-                    df.type=c("ncc","nccct","nc","none"),
+                    df.type=c("nc","nccct","ncc","c","ct","none"),
+                    group.start=4,
+                    group.by=4,                    
                     lag.vec=NULL,
                     method=c("jma","mma"),
                     quantile.vec=c(0.005,0.01,0.025,0.05,0.95,0.975,0.99,0.995),
                     random.seed=42,
-                    S=8,
+                    S=12,
                     verbose=TRUE) {
 
     ## Some basic input checking and conversion
@@ -22,9 +24,7 @@ hr.test <- function(x=NULL,
     adf.type <- match.arg(adf.type)
     if(adf.type=="all") adf.type <- c("nc", "c", "ct")
     df.type <- match.arg(df.type)
-    if(df.type=="nc") {
-        df.type <- c("nc") 
-    } else if(df.type=="ncc") {
+    if(df.type=="ncc") {
         df.type <- c("nc", "c")
     } else if(df.type=="nccct") {
         df.type <- c("nc", "c", "ct")        
@@ -58,10 +58,12 @@ hr.test <- function(x=NULL,
     
     n <- length(x)
     
-    ## Schwert's ad-hoc rule for the maximum lag for the candidate models 
-    ## if none is provided (constant may differ from S=12 that he uses)
+    ## Variation on Schwert's ad-hoc rule for the maximum lag for the 
+    ## candidate models if none is provided (constant may differ from S=12 
+    ## that he uses). Hansen (2014) suggests blocks of 4 or more regressors
+    ## improves MSE.
     
-    if(is.null(lag.vec)) lag.vec <- 1:round(S*(n/100)^0.25)
+    if(is.null(lag.vec)) lag.vec <- seq(group.start,ceiling(S*(n/100)^.25),by=group.by)
     K <- length(lag.vec)
 
     ## A simple function that returns its argument for the tsboot() call

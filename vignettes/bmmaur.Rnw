@@ -301,7 +301,12 @@ from the model average fit, and has been shown to be asymptotically
 optimal in the sense of achieving the lowest possible squared error in
 a class of model average estimators. See \citeasnoun{HANSEN:2007} for
 further details, \citeasnoun{HANSEN:2014} who explores the use of the
-Mallows criterion in a time series autoregression setting, and
+Mallows criterion in a time series autoregression setting and notes
+that averaging estimators have reduced risk relative to unconstrained
+estimation when the covariates are grouped in sets of four or larger
+so that a Stein shrinkage effect holds, and suggests that averaging
+estimators be restricted to models in which the regressors have been
+grouped in this manner. See also the related work of
 \citeasnoun{Hansen2010142} who uses a Mallows criterion for combining
 forecasts local to a unit root.
 
