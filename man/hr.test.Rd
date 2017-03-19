@@ -4,12 +4,13 @@
 
 \title{Hansen-Racine Bootstrap Model Averaged Unit Root Test}
 
-\description{Computes a nonparametric bootstrap model average test for the null hypothesis that x has a unit root against stationary and explosive alternatives.}
+\description{Computes a nonparametric bootstrap model average test for the null hypothesis that x has a unit root against stationary, explosive, or both alternatives.}
 
 \usage{
 hr.test(x = NULL, 
         adf.type = c("c","ct","nc","all"),
         alpha = 0.05, 
+        alternative = c("both","stationary","explosive"),
         B = 399, 
         df.type = c("ncc","nccct","nc","none"),
         lag.vec = NULL, 
@@ -24,6 +25,7 @@ hr.test(x = NULL,
   \item{x}{a univariate time series (\code{numeric} will be converted automatically)}
   \item{adf.type}{whether to average over (lagged) Augmented Dickey-Fuller (ADF) models with no constant, constant or constant and trend, or average over all three jointly}
   \item{alpha}{size of the test}
+  \item{alternative}{alternative hypothesis (null hypothesis is that x has a unit root)}
   \item{B}{number of bootstrap replications}
   \item{df.type}{whether to average over (non-lagged) Dickey-Fuller (DF) models with no constant (nc), no constant and constant (ncc) or no constant and constant and constant and trend (nccct), or ignore non-lagged models (none)}
   \item{lag.vec}{optional vector of lags for the ADF estimating equations (default uses a modification of Schwert's (1989) ad hoc rule)}

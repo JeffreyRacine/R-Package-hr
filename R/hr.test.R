@@ -3,6 +3,7 @@
 hr.test <- function(x=NULL,
                     adf.type=c("c","ct","nc","all"),
                     alpha=0.05,
+                    alternative=c("both","stationary","explosive"),
                     B=399,
                     df.type=c("ncc","nccct","nc","none"),
                     lag.vec=NULL,
@@ -14,6 +15,7 @@ hr.test <- function(x=NULL,
 
     ## Some basic input checking and conversion
     
+    alternative <- match.arg(alternative)
     method <- match.arg(method)
     adf.type <- match.arg(adf.type)
     if(adf.type=="all") adf.type <- c("nc", "c", "ct")
@@ -169,18 +171,30 @@ hr.test <- function(x=NULL,
     if(verbose) cat("\r                               ")
 
     decision <- paste("Fail to reject the null at the ",100*alpha,"% level (unit root)",sep="")
-    if(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha/2,type=1)) decision <- paste("Reject the null at the ",100*alpha,"% level (stationary)",sep="")
-    if(t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha/2,type=1)) decision <- paste("Reject the null at the ",100*alpha,"% level (explosive)",sep="")
-
-    reject <- as.numeric(ifelse(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha/2,type=1) |
-                                t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha/2,type=1),1,0))
-                        
+    if(alternative=="both") {
+        if(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha/2,type=1)) decision <- paste("Reject the null at the ",100*alpha,"% level (stationary)",sep="")
+        if(t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha/2,type=1)) decision <- paste("Reject the null at the ",100*alpha,"% level (explosive)",sep="")
+        reject <- as.numeric(ifelse(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha/2,type=1) |
+                                    t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha/2,type=1),1,0))
+        tau.alpha.low <- quantile(t.stat.boot.ma,probs=alpha/2,type=1)
+        tau.alpha.up <- quantile(t.stat.boot.ma,probs=1-alpha/2,type=1)
+    } else if(alternative=="stationary") {
+        if(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha,type=1)) decision <- paste("Reject the null at the ",100*alpha,"% level (stationary)",sep="")
+        reject <- as.numeric(ifelse(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha,type=1),1,0))
+        tau.alpha.low <- quantile(t.stat.boot.ma,probs=alpha,type=1)
+        tau.alpha.up <- NA
+    } else if(alternative=="explosive") {
+        if(t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha,type=1)) decision <- paste("Reject the null at the ",100*alpha,"% level (explosive)",sep="")
+        reject <- as.numeric(ifelse(t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha,type=1),1,0))        
+        tau.alpha.low <- NA
+        tau.alpha.up <- quantile(t.stat.boot.ma,probs=1-alpha,type=1)
+    }
 
     if(exists.seed) assign(".Random.seed", save.seed, .GlobalEnv)
     
     hrtest(tau = t.stat.ma,
-           tau.alpha.low = quantile(t.stat.boot.ma,probs=alpha/2,type=1),
-           tau.alpha.up = quantile(t.stat.boot.ma,probs=1-alpha/2,type=1),
+           tau.alpha.low = tau.alpha.low,
+           tau.alpha.up = tau.alpha.up,
            decision = decision,
            reject = reject,
            quantiles = quantile(t.stat.boot.ma,quantile.vec,type=1),
