@@ -13,7 +13,6 @@ hr.test(x = NULL,
         alternative = c("both","stationary","explosive"),
         B = 399, 
         boot.method = c("geom","fixed","iid"),
-        detrend = FALSE,
         df.type = c("nc","nccct","ncc","nct","cct","c","ct","none"),
         group.start = 4,
         group.by = 4,        
@@ -33,7 +32,6 @@ hr.test(x = NULL,
   \item{B}{number of bootstrap replications}
   \item{boot.method}{whether to use \code{sim="geom"} or \code{sim="fixed"} in the call to \code{\link[boot]{tsboot}} (\code{sim="iid"} generates a naive bootstrap)}
   \item{df.type}{whether to include in the estimating equations a Dickey-Fuller (DF) model with no constant (nc), constant(c), or constant and a trend (ct), two DF models with no constant and constant (ncc) or no constant and constant and trend (nct) or constant and constant and trend (cct), or three DF models with no constant and constant and constant and trend (nccct), or to include no DF models (none)}
-  \item{detrend}{whether to apply OLS detrending or not}
   \item{group.start}{lag for first starting group for Hansen's (2014) grouping of covariates}
   \item{group.by}{group size for Hansen's (2014) grouping of covariates}
   \item{lag.vec}{optional vector of lags for the ADF estimating equations (default uses a modification of Schwert's (1989) ad hoc rule)}

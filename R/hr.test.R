@@ -6,7 +6,6 @@ hr.test <- function(x=NULL,
                     alternative=c("both","stationary","explosive"),
                     B=399,
                     boot.method=c("geom","fixed","iid"),
-                    detrend=FALSE,
                     df.type=c("nc","nccct","ncc","nct","cct","c","ct","none"),
                     group.start=4,
                     group.by=4,                    
@@ -77,14 +76,10 @@ hr.test <- function(x=NULL,
 
     if(verbose) cat("\rComputing statistics and model averaging weights")
     
-    if(detrend) {
-        trend <- ts(fitted(lm(x~time(x))),frequency=frequency(x),start=start(x))
-    } 
-    
     ## Dickey-Fuller models (no lags)
     
     for(t in df.type) {
-        out <- suppressWarnings(adfTest(if(detrend){x-trend}else{x},lags=0,type=t))
+        out <- suppressWarnings(adfTest(x,lags=0,type=t))
         if(!exists("ma.mat")) {
             ma.mat <- as.matrix(Dmat.func(out@test$lm,method=method))
             rank.vec <- out@test$lm$rank
@@ -100,7 +95,7 @@ hr.test <- function(x=NULL,
 
     for(k in 1:K) {
         for(t in adf.type) {
-            out <- suppressWarnings(adfTest(if(detrend){x-trend}else{x},lags=lag.vec[k],type=t))
+            out <- suppressWarnings(adfTest(x,lags=lag.vec[k],type=t))
             r <- Dmat.func(out@test$lm,method=method) 
             if(!exists("ma.mat")) {
                 ma.mat <- as.matrix(r)
@@ -172,12 +167,12 @@ hr.test <- function(x=NULL,
         
         t.stat.boot <- NULL
         for(t in df.type) {
-            t.stat.boot <- c(t.stat.boot,suppressWarnings(adfTest(if(detrend){x.boot-trend}else{x.boot},lags=0,type=t)@test$statistic))
+            t.stat.boot <- c(t.stat.boot,suppressWarnings(adfTest(x.boot,lags=0,type=t)@test$statistic))
         }        
         
         for(k in 1:K) {
             for(t in adf.type) {
-                t.stat.boot <- c(t.stat.boot,suppressWarnings(adfTest(if(detrend){x.boot-trend}else{x.boot},lags=lag.vec[k],type=t)@test$statistic))
+                t.stat.boot <- c(t.stat.boot,suppressWarnings(adfTest(x.boot,lags=lag.vec[k],type=t)@test$statistic))
             }
         }
         
