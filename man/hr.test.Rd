@@ -13,7 +13,8 @@ hr.test(x = NULL,
         alternative = c("both","stationary","explosive"),
         B = 399, 
         boot.method = c("geom","fixed","iid"),
-        df.type = c("nc","nccct","ncc","c","ct","none"),
+        detrend = FALSE,
+        df.type = c("nc","nccct","ncc","nct","cct","c","ct","none"),
         group.start = 4,
         group.by = 4,        
         lag.vec = NULL, 
@@ -31,9 +32,10 @@ hr.test(x = NULL,
   \item{alternative}{alternative hypothesis (null hypothesis is that x has a unit root)}
   \item{B}{number of bootstrap replications}
   \item{boot.method}{whether to use \code{sim="geom"} or \code{sim="fixed"} in the call to \code{\link[boot]{tsboot}} (\code{sim="iid"} generates a naive bootstrap)}
-  \item{df.type}{whether to include in the estimating equations a Dickey-Fuller (DF) model with no constant (nc), constant(c), or constant and a trend (ct), two DF models with no constant and constant (ncc) or three DF models with no constant and constant and constant and trend (nccct), or to include no DF models (none)}
-  \item{group.start}{starting group for Hansen (2014)}
-  \item{group.by}{group size for Hansen (2014)}  
+  \item{df.type}{whether to include in the estimating equations a Dickey-Fuller (DF) model with no constant (nc), constant(c), or constant and a trend (ct), two DF models with no constant and constant (ncc) or no constant and constant and trend (nct) or constant and constant and trend (cct), or three DF models with no constant and constant and constant and trend (nccct), or to include no DF models (none)}
+  \item{detrend}{whether to apply OLS detrending or not}
+  \item{group.start}{lag for first starting group for Hansen's (2014) grouping of covariates}
+  \item{group.by}{group size for Hansen's (2014) grouping of covariates}
   \item{lag.vec}{optional vector of lags for the ADF estimating equations (default uses a modification of Schwert's (1989) ad hoc rule)}
   \item{method}{whether to use Hansen's (2007) Mallows model averaging criterion or Hansen and Racine's (2012) jackknife model averaging criterion}
   \item{quantile.vec}{vector of probabilities for the null quantile values returned}
@@ -77,7 +79,7 @@ A list with class "hrtest" containing the following components:
 \item{quantiles}{vector of nonparametric null quantiles}
 \item{alpha}{size of test}
 \item{ma.weights}{vector of model average weights}
-\item{tau.boot}{vector of bootstrapped test statistics generated under the null of a unit root}
+\item{tau.boot}{sorted vector of bootstrapped test statistics generated under the null of a unit root}
 \item{e.block.length}{expected block length for the stationary geometric bootstrap returned by \code{\link[np]{b.star}}}
 \item{adf.lags}{vector of lags used for the augmented models}
 }

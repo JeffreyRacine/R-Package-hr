@@ -6,7 +6,8 @@ hr.test <- function(x=NULL,
                     alternative=c("both","stationary","explosive"),
                     B=399,
                     boot.method=c("geom","fixed","iid"),
-                    df.type=c("nc","nccct","ncc","c","ct","none"),
+                    detrend=FALSE,
+                    df.type=c("nc","nccct","ncc","nct","cct","c","ct","none"),
                     group.start=4,
                     group.by=4,                    
                     lag.vec=NULL,
@@ -26,6 +27,10 @@ hr.test <- function(x=NULL,
     df.type <- match.arg(df.type)
     if(df.type=="ncc") {
         df.type <- c("nc", "c")
+    } else if(df.type=="nct") {
+        df.type <- c("nc", "ct")        
+    } else if(df.type=="cct") {
+        df.type <- c("c", "ct")        
     } else if(df.type=="nccct") {
         df.type <- c("nc", "c", "ct")        
     } else if(df.type=="none") {
@@ -133,6 +138,11 @@ hr.test <- function(x=NULL,
     ## similar procedure)
 
     e <- diff(x,1)
+    
+    if(detrend) {
+        trend <- ts(residuals(lm(x~time(x))),frequency=frequency(x),start=start(x))
+    } 
+
     if(boot.method == "iid") {
         ## An IID bootstrap is obtained via a a fixed block bootstrap with a
         ## block length of 1
@@ -154,9 +164,13 @@ hr.test <- function(x=NULL,
         
         ## Generate a bootstrap resample under the null
         
+        if(detrend) e <- e - mean(e)
+        
         x.boot <- ts(c(x[1],cumsum(tsboot(e,stat,R=1,l=l,sim=boot.method)$t)),
                      frequency=frequency(x),
                      start=start(x))
+        
+        if(detrend) x.boot <- x.boot + trend
         
         ## Recompute all candidate models and their test statistics
         
