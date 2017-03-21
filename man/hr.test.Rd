@@ -8,12 +8,12 @@
 
 \usage{
 hr.test(x = NULL, 
-        adf.type = c("c","ct","nc","all"),
+        adf.type = c("ct","c","nc","all"),
         alpha = 0.05, 
         alternative = c("stationary","explosive","both"),
         B = 399, 
         boot.method = c("geom","fixed","iid"),
-        df.type = c("nc","nccct","ncc","nct","cct","c","ct","none"),
+        df.type = c("nccct","ncc","nct","cct","nc","c","ct","none"),
         group.start = 4,
         group.by = 4,        
         lag.vec = NULL, 
