@@ -199,11 +199,11 @@ hr.test <- function(x=NULL,
         if(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha,type=1)) decision <- paste("Reject the null hypothesis at the ",100*alpha,"% level (stationary)",sep="")
         reject <- as.numeric(ifelse(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha,type=1),1,0))
         tau.alpha.low <- quantile(t.stat.boot.ma,probs=alpha,type=1)
-        tau.alpha.up <- NA
+        tau.alpha.up <- quantile(t.stat.boot.ma,probs=1-alpha,type=1)
     } else if(alternative=="explosive") {
         if(t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha,type=1)) decision <- paste("Reject the null hypothesis at the ",100*alpha,"% level (explosive)",sep="")
         reject <- as.numeric(ifelse(t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha,type=1),1,0))        
-        tau.alpha.low <- NA
+        tau.alpha.low <- quantile(t.stat.boot.ma,probs=alpha,type=1)
         tau.alpha.up <- quantile(t.stat.boot.ma,probs=1-alpha,type=1)
     }
 

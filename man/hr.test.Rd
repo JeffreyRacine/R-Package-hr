@@ -63,6 +63,8 @@ Simulations reveal that the test's size and power is balanced regardless of how 
 
 We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the automatic dependent bootstrap procedure, \code{\link[quadprog]{solve.QP}} from the \pkg{quadprog} package to solve the quadratic program for the model average weights), \code{\link[boot]{tsboot}} from the \pkg{boot} package to generate the stationary geometric bootstrap resample, and the \code{\link[fUnitRoots]{adfTest}} function from the \pkg{fUnitRoots} package to generate the statistics that are averaged.
 
+Note that the default tests for the presence of a unit root (point null) version a stationary alternative. Rejection of the null implies stationarity, however failure to reject could arise when the series contains a unit root or is explosive. This is the reason why two critical values are returned no matter what the alternative (they are the alpha tail critical values instead of the alpha/2 tail ones, so you can determine whether failure to reject is an indication of a unit root an explosive series).
+
 }
 
 \value{
