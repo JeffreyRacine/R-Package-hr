@@ -31,7 +31,7 @@ hr.test(x = NULL,
   \item{alternative}{alternative hypothesis (null hypothesis is that x has a unit root)}
   \item{B}{number of bootstrap replications}
   \item{boot.method}{whether to use \code{sim="geom"} or \code{sim="fixed"} in the call to \code{\link[boot]{tsboot}} (\code{sim="iid"} generates a naive bootstrap)}
-  \item{df.type}{whether to include in the estimating equations a Dickey-Fuller (DF) model with no constant (nc), constant(c), or constant and a trend (ct), two DF models with no constant and constant (ncc) or no constant and constant and trend (nct) or constant and constant and trend (cct), or three DF models with no constant and constant and constant and trend (nccct), or to include no DF models (none)}
+  \item{df.type}{whether to include in the estimating equations a Dickey-Fuller (DF) model with no constant (nc), constant (c), or constant and a trend (ct), two DF models with no constant and constant (ncc) or no constant and constant and trend (nct) or constant and constant and trend (cct), or three DF models with no constant and constant and constant and trend (nccct), or to include no DF models (none)}
   \item{group.start}{lag for first starting group for Hansen's (2014) grouping of covariates}
   \item{group.by}{group size for Hansen's (2014) grouping of covariates}
   \item{lag.vec}{optional vector of lags for the ADF estimating equations (default uses a modification of Schwert's (1989) ad hoc rule)}
@@ -48,12 +48,12 @@ Typical usages are
 \preformatted{
     hr.test(x)
     hr.test(x,B=999)
-    hr.test(x,lag.vec=c(4,8,12))
-    hr.test(x,S=2)
+    hr.test(x,lag.vec=2:8)
+    hr.test(x,S=8)
     hr.test(x,method="mma")
-    hr.test(x,df.type="none",adf.type="nc")}
+}
 
-The default involves taking a set of DF and ADF estimating equations (ADF contain k > 0 lags of the differenced series, DF contain 0 lags) with covariates i) the first lag of x, ii) a constant and the first lag of x, and iii) a constant, the first lag of x and 1,4,8,...,k lags of the differenced x yielding k/4 such models (Hansen (2014)). Next, take the unit root test statistics from each of the estimating equations (in each estimating equation the first difference of x is regressed on the covariates). Finally, average these statistics using either a Mallows criterion (Hansen (2007)) or a jackknife criterion (Hansen and Racine (2012)). 
+The default involves taking a set of DF and ADF estimating equations (ADF contain k > 0 lags of the differenced series, DF contain 0 lags) with covariates i) the first lag of x an ii) a constant, the first lag of x and 1 through 3, 7, and 11 lags of the differenced x (Hansen (2014)). Next, take the unit root test statistics from each of the estimating equations (in each estimating equation the first difference of x is regressed on the covariates). Finally, average these statistics using either a Mallows criterion (Hansen (2007)) or a jackknife criterion (Hansen and Racine (2012)). 
 
 The null distribution of the model averaged test statistic is constructed using a model-free nonparametric bootstrap applied to the first difference of x similar to that outlined in Swensen (2003). A stationary geometric bootstrap (Politis and Romano (1994)) with automatic expected block length selection (Patton, Politis and White (2009)) is employed, and the null is imposed by taking the cumulative sum of the bootstrap values initialized to the first value of x; see \code{vignette("bmaur", package = "hr")} for further details.
 
