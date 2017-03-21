@@ -3,7 +3,7 @@
 hr.test <- function(x=NULL,
                     adf.type=c("c","ct","nc","all"),
                     alpha=0.05,
-                    alternative=c("both","stationary","explosive"),
+                    alternative=c("stationary","explosive","both"),
                     B=399,
                     boot.method=c("geom","fixed","iid"),
                     df.type=c("nc","nccct","ncc","nct","cct","c","ct","none"),
