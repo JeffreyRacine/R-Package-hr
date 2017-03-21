@@ -441,7 +441,10 @@ between these two DGPs. Given the inability of the Phillips-Perron and
 ADF tests to distinguish between such cases, it would be difficult to
 recommend these approaches to practitioners as they may incorrectly
 indicate that a series is stationary when in fact it contains a unit
-root. 
+root. Note that for the Ng-Perron approach you also need to specify
+whether to include trend, drift, or none (this is not resolved by the
+use of their modified information criterion statistic though it could
+be performed manually).
 
 \begin{table}[!ht]
 \caption{\label{tab:maic_mma_comp}Empirical rejection probabilities
@@ -746,6 +749,6 @@ for(m in 1:M) {
 
 \singlespacing
 
-\bibliography{bmmaur}
+\bibliography{bmaur}
 
 \end{document}
