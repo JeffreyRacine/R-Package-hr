@@ -1,13 +1,13 @@
 ## The Hansen-Racine nonparametric bootstrap model average unit root test
 
 hr.test <- function(x=NULL,
-                    adf.type=c("ct","c","nc","all"),
+                    adf.type=c("c","ct","nc","all"),
                     alpha=0.05,
                     alternative=c("stationary","explosive","both"),
                     B=399,
                     boot.method=c("geom","fixed","iid"),
                     df.type=c("nc","c","ct","nccct","ncc","nct","cct","none"),
-                    group.start=3,
+                    group.start=4,
                     group.by=4,                    
                     lag.vec=NULL,
                     method=c("jma","mma"),
@@ -192,26 +192,26 @@ hr.test <- function(x=NULL,
         if(t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha/2,type=1)) decision <- paste("Reject the null hypothesis at the ",100*alpha,"% level (explosive)",sep="")
         reject <- as.numeric(ifelse(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha/2,type=1) |
                                     t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha/2,type=1),1,0))
-        tau.alpha.low <- quantile(t.stat.boot.ma,probs=alpha/2,type=1)
-        tau.alpha.up <- quantile(t.stat.boot.ma,probs=1-alpha/2,type=1)
+        tau.low <- quantile(t.stat.boot.ma,probs=alpha/2,type=1)
+        tau.up <- quantile(t.stat.boot.ma,probs=1-alpha/2,type=1)
         alternative <- "stationary or explosive"
     } else if(alternative=="stationary") {
         if(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha,type=1)) decision <- paste("Reject the null hypothesis at the ",100*alpha,"% level (stationary)",sep="")
         reject <- as.numeric(ifelse(t.stat.ma < quantile(t.stat.boot.ma,probs=alpha,type=1),1,0))
-        tau.alpha.low <- quantile(t.stat.boot.ma,probs=alpha,type=1)
-        tau.alpha.up <- quantile(t.stat.boot.ma,probs=1-alpha,type=1)
+        tau.low <- quantile(t.stat.boot.ma,probs=alpha,type=1)
+        tau.up <- quantile(t.stat.boot.ma,probs=1-alpha,type=1)
     } else if(alternative=="explosive") {
         if(t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha,type=1)) decision <- paste("Reject the null hypothesis at the ",100*alpha,"% level (explosive)",sep="")
         reject <- as.numeric(ifelse(t.stat.ma > quantile(t.stat.boot.ma,probs=1-alpha,type=1),1,0))        
-        tau.alpha.low <- quantile(t.stat.boot.ma,probs=alpha,type=1)
-        tau.alpha.up <- quantile(t.stat.boot.ma,probs=1-alpha,type=1)
+        tau.low <- quantile(t.stat.boot.ma,probs=alpha,type=1)
+        tau.up <- quantile(t.stat.boot.ma,probs=1-alpha,type=1)
     }
 
     if(exists.seed) assign(".Random.seed", save.seed, .GlobalEnv)
     
     hrtest(tau = t.stat.ma,
-           tau.alpha.low = tau.alpha.low,
-           tau.alpha.up = tau.alpha.up,
+           tau.low = tau.low,
+           tau.up = tau.up,
            decision = decision,
            reject = reject,
            alternative = alternative,
@@ -229,8 +229,8 @@ hr.test <- function(x=NULL,
 ## S3 functions for summary() and print()
 
 hrtest <- function(tau,
-                   tau.alpha.low,
-                   tau.alpha.up,
+                   tau.low,
+                   tau.up,
                    decision,
                    reject,
                    alternative,
@@ -244,8 +244,8 @@ hrtest <- function(tau,
                    varname) {
    
     thr <- list(tau = tau,
-                tau.alpha.low = tau.alpha.low,
-                tau.alpha.up = tau.alpha.up,
+                tau.low = tau.low,
+                tau.up = tau.up,
                 decision = decision,
                 reject = reject,
                 alternative = alternative,
@@ -268,7 +268,7 @@ print.hrtest <- function(x, ...){
         "\nData: ",x$varname,
         "\nAlternative hypothesis: ",x$alternative,
         "\nTest statistic: ",x$tau,
-        "\n",100*x$alpha,"% critical value(s): (",x$tau.alpha.low,",",x$tau.alpha.up,")",
+        "\n",100*x$alpha,"% critical value(s): (",x$tau.low,",",x$tau.up,")",
         "\n",x$decision,
         "\nBootstrap replications: ",x$boot.num,
         "\nAutomatic expected block length: ",x$e.block.length,"\n",sep="")

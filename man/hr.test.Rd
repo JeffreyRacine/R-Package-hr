@@ -8,13 +8,13 @@
 
 \usage{
 hr.test(x = NULL, 
-        adf.type = c("ct","c","nc","all"),
+        adf.type = c("c","ct","nc","all"),
         alpha = 0.05, 
         alternative = c("stationary","explosive","both"),
         B = 399, 
         boot.method = c("geom","fixed","iid"),
         df.type = c("nc","c","ct","nccct","ncc","nct","cct","none"),
-        group.start = 3,
+        group.start = 4,
         group.by = 4,        
         lag.vec = NULL, 
         method = c("jma","mma"),
@@ -32,8 +32,8 @@ hr.test(x = NULL,
   \item{B}{number of bootstrap replications}
   \item{boot.method}{whether to use \code{sim="geom"} or \code{sim="fixed"} in the call to \code{\link[boot]{tsboot}} (\code{sim="iid"} generates a naive bootstrap)}
   \item{df.type}{whether to include in the estimating equations a Dickey-Fuller (DF) model with no constant (nc), constant (c), or constant and a trend (ct), two DF models with no constant and constant (ncc) or no constant and constant and trend (nct) or constant and constant and trend (cct), or three DF models with no constant and constant and constant and trend (nccct), or to include no DF models (none)}
-  \item{group.start}{lag for first starting group for Hansen's (2014) grouping of covariates}
-  \item{group.by}{group size for Hansen's (2014) grouping of covariates}
+  \item{group.start}{maximum lag for first starting group for Hansen's (2014) grouping of covariates}
+  \item{group.by}{group size (subsequent to \code{group.start}) for Hansen's (2014) grouping of covariates}
   \item{lag.vec}{optional vector of lags for the ADF estimating equations (default uses a modification of Schwert's (1989) ad hoc rule)}
   \item{method}{whether to use Hansen's (2007) Mallows model averaging criterion or Hansen and Racine's (2012) jackknife model averaging criterion}
   \item{quantile.vec}{vector of probabilities for the null quantile values returned}
@@ -53,11 +53,11 @@ Typical usages are
     hr.test(x,method="mma")
 }
 
-The default involves taking a set of DF and ADF estimating equations (ADF contain k > 0 lags of the differenced series, DF contain 0 lags) with covariates i) the first lag of x (DF, (nc)) an ii) a constant, the first lag of x and 1 through 3, 7, and 11 lags of the differenced x (ADF, (c)). The convention to consider blocks of at least 4 regressors is adopted (Hansen (2014)). Next, take the unit root test statistics from each of the estimating equations (in each estimating equation the first difference of x is regressed on the covariates). Finally, average these statistics using either a Mallows criterion (Hansen (2007)) or a jackknife criterion (Hansen and Racine (2012)). By default, Schwert's (1989) ad-hoc rule is used to determine the maximum lag k to be used (\code{round(S*(T/100)^0.25)}) where T is the length of x).
+The default involves taking a set of DF and ADF estimating equations (ADF contain k > 0 lags of the differenced series, DF contain 0 lags) with covariates i) the first lag of x (DF, (nc)) an ii) a constant, the first lag of x and 1 through 3, 7, and 11 lags of the differenced x (ADF, (c)). The convention to consider blocks of at least 4 regressors is adopted (Hansen (2014)). Next, take the unit root test statistics from each of the estimating equations (in each estimating equation the first difference of x is regressed on the covariates and the test statistic is the t-statistic associated with the coefficient on the first lag of x). Finally, average these statistics using either a Mallows criterion (Hansen (2007)) or a jackknife criterion (Hansen and Racine (2012)). By default, Schwert's (1989) ad-hoc rule is used to determine the maximum lag k to be used (\code{round(S*(T/100)^0.25)}) where T is the length of x).
 
 The null distribution of the model averaged test statistic is constructed using a model-free nonparametric bootstrap applied to the first difference of x similar to that outlined in Swensen (2003). A stationary geometric bootstrap (Politis and Romano (1994)) with automatic expected block length selection (Patton, Politis and White (2009)) is employed, and the null is imposed by taking the cumulative sum of the bootstrap values initialized to the first value of x; see \code{vignette("bmaur", package = "hr")} for further details.
 
-Simulations reveal that the test's size and power is balanced regardless of how large the number of estimating equations may be, unlike its peers, particularly in cases known to confound existing tests. The test displays the lowest size distortions in such cases among the range of tests considered (Phillips-Perron, Ng-Perron with modified AIC model selection, ADF with BIC model selection). Of these three peers, the Ng-Perron test exhibits the smallest size distortions in cases known to confound existing tests. Not only does our model average test have the lowest size distortions in such cases among all tests considered, but it also exhibits higher power than Ng-Perron's approach. The Phillips-Perron and ADF tests can fail to distinguish stationary from non-stationary cases even for large samples of data (see the example below) and therefore cannot be recommended for general application. To the best of our knowledge, this is the first such unit root test to be proposed that is based on model averaging.
+Simulations reveal that the test's size and power is quite balanced regardless of how large the number of estimating equations may be, more so than those for its peers, particularly in cases known to confound existing tests. The test displays the lowest size distortions in such cases among the range of tests considered (Phillips-Perron, Ng-Perron with modified AIC model selection, ADF with BIC model selection). Of these three peers, the Ng-Perron test exhibits the smallest size distortions in cases known to confound existing tests. Not only does our model average test have the lowest size distortions in such cases among all tests considered, but it also exhibits higher power than Ng-Perron's approach. The Phillips-Perron and ADF tests can fail to distinguish between stationary and non-stationary cases even for large samples of data (see the example below) and therefore cannot be recommended for general application. To the best of our knowledge, this is the first such unit root test to be proposed that is based on model averaging.
 
 We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the automatic dependent bootstrap procedure, \code{\link[quadprog]{solve.QP}} from the \pkg{quadprog} package to solve the quadratic program for the model average weights), \code{\link[boot]{tsboot}} from the \pkg{boot} package to generate the stationary geometric bootstrap resample, and the \code{\link[fUnitRoots]{adfTest}} function from the \pkg{fUnitRoots} package to generate the statistics that are averaged.
 
@@ -69,17 +69,28 @@ Note that the default tests for the presence of a unit root (point null) version
 
 A list with class "hrtest" containing the following components:
 
-\item{tau}{model averaged test statistic}
-\item{tau.alpha.low}{lower critical value}
-\item{tau.alpha.up}{upper critical value}
-\item{decision}{outcome of test}
-\item{reject}{1 if reject, 0 otherwise}
-\item{quantiles}{vector of nonparametric null quantiles}
-\item{alpha}{size of test}
-\item{ma.weights}{vector of model average weights}
-\item{tau.boot}{sorted vector of bootstrapped test statistics generated under the null of a unit root}
-\item{e.block.length}{expected block length for the stationary geometric bootstrap returned by \code{\link[np]{b.star}}}
 \item{adf.lags}{vector of lags used for the augmented models}
+
+\item{alpha}{size of test}
+
+\item{decision}{outcome of test}
+
+\item{e.block.length}{expected block length for the stationary geometric bootstrap returned by \code{\link[np]{b.star}}}
+
+\item{ma.weights}{vector of model average weights}
+
+\item{quantiles}{vector of nonparametric null quantiles}
+
+\item{reject}{1 if reject, 0 otherwise}
+
+\item{tau.boot}{sorted vector of bootstrapped test statistics generated under the null of a unit root}
+
+\item{tau.low}{lower critical value}
+
+\item{tau.up}{upper critical value}
+
+\item{tau}{model averaged test statistic}
+
 }
 
 \references{
