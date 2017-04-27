@@ -1,11 +1,12 @@
 Package: hr
 Type: Package
 Title: Bootstrap Model Averaged Unit Root Test
-Version: 1.01
-Date: 2017-03-15
+Version: 1.0-1
+Date: 2017-04-27
 Imports: boot, fUnitRoots, np, quadprog
 Suggests: CADFtest, tseries
-Author: Jeffrey S. Racine
-Maintainer: <racinej@mcmaster.ca>
+Authors@R: person(given = "Jeffrey S.", family = "Racine", role = c("aut","cre"), email = "racinej@mcmaster.ca")
+Author: Jeffrey S. Racine [aut, cre]
+Maintainer: Jeffrey S. Racine <racinej@mcmaster.ca>
 Description: This package implements the nonparametric bootstrap model averaging unit root test.
 License: GPL-2
