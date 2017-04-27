@@ -1,4 +1,4 @@
-# ma
+# hr
 
 This is the R package `hr' (Hansen-Racine Bootstrap Model Average Unit Root Test) written and maintained by Jeffrey S. Racine (racinej@mcmaster.ca).
 
