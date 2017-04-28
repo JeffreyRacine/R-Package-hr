@@ -10,3 +10,5 @@ Author: Jeffrey S. Racine [aut, cre]
 Maintainer: Jeffrey S. Racine <racinej@mcmaster.ca>
 Description: This package implements the nonparametric bootstrap model averaging unit root test.
 License: GPL-2
+URL: https://github.com/JeffreyRacine/R-Package-hr
+BugReports: https://github.com/JeffreyRacine/R-Package-hr/issues
