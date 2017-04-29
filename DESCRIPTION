@@ -1,6 +1,6 @@
 Package: hr
 Type: Package
-Title: Bootstrap Model Averaged Unit Root Test
+Title: Bootstrap Model Average Unit Root Test
 Version: 1.0-1
 Date: 2017-04-27
 Imports: boot, fUnitRoots, np, quadprog
@@ -8,7 +8,7 @@ Suggests: CADFtest, tseries
 Authors@R: person(given = "Jeffrey S.", family = "Racine", role = c("aut","cre"), email = "racinej@mcmaster.ca")
 Author: Jeffrey S. Racine [aut, cre]
 Maintainer: Jeffrey S. Racine <racinej@mcmaster.ca>
-Description: This package implements the nonparametric bootstrap model averaging unit root test.
+Description: This package implements the Hansen-Racine nonparametric bootstrap model average unit root test.
 License: GPL-2
-URL: https://github.com/JeffreyRacine/R-Package-hr
-BugReports: https://github.com/JeffreyRacine/R-Package-hr/issues
+URL: <https://github.com/JeffreyRacine/R-Package-hr>
+BugReports: <https://github.com/JeffreyRacine/R-Package-hr/issues>
