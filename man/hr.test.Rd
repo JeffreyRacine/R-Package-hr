@@ -94,29 +94,29 @@ A list with class "hrtest" containing the following components:
 }
 
 \references{
-Dickey, D. A. & Fuller, W. A. (1979), \dQuote{Distribution of the estimators for autoregressive time series with a unit root,} Journal of the American Statistical Association 74(366), 427-431.
+Dickey, D. A. & W. A. Fuller (1979), \dQuote{Distribution of the estimators for autoregressive time series with a unit root,} Journal of the American Statistical Association 74(366), 427-431.
 
 Hansen, B. E. (2007), \dQuote{Least squares model averaging,} Econometrica 75, 1175-1189.
 
 Hansen, B. E. (2014), \dQuote{Model averaging, asymptotic risk, and regressor groups,} Quantitative Economics 5(3), 495-530.
 
-Hansen, B. E. & Racine, J. S. (2012), \dQuote{Jackknife model averaging,} Journal of Econometrics 167(1), 38-46.
+Hansen, B. E. & J. S. Racine (2017), \dQuote{Bootstrap Model Averaging Unit Root Inference,} Technical Report.
 
-Ng, S. & Perron, P. (2001), \dQuote{Lag length selection and the construction of unit root tests with good size and power,} Econometrica 69(6), 1519-1554.
+Hansen, B. E. & J. S. Racine (2012), \dQuote{Jackknife model averaging,} Journal of Econometrics 167(1), 38-46.
 
-Palm, F. C., Smeekes, S. & Urbain, J. P. (2008), \dQuote{Bootstrap unit-root tests: Comparison and extensions,} Journal of Time Series Analysis 29(2), 371-401.
+Ng, S. & P. Perron (2001), \dQuote{Lag length selection and the construction of unit root tests with good size and power,} Econometrica 69(6), 1519-1554.
+
+Palm, F. C., Smeekes, S. & J. P. Urbain (2008), \dQuote{Bootstrap unit-root tests: Comparison and extensions,} Journal of Time Series Analysis 29(2), 371-401.
 
 Patton, A. & D. N. Politis & H. White (2009), \dQuote{CORRECTION TO "Automatic block-length selection for the dependent bootstrap" by D. Politis and H. White}, Econometric Reviews 28(4), 372-375.
 
-Phillips, P. C. B. & Perron, P. (1988), \dQuote{Testing for a unit root in time series regression,} Biometrika 75(2), 335-346.
+Phillips, P. C. B. & P. Perron (1988), \dQuote{Testing for a unit root in time series regression,} Biometrika 75(2), 335-346.
 
 Politis, D. N. & J. P. Romano (1994), \dQuote{Limit theorems for weakly dependent Hilbert space valued random variables with applications to the stationary bootstrap}, Statistica Sinica 4, 461-476.
 
 Politis, D. N. & H. White (2004), \dQuote{Automatic block-length selection for the dependent bootstrap}, Econometric Reviews 23(1), 53-70.
 
-Racine, J. S. (2017), \dQuote{Bootstrap Model Averaging Unit Root Inference,} Technical Report.
-
-Said S. E., Dickey D. A. (1984), \dQuote{Testing for Unit Roots in Autoregressive-Moving Average Models of Unknown Order,} Biometrika 71, 599-607.
+Said, S. E. & D. A. Dickey (1984), \dQuote{Testing for Unit Roots in Autoregressive-Moving Average Models of Unknown Order,} Biometrika 71, 599-607.
 
 Schwert, G. W. (1989), \dQuote{Tests for unit roots: A Monte Carlo investigation,} Journal of Business & Economic Statistics 7(2), 147-159.
 

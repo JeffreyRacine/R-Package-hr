@@ -24,6 +24,7 @@
 
 \title{Bootstrap Model Averaging Unit Root Inference}
 \date{\today}
+\author{Bruce E.\ Hansen}
 \author{Jeffrey S.\ Racine}
 
 \address[Jeffrey S.\ Racine]{Department of Economics and Graduate
