@@ -106,7 +106,7 @@ Hansen, B. E. & J. S. Racine (2012), \dQuote{Jackknife model averaging,} Journal
 
 Ng, S. & P. Perron (2001), \dQuote{Lag length selection and the construction of unit root tests with good size and power,} Econometrica 69(6), 1519-1554.
 
-Palm, F. C., Smeekes, S. & J. P. Urbain (2008), \dQuote{Bootstrap unit-root tests: Comparison and extensions,} Journal of Time Series Analysis 29(2), 371-401.
+Palm, F. C. & S. Smeekes & J. P. Urbain (2008), \dQuote{Bootstrap unit-root tests: Comparison and extensions,} Journal of Time Series Analysis 29(2), 371-401.
 
 Patton, A. & D. N. Politis & H. White (2009), \dQuote{CORRECTION TO "Automatic block-length selection for the dependent bootstrap" by D. Politis and H. White}, Econometric Reviews 28(4), 372-375.
 
