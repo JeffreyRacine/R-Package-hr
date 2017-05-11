@@ -151,7 +151,7 @@ hr.test <- function(x=NULL,
 
     t.stat.boot.ma <- numeric(length=B)
     
-    if(verbose) cat("\r                                                ")
+    if(verbose) cat("\r                                                  ")
 
     for(b in 1:B) {
         
@@ -184,7 +184,7 @@ hr.test <- function(x=NULL,
     
     ## Set return objects
 
-    if(verbose) cat("\r                               ")
+    if(verbose) cat("\r                                          ")
 
     decision <- paste("Fail to reject the null hypothesis at the ",100*alpha,"% level (unit root)",sep="")
     if(alternative=="both") {
