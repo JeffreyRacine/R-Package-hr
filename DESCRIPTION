@@ -2,7 +2,7 @@ Package: hr
 Type: Package
 Title: Bootstrap Model Average Unit Root Test
 Version: 1.0-1
-Date: 2017-05-11
+Date: 2017-05-12
 Imports: boot, fUnitRoots, np, quadprog
 Suggests: CADFtest, tseries
 Authors@R: person(given = "Jeffrey S.", family = "Racine", role = c("aut","cre"), email = "racinej@mcmaster.ca")

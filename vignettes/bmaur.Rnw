@@ -327,15 +327,16 @@ errors, JMA and MMA are nearly equivalent, but when the errors are
 heteroskedastic, JMA has significantly lower MSE.
 
 To obtain a model average test statistic, we take the $\tau$ statistic
-from each of the $M$ candidate estimating equations and average them using the
-weight vector $\hat w$, and call this averaged statistic $\tau_M$. In
-order to obtain the null distribution of this statistic, we use a time
-series bootstrap with automatic choice of the expected block length.
+from each of the $M$ candidate estimating equations and average them
+using the weight vector $\hat w$, and call this averaged statistic
+$\mathcal{T}_M=\sum_{m=1}^M\hat w_m\tau_m$. In order to obtain the
+null distribution of this statistic, we use a time series bootstrap
+with automatic choice of the expected block length.
 
 \subsection{A Unit Root Model Average Bootstrap Procedure}
 
 We consider a first-difference-based bootstrap procedure for obtaining
-the sampling distribution of $\tau_M$ under the null of a unit root
+the sampling distribution of $\mathcal{T}_M$ under the null of a unit root
 along the lines of \citeasnoun{SWENSEN:2003}, who proves the
 consistency of the standard (non-averaged) test without deterministic
 components based on the stationary bootstrap (deterministic components
@@ -362,16 +363,16 @@ is as follows:
   $y^*_t=y_1+\sum_{i=2}^t\epsilon^*_i=y^*_{t-1}+\epsilon^*_t$
 
 \item Next, take the bootstrap $\tau^*$ statistics from each of the
-  $M$ candidate estimating equations and average them using the weight vector for
-  the original series $\hat w$, which delivers a bootstrap model
-  average statistic $\tau^*_M$ generated under the null
+  $M$ candidate estimating equations and average them using the weight
+  vector for the original series $\hat w$, which delivers a bootstrap
+  model average statistic $\mathcal{T}^*_M$ generated under the null
 
 \item Repeat this process $B$ times, then compute percentiles of the
-  $B$ bootstrap statistics $\tau^*_{1,M},\dots,\tau^*_{B,M}$ which
-  serve as critical values under the null (e.g., $\alpha/2$ and
-  $1-\alpha/2$ where $\alpha$ is the desired level of the test);
-  finally, determine whether one will reject or fail to reject at
-  level $\alpha$
+  $B$ bootstrap statistics
+  $\mathcal{T}^*_{1,M},\dots, \mathcal{T}^*_{B,M}$ which serve as
+  critical values under the null (e.g., $\alpha/2$ and $1-\alpha/2$
+  where $\alpha$ is the desired level of the test); finally, determine
+  whether one will reject or fail to reject at level $\alpha$
 
 \end{enumerate}
 
