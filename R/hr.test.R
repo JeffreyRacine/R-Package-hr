@@ -6,6 +6,7 @@ hr.test <- function(x=NULL,
                     alternative=c("stationary","explosive","both"),
                     B=399,
                     boot.method=c("geom","fixed","iid"),
+                    boot.weights=FALSE,
                     df.type=c("nc","c","ct","nccct","ncc","nct","cct","none"),
                     group.start=4,
                     group.by=4,                    
@@ -44,6 +45,7 @@ hr.test <- function(x=NULL,
     if(B<0) stop("Number of bootstrap replications (B) must be positive")
     if(alpha*(B+1)!=floor(alpha*(B+1))) stop("alpha*(B+1) must be an integer")
     if(any(quantile.vec<=0) | any(quantile.vec>=1)) stop("The quantile vector entries must lie in (0,1)")
+    if(!is.logical(boot.weights)) stop("boot.weights must be one of TRUE or FALSE")
     
     ## Save any existing random seed and restore upon exit
 
@@ -164,16 +166,80 @@ hr.test <- function(x=NULL,
                      start=start(x))
 
         ## Recompute all candidate models and their test statistics
-        
+
         t.stat.boot <- NULL
-        for(t in df.type) {
-            t.stat.boot <- c(t.stat.boot,suppressWarnings(adfTest(x.boot,lags=0,type=t)@test$statistic))
-        }        
+
+        if(!boot.weights) {
+
+            ## Use weights computed for the original data
         
-        for(k in 1:K) {
-            for(t in adf.type) {
-                t.stat.boot <- c(t.stat.boot,suppressWarnings(adfTest(x.boot,lags=lag.vec[k],type=t)@test$statistic))
+            for(t in df.type) {
+                t.stat.boot <- c(t.stat.boot,suppressWarnings(adfTest(x.boot,lags=0,type=t)@test$statistic))
+            }        
+            
+            for(k in 1:K) {
+                for(t in adf.type) {
+                    t.stat.boot <- c(t.stat.boot,suppressWarnings(adfTest(x.boot,lags=lag.vec[k],type=t)@test$statistic))
+                }
             }
+
+        } else {
+
+            ## Re-estimate weights on the bootstrap data
+
+            rm(ma.mat)
+
+            ## Dickey-Fuller models (no lags)
+    
+            for(t in df.type) {
+                out <- suppressWarnings(adfTest(x.boot,lags=0,type=t))
+                if(!exists("ma.mat")) {
+                    ma.mat <- as.matrix(Dmat.func(out@test$lm,method=method))
+                    rank.vec <- out@test$lm$rank
+                    t.stat.boot <- out@test$statistic
+                } else {
+                    ma.mat <- cbind(ma.mat,Dmat.func(out@test$lm,method=method))
+                    rank.vec <- c(rank.vec,out@test$lm$rank)
+                    t.stat.boot <- c(t.stat.boot,out@test$statistic)
+                }
+            }
+            
+            ## Augmented Dickey-Fuller models (lagged first differences)
+            
+            for(k in 1:K) {
+                for(t in adf.type) {
+                    out <- suppressWarnings(adfTest(x.boot,lags=lag.vec[k],type=t))
+                    r <- Dmat.func(out@test$lm,method=method) 
+                    if(!exists("ma.mat")) {
+                        ma.mat <- as.matrix(r)
+                        rank.vec <- out@test$lm$rank
+                        t.stat.boot <- out@test$statistic
+                    } else {
+                        n.r <- length(r)
+                        n.rm <- nrow(ma.mat)
+                        ma.mat <- cbind(ma.mat[(n.rm-n.r+1):n.rm,],r)
+                        rank.vec <- c(rank.vec,out@test$lm$rank)
+                        t.stat.boot <- c(t.stat.boot,out@test$statistic)
+                    }
+                }
+            }
+            
+            ## Model average weights (solve a simple quadratic program)
+            
+            M.dim <- ncol(ma.mat)
+            sigsq.largest <- summary(out@test$lm)$sigma**2
+            Dmat <- t(ma.mat)%*%ma.mat
+            if(qr(Dmat)$rank<M.dim) Dmat <- Dmat + diag(1e-10,M.dim,M.dim)
+            Amat <- cbind(rep(1,M.dim),diag(1,M.dim,M.dim))
+            bvec <- c(1,rep(0,M.dim))
+            if(method=="mma") {
+                dvec <- -rank.vec*sigsq.largest
+            } else {
+                dvec <- t(as.matrix(x[(n-nrow(ma.mat)+1):n]))%*%ma.mat
+            }
+            
+            w.hat.ma <- solve.QP(Dmat,dvec,Amat,bvec,1)$solution
+            
         }
         
         ## Compute the model average bootstrap statistics
