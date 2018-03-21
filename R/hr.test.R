@@ -168,6 +168,7 @@ hr.test <- function(x=NULL,
         ## Recompute all candidate models and their test statistics
 
         t.stat.boot <- NULL
+        w.hat.ma.boot <- w.hat.ma
 
         if(!boot.weights) {
 
