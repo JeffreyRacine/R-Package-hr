@@ -235,16 +235,16 @@ hr.test <- function(x=NULL,
             if(method=="mma") {
                 dvec <- -rank.vec*sigsq.largest
             } else {
-                dvec <- t(as.matrix(x[(n-nrow(ma.mat)+1):n]))%*%ma.mat
+                dvec <- t(as.matrix(x.boot[(n-nrow(ma.mat)+1):n]))%*%ma.mat
             }
             
-            w.hat.ma <- solve.QP(Dmat,dvec,Amat,bvec,1)$solution
+            w.hat.ma.boot <- solve.QP(Dmat,dvec,Amat,bvec,1)$solution
             
         }
         
         ## Compute the model average bootstrap statistics
 
-        t.stat.boot.ma[b] <- sum(t.stat.boot*w.hat.ma)
+        t.stat.boot.ma[b] <- sum(t.stat.boot*w.hat.ma.boot)
         
     }
     
