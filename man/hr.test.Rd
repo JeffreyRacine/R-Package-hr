@@ -10,7 +10,7 @@
 hr.test(x = NULL, 
         adf.type = c("c","ct","nc","all"),
         alpha = 0.05, 
-        alternative = c("stationary","explosive","both"),
+        alternative = c("both","stationary","explosive"),
         B = 399, 
         boot.method = c("geom","fixed","iid"),
         boot.weights = FALSE,
