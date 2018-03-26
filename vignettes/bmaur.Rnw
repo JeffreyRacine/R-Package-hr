@@ -7,6 +7,7 @@
 
 \documentclass[11pt]{amsart}
 
+\usepackage{graphicx}
 \usepackage{setspace}
 \usepackage[agsm]{harvard}
 \usepackage{pdflscape}
@@ -66,7 +67,7 @@
   automatically determined using recent developments for bootstrapping
   dependent processes). Monte Carlo simulations indicate that this
   approach exhibits the lowest size distortions among its peers in
-  settings that confound existing approaches, while it has better
+  settings that confound existing approaches, while it has superior
   power than those peers whose size distortions do not preclude their
   general use. The proposed approach is fully automatic, and there are
   no nuisance parameters that have to be set by the user, which ought
@@ -142,13 +143,13 @@ asymptotic distribution under the null of a unit root (see also
 We will see that when model averaging is combined with a model-free,
 automatic, time series bootstrap procedure
 \cite{POLITIS_ROMANO:1994,POLITIS_WHITE:2004,PATTON_POLITIS_WHITE:2009},
-we can obtain a fully automatic data-driven procedure that has better
-size \textsl{and} power than its peers, while the sensitivity to the
-dimension of the model (i.e., the maximum lag that must be set by the
-practitioner) is attenuated by averaging over a set of candidate
-estimating equations in a particular manner. Furthermore, unlike its
-peers, the procedure is very robust to the number of and maximum
-dimension of the candidate estimating equations over which the
+we can obtain a fully automatic data-driven procedure that has
+superior size \textsl{and} power than its peers, while the
+sensitivity to the dimension of the model (i.e., the maximum lag that
+must be set by the practitioner) is attenuated by averaging over a set
+of candidate estimating equations in a particular manner. Furthermore,
+unlike its peers, the procedure is very robust to the number of and
+maximum dimension of the candidate estimating equations over which the
 averaging is performed (size and power are largely unaffected whether
 you use augmented Dickey-Fuller models with, e.g., one through two,
 four, eight, sixteen, or twenty four differenced lags of the time
@@ -518,6 +519,12 @@ and the first term is ignorable. In the presence of homoskedastic
 errors, JMA and MMA are nearly equivalent, but when the errors are
 heteroskedastic, JMA has significantly lower MSE.
 
+% A series of
+% exploratory simulations reveal that the JMA approach exhibits superior
+% size and power over the MMA approach in this setting, so we report
+% simulations for the JMA method (those for the MMA method are available
+% upon request).
+
 To obtain a model average test statistic, we take the $ADF(k)$
 statistic from each of the $K$ candidate estimating equations and
 average them using the weight vector $\hat w$, and call this averaged
@@ -539,7 +546,7 @@ is as follows:
 \begin{enumerate}
 
 \item Take the first difference of the series at hand
-  $\epsilon_t=(1-B)y_t$, $t=1,\dots,T$ ($\epsilon_t$ could be, e.g., an
+  $\epsilon_t=\Delta y_t$, $t=1,\dots,T$ ($\epsilon_t$ could be, e.g., an
   ARMA process)
 
 \item Apply a time series bootstrap with automated block length choice
@@ -570,164 +577,136 @@ is as follows:
 
 \section{\label{sec:mc}Monte Carlo Simulation for Bootstrap Unit Root Test}
 
-\subsection{Data Generating Processes (DGPs)}
+We construct power curves for three DGPs, one a simple AR(1), one an
+ARMA(1,1), and one an ARMA(1,2). The ARMA(1,1) DGP was used in
+simulations appearing in \citeasnoun{PALM_ET_AL:2008}
+($y_t=\rho y_{t-1}+\epsilon_t-0.8\epsilon_{t-1}$) and is known to
+confound existing tests. In particular, \citeasnoun[p.\
+344]{PHILLIPS_PERRON:1988} point out a limitation of their approach
+writing that their tests ``have significant size distortions and are
+too liberal to be useful for $\theta=-0.5,-0.8$'' (here $\theta=-0.8$
+is the MA coefficient in the ARMA(1,1) model). For the ARMA(1,2) model
+we use the DGP
+$y_t=\rho y_{t-1}+\epsilon_t+0.3\epsilon_{t-1}-0.2\epsilon_{t-1}$,
+while for the AR(1) DGP we use $y_t=\rho y_{t-1}+\epsilon_t$. 
 
-We consider three non-stationary series containing a unit root (a DGP
-considered in \citeasnoun{PALM_ET_AL:2008},
-$y_t=y_{t-1}+\epsilon_t-0.8\epsilon_{t-1}$, a random walk, and a
-random walk with drift), and two stationary series that do not
-contain unit roots (a stationary white noise process,
-$y_t=\epsilon_t$, where $\epsilon_t$ is i.i.d.\ $N(0,1)$ and a
-stationary ARMA(2,2),
-$y_t=0.4y_{t-1}+0.2y_{t-2}+\epsilon_t+0.3\epsilon_{t-1}-0.2\epsilon_{t-2}$).
+We conduct $B=399$ bootstrap replications and $M=2500$ Monte Carlo
+replications for sample sizes $T=(50,100,200,400)$. We then conduct
+the bootstrap test described above and report the empirical rejection
+frequency of each test where each test is conducted with a nominal
+level of $\alpha=0.05$. When $\rho=1$ we can assess each test's
+empirical size while when $\rho<1$ we can assess power, and we
+consider $\rho\in[0.75,1]$ using a grid of 15 equally spaced values
+for $\rho$ for constructing each power curve. Results for each DGP and
+a brief discussion follow.
 
-\begin{align*}
-\text{[ARIMA(0,1,1)]}\quad y_t & =y_{t-1}+\epsilon_t+\theta_1\epsilon_{t-1}\\
-\text{[Random Walk]}\quad y_t & =y_{t-1}+\epsilon_t\\
-\text{[Random Walk/Drift]}\quad y_t & =d + y_{t-1}+\epsilon_t\\
-\text{[White Noise]}\quad y_t&=\epsilon_t\\
-\text{[ARMA(2,2)]}\quad y_t & = \rho_1y_{t-1}+\rho_2y_{t-2}+\epsilon_t+\theta_1\epsilon_{t-1}+\theta_2\epsilon_{t-2}\\
-%\text{[Random Walk/Drift]}\quad y_t & =y_{t-1}+d+\epsilon_t
-\end{align*}
+\subsection{AR(1) DGP}
 
-\subsection{The Monte Carlo Parameters and Estimating Equations}
+Figure \ref{fig:arpower} presents power curves under the AR(1) DGP for
+the proposed test using either the MMA or JMA weight selection scheme
+outlined in Section \ref{sec:bmma}.
 
-We conduct $B=399$ bootstrap replications and $M=10000$ Monte Carlo
-replications for sample sizes $T=(100,200,300,400)$. We then conduct
-the bootstrap test described above and report the empirical size for
-tests with levels $\alpha=0.05$. The underlying DGPs do not contain
-deterministic trends, but we consider two versions of the test, one
-without and one incorporating a deterministic trend in the estimating
-equations.
+\begin{figure}[!ht]
+  \includegraphics[scale=0.375]{work_power_ar/n_50/power_all.pdf}
+  \includegraphics[scale=0.375]{work_power_ar/n_100/power_all.pdf}
 
-\begin{enumerate}
+  \includegraphics[scale=0.375]{work_power_ar/n_200/power_all.pdf}
+  \includegraphics[scale=0.375]{work_power_ar/n_400/power_all.pdf}
+  \caption{\label{fig:arpower}Power curves for the AR(1) DGP
+    $y_t=\rho y_{t-1}+\varepsilon_t$ for unit root tests using a
+    $\alpha=0.05$ level of significance. When $\rho=1$ a unit root is
+    present (empirical size is the height of the power curve at
+    $\rho=1$, i.e., at the right of each figure).}
+\end{figure}
 
-\item No deterministic trend - the models used are no constant DF(nc),
-  a constant DF(c), and a range of augmented models containing a
-  constant and lagged differences of the series (ADF(1), ADF(2),
-  without trend etc.).
+Figure \ref{fig:arpower} reveals that this is a textbook case where
+all tests are correctly sized, though it is evident that the proposed
+approach dominates in terms of power. As expected, for a given value
+of $\rho$ ($<1$), power increases as the sample size increases for all
+tests. \possessivecite{HANSEN:2007} MMA weight selection scheme
+delivers a test with more power than that based on
+\possessivecite{HANSEN_RACINE:2012} JMA approach for this DGP.
 
-\item Deterministic trend - the models used are no constant DF(nc), a
-  constant DF(c), a constant and time trend DF(ct), and a range of
-  augmented models containing a constant and lagged differences of the
-  series (ADF(1), ADF(2), with trend etc.).
+\subsection{ARMA(1,1) DGP}
 
-\end{enumerate}
+Figure \ref{fig:mapower} presents power curves under the ARMA(1,1)
+DGP for the proposed test using either the MMA or JMA weight selection
+scheme outlined in Section \ref{sec:bmma}.
 
-The R code for this simulation appears in the Appendix.
+\begin{figure}[!ht]
+  \includegraphics[scale=0.375]{work_power_ma/n_50/power_all.pdf}
+  \includegraphics[scale=0.375]{work_power_ma/n_100/power_all.pdf}
+
+  \includegraphics[scale=0.375]{work_power_ma/n_200/power_all.pdf}
+  \includegraphics[scale=0.375]{work_power_ma/n_400/power_all.pdf}
+  \caption{\label{fig:mapower}Power curves for the ARMA(1,1) DGP
+    $y_t=\rho y_{t-1}+\varepsilon_t-0.8\varepsilon_{t-1}$ for unit
+    root tests using a $\alpha=0.05$ level of significance. When
+    $\rho=1$ a unit root is present (empirical size is the height of
+    the power curve at $\rho=1$, i.e., at the right of each figure).}
+\end{figure}
+
+It is evident from Figure \ref{fig:mapower} that the
+\citeasnoun{PHILLIPS_PERRON:1988} and \citeasnoun{DICKEY_FULLER:1979}
+approaches completely fail for this DGP as was pointed out by
+\citeasnoun{PHILLIPS_PERRON:1988} and \citeasnoun{PALM_ET_AL:2008}. In
+particular, the \citeasnoun{PHILLIPS_PERRON:1988} test has empirical
+size equal to $1.00$ when $\alpha=0.05$ thereby rejecting 100\% of the
+time when in fact the null is true, while the
+\citeasnoun{DICKEY_FULLER:1979} approach displays similarly crippling
+size distortions.
+
+In light of the extreme size distortions that surface for this (and
+similar) DGPs when using the \citeasnoun{PHILLIPS_PERRON:1988} and
+\citeasnoun{DICKEY_FULLER:1979} tests, it is difficult to recommend
+either test to practitioners, therefore the choice of tests therefore
+comes down to either \possessivecite{NG_PERRON:2001} procedure or the
+proposed bootstrap model averaging approach. The proposed approach is
+correctly sized for this DGP while \possessivecite{NG_PERRON:2001}
+approach exhibits large size distortions for samples of size
+$n<200$. In addition, the proposed approach has substantially higher
+power than \possessivecite{NG_PERRON:2001} approach for this DGP
+regardless of whether the MMA or JMA weighting schemes are adopted.
+
+\subsection{ARMA(1,2) DGP}
+
+Figure \ref{fig:armapower} presents power curves under the ARMA(1,2)
+for the proposed test using either the MMA or JMA weight selection
+scheme outlined in Section \ref{sec:bmma}. Given that neither the
+\citeasnoun{PHILLIPS_PERRON:1988} nor \citeasnoun{DICKEY_FULLER:1979}
+can be recommended to practitioners given their failure for the
+ARMA(1,1) DGP above and for a range of similar DGPs, we drop them in
+the power analysis that follows.
+
+\begin{figure}[!ht]
+  \includegraphics[scale=0.375]{work_power_arma/n_50/power.pdf}
+  \includegraphics[scale=0.375]{work_power_arma/n_100/power.pdf}
+
+  \includegraphics[scale=0.375]{work_power_arma/n_200/power.pdf}
+  \includegraphics[scale=0.375]{work_power_arma/n_400/power.pdf}
+  \caption{\label{fig:armapower}Power curves for the DGP
+    $y_t=\rho
+    y_{t-1}+\varepsilon_t+0.3\varepsilon_{t-1}-0.2\varepsilon_{t-2}$
+    for unit root tests using a $\alpha=0.05$ level of
+    significance. When $\rho=1$ a unit root is present (empirical size
+    is the height of the power curve at $\rho=1$, i.e., at the right
+    of each figure).}
+\end{figure}
 
 \subsection{Discussion}
 
-Table \ref{tab:maic_mma_comp} presents a summary of the Monte Carlo
-simulations. \citeasnoun[p.\ 344]{PHILLIPS_PERRON:1988} point out a
-limitation of their approach writing that their tests ``have
-significant size distortions and are too liberal to be useful for
-$\theta=-0.5,-0.8$'' (here $\theta=-0.8$ is the MA coefficient used in
-the simulations for the ARIMA(0,1,1) DGP). The simulations indeed
-reveal that this approach rejects the non-stationary ARIMA(0,1,1) DGP
-100\% of the time incorrectly indicating that it is stationary when in
-fact it contains a unit root. Furthermore, it is evident that similar
-behaviour is manifest in the ADF test as well.  These tests are unable
-to distinguish between the non-stationary ARIMA(0,1,1) DGP that
-contains a unit root and, e.g., the stationary ARMA(2,2) DGP, though
-the Ng-Perron and the proposed test can successfully discriminate
-between these two DGPs. Given the inability of the Phillips-Perron and
-ADF tests to distinguish between such cases, it would be difficult to
-recommend these approaches to practitioners as they may incorrectly
-indicate that a series is stationary when in fact it contains a unit
-root. Note that for the Ng-Perron approach you also need to specify
-whether to include trend, drift, or none (this is not resolved by the
-use of their modified information criterion statistic though it could
-be performed manually).
-
-\begin{table}[!ht]
-\caption{\label{tab:maic_mma_comp}Empirical rejection probabilities
-  for testing whether or not a series contains a unit root (nominal
-  level $\alpha=0.05$). We compare the Phillips-Perron test (P-P), the
-  ADF test based upon BIC model selection (ADF), Ng-Perron's test
-  using Perron-Qu detrending (N-P), and the proposed Bootstrap 
-  Model Averaging test (MA). The N-P, MA, and ADF-BIC methods use
-  the same set of candidate estimating equations determined by
-  Schwert's ad-hoc lag selection rule, $k=1,\dots,12(T/100)^{1/4}$. R
-  code to replicate can be found in Appendix \ref{app:R}. Results on
-  the left are for candidate estimating equations without a
-  deterministic trend, on the right with a deterministic trend (the
-  DGPs used in the Monte Carlo do not contain deterministic trends,
-  the P-P test contains a trend in both tables).}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_no_trend/tex/reject_2f
-\quad
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_trend/tex/reject_2f
-\end{table}
-
-Table \ref{tab:norm_size} presents the normed size distortions,
-$||\hat\alpha-0.05||$, for each method as the constant $j$ in
-Schwert's ad-hoc formula, $k=1,\dots,j(T/100)^{1/4}$, changes for
-$j=2,4,8,12,24$. We take the vector of empirical sizes for the size
-DGPs and jointly compute their norm. It is evident that the P-P and
-ADF approaches display size distortions that are orders of magnitude
-larger than those for the N-P or proposed approach. The size
-distortions present in the proposed approach are remarkably robust to
-the choice of $j$, unlike that for the N-P approach, and on balance
-are the smallest over all approaches and choice of $j$. Table
-\ref{tab:norm_power} presents normed power (we take the vector of
-empirical powers for the power DGPs and jointly compute their norm
-against a base of 1), and it is evident that the proposed method has
-size and power that is robust to the number of candidate estimating equations while
-the N-P approach is extremely sensitive to its choice. Furthermore,
-using Schwert's ad-hoc rule for choosing $j$ may deliver a N-P test
-with acceptable size, but it results in a clear loss in power.
-
-\begin{table}[!ht]
-  \caption{\label{tab:norm_size}Normed size distortions
-    $||\hat\alpha-0.05||$ for the ARIMA(0,1,1), random walk, and random
-    walk with drift DGPs over all sample sizes for a range of constants
-    $j$ in Schwerts' ad-hoc rule $k=1,\dots,j(T/100)^{1/4}$ (Schwert
-    recommends $j=12$), where $\hat\alpha$ is the empirical rejection
-    probability. Smaller values indicate empirical size closer to
-    nominal size (0.05) overall. Results on the left are for candidate
-    estimating equations without a deterministic trend, on the right
-    with a deterministic trend (the DGPs used in the Monte Carlo do not
-    contain deterministic trends, the P-P test contains a trend in both
-    tables)}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_size_no_trend_2f
-\quad
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_size_trend_2f
-\end{table}
-
-\begin{table}[!ht]
-  \caption{\label{tab:norm_power}Normed power $||\hat\alpha-1||$ for the
-    ARMA(2,2) and white noise DGPs over all sample sizes for a range of
-    constants $j$ in Schwerts' ad-hoc rule $k=1,\dots,j(T/100)^{1/4}$
-    (Schwert recommends $j=12$), where $\hat\alpha$ is the empirical
-    rejection probability. Smaller values indicate empirical power
-    closer to 1 overall. Results on the left are for candidate
-    estimating equations without a deterministic trend, on the right
-    with a deterministic trend (the DGPs used in the Monte Carlo do not
-    contain deterministic trends, the P-P test contains a trend in both
-    tables)}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_power_no_trend_2f
-\quad
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/tex/norm_power_trend_2f
-\end{table}
-
-The choice of tests therefore comes down to either Ng-Perron or the
-proposed bootstrap model averaging approach. The proposed approach
-displays the smallest size distortions and has higher power tan the
-Ng-Perron procedure.  On the basis of our simulation results, we
-therefore recommend the MA procedure for testing for the presence of
-a unit root with only a handful of candidate estimating equations
-being necessary (use, e.g., $j=4$ in Schwert's ad-hoc rule). It
-attenuates the large size distortions present in the classical
-approach that relies on tabulated critical values and still present
-(though muted) in \possessivecite{NG_PERRON:2001} approach, exhibits
-higher power, does not require specification of the model from which
-the bootstrap resamples are drawn, and uses an automatic block length
-selection procedure for the dependent bootstrap method. This procedure
-ought to appeal to practitioners as there are no unknown parameters
-that must be specified by the user.
-
-Appendix \ref{app:mma} summarizes the MA weights selected by the
-proposed procedure for the interested reader.
+On the basis of our simulation results, we feel confident recommending
+the proposed procedure for testing for the presence of a unit root
+with only a handful of candidate estimating equations being necessary
+(use, e.g., $j=4$ in Schwert's ad-hoc rule). It attenuates the large
+size distortions present in the classical approach that relies on
+tabulated critical values and still present (though muted) in
+\possessivecite{NG_PERRON:2001} approach, exhibits higher power, does
+not require specification of the model from which the bootstrap
+resamples are drawn, and uses an automatic block length selection
+procedure for the dependent bootstrap method. This procedure ought to
+appeal to practitioners as there are no unknown parameters that must
+be specified by the user.
 
 \section{Conclusion}
 
@@ -746,197 +725,6 @@ practitioners.
 
 \clearpage
 
-\appendix
-
-\singlespacing
-
-\begin{landscape}
-\section{\label{app:mma}Model Average Weight Summary}
-
-Table \ref{tab:mma_no_trend} presents the mean weights accorded to
-each of the candidate estimating equations over the $M$ Monte Carlo
-replications for ADF models with no trend, Table \ref{tab:mma_trend}
-for those with a trend. The use of Schwert's ad-hoc rule
-($k=1,\dots,12(T/100)^{1/4}$) results in models having from 1 through
-12, 14, 16, and 17 lags being used for the procedures for
-T=(100,200,300,400).
-
-\begin{table}[!ht]
-\centering
-\caption{\label{tab:mma_no_trend}Model Averaging Weights (mean over all
-  $M$ Monte Carlo replications, no trend).}
-\Tiny
-\centerline{$T=100$}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_no_trend/tex/mma_n_100
-\centerline{$T=200$}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_no_trend/tex/mma_n_200
-\centerline{$T=300$}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_no_trend/tex/mma_n_300
-\centerline{$T=400$}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_no_trend/tex/mma_n_400
-%\end{table}
-\bigskip
-%\begin{table}[!ht]
-%\centering
-\caption{\label{tab:mma_trend}Model Averaging Weights (mean over all
-  $M$ Monte Carlo replications, trend).}
-\Tiny
-\centerline{$T=100$}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_trend/tex/mma_n_100
-\centerline{$T=200$}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_trend/tex/mma_n_200
-\centerline{$T=300$}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_trend/tex/mma_n_300
-\centerline{$T=400$}
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_12_trend/tex/mma_n_400
-\end{table}
-\end{landscape}
-
-\clearpage
-
-\section{Effect of Changing the Number of Candidate Estimating Equations}
-
-\begin{table}[!ht]
-  \caption{Empirical rejection probabilities for testing whether or not
-    a series contains a unit root (nominal level $\alpha=0.05$). We
-    compare the Phillips-Perron test (P-P), the ADF test based upon BIC
-    model selection (ADF), Ng-Perron's test using Perron-Qu detrending
-    (N-P), and the proposed Bootstrap Model Averaging test
-    (MA). The N-P, MA, and ADF-BIC methods use the same set of
-    candidate estimating equations determined by modifying the constant
-    in Schwert's ad-hoc lag selection rule, $k=1,\dots,j(T/100)^{1/4}$,
-    $j=2,4,8,24$ (clockwise from top left), no deterministic trend in
-    any model (for $j=2$, $k=(2,2,3,3)$, $j=4$, $k=(4,5,5,6)$, $j=9$,
-    $k=(8,10,11,11)$, $j=24$, $k=(24,29,32,34)$).}
-\Tiny
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_2_no_trend/tex/reject_2f
-\quad
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_4_no_trend/tex/reject_2f
-
-\bigskip
-
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_8_no_trend/tex/reject_2f
-\quad
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_24_no_trend/tex/reject_2f
-\end{table}
-
-\clearpage
-
-\begin{table}[!ht]
-\caption{Empirical rejection probabilities for testing whether or not
-  a series contains a unit root (nominal level $\alpha=0.05$). We
-  compare the Phillips-Perron test (P-P), the ADF test based upon BIC
-  model selection (ADF), Ng-Perron's test using Perron-Qu detrending
-  (N-P), and the proposed Bootstrap Model Averaging test
-  (MA). The N-P, MA, and ADF-BIC methods use the same set of
-  candidate estimating equations determined by modifying the constant
-  in Schwert's ad-hoc lag selection rule, $k=1,\dots,j(T/100)^{1/4}$,
-  $j=2,4,8,24$ (clockwise from top left), deterministic trend
-  incorporated in all models (for $j=2$, $k=(2,2,3,3)$, $j=4$,
-  $k=(4,5,5,6)$, $j=9$, $k=(8,10,11,11)$, $j=24$, $k=(24,29,32,34)$).}
-\Tiny
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_2_trend/tex/reject_2f
-\quad
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_4_trend/tex/reject_2f
-
-\bigskip
-
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_8_trend/tex/reject_2f
-\quad
-\input /Users/jracine/tex/categorical/bootstrap_unitroot/work_jma/Schwert_24_trend/tex/reject_2f
-\end{table}
-
-\clearpage
-
-\section{\label{app:R}R Simulation Code}
-
-The following R code conducts the Monte Carlo simulation. It requires
-the packages \texttt{tseries} \cite{tseries}, \texttt{CADFtest}
-\cite{CADF}, and the package \texttt{hr} \cite{hr} which contains a
-function \texttt{hr.test()} that implements the proposed procedure.
-
-\scriptsize
-\begin{verbatim}
-require(CADFtest)
-require(tseries)
-require(hr)
-
-set.seed(42)
-
-n <- scan("num_obs.dat")
-M <- scan("num_monte.dat")
-DGP <- scan("dgp.dat",character())
-
-system("rm *.out *.bak *~")
-
-## We use five DGPs
-
-dgp.func <- function(n,DGP=c("rw","rwd","wn","arma","ma")) {
-    DGP <- match.arg(DGP)
-    if(DGP=="rw") {
-        ## Random walk (null)
-        ts(cumsum(rnorm(n)))
-    } else if(DGP=="rwd") {
-        ## Random walk with drift (null)
-        ts(cumsum(rnorm(n,mean=0.1)))
-    } else if(DGP=="wn") {
-        ## White noise (alternative)
-        ts(rnorm(n))
-    } else if(DGP=="arma") {
-        ## ARMA(2,2) (alternative)
-        arima.sim(n=n,list(ar=c(0.4,0.2),ma=c(0.3,-0.2)))
-    } else if(DGP=="ma") {
-        ## Unit root with MA error (James MacKinnon, largest alpha
-        ## from Palm et al)
-        arima.sim(list(order=c(0,1,1),ma=-0.8),n=n)
-    }
-}
-
-## Monte Carlo begins
-
-p.vec <- numeric()
-reject.bmma <- numeric()
-reject.pp <- numeric()
-reject.maic <- numeric()
-reject.bic <- numeric()
-
-for(m in 1:M) {
-
-    x <- dgp.func(n,DGP)
-
-    ## Bootstrap Mallow Model Average, Schwert's ad-hoc rule
-    
-    max.lag <- round(12*(n/100)^0.25)
-
-    out <- hr.test(x,verbose=FALSE,K.vec=1:max.lag)
-    reject.bmma[m] <- out$reject
-    write(mean(reject.bmma[1:m]),file="bmma_reject.out")
-    write(out$mma.weights,file="mma_weights.out",ncol=length(out$mma.weights),append=TRUE)
-    write(out$tau,file="tau.out",append=TRUE)
-    write(out$e.block.length,file="expected_block_length.out",append=TRUE)
-    write(out$decision,file="decision.out",append=TRUE)
-    write(out$reject,file="bmma_reject_01.out",append=TRUE)            
-    write(out$quantiles,file="tau_quantiles.out",ncol=length(out$quantiles),append=TRUE)
-
-    ## Phillips-Perron (tseries)
-
-    reject.pp[m] <- ifelse(suppressWarnings(pp.test(x)$p.value)<0.05,1,0)
-    write(mean(reject.pp[1:m]),file="pp_reject.out")
-
-    ## Ng-Perron with Perron-Qu detrending, Schwert's ad-hoc rule (CADFtest)
-
-    reject.maic[m] <- ifelse(suppressWarnings(CADFtest(x,max.lag.y=max.lag,criterion="MAIC")$p.value)<0.05,1,0)
-    write(mean(reject.maic[1:m]),file="maic_reject.out")
-
-    ## ADF, MacKinnon P-values, BIC model selection, Schwert's ad-hoc rule (CADFtest)
-    
-    reject.bic[m] <- ifelse(suppressWarnings(CADFtest(x,max.lag.y=max.lag,criterion="BIC")$p.value)<0.05,1,0)
-    write(mean(reject.bic[1:m]),file="bic_reject.out")
-    
-    
-}
-\end{verbatim}
-\normalsize
 
 \clearpage
 
