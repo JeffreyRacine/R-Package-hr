@@ -74,10 +74,10 @@
   dependent processes). Monte Carlo simulations indicate that this
   approach exhibits the lowest size distortions among its peers in
   settings that confound existing approaches, while it has superior
-  power than those peers whose size distortions do not preclude their
-  general use. The proposed approach is fully automatic, and there are
-  no nuisance parameters that have to be set by the user, which ought
-  to appeal to practitioners.
+  power relative to those peers whose size distortions do not preclude
+  their general use. The proposed approach is fully automatic, and
+  there are no nuisance parameters that have to be set by the user,
+  which ought to appeal to practitioners.
 
 \end{abstract}
 
@@ -147,10 +147,11 @@ We will see that when model averaging is combined with a model-free,
 automatic, time series bootstrap procedure
 \cite{POLITIS_ROMANO:1994,POLITIS_WHITE:2004,PATTON_POLITIS_WHITE:2009},
 we can obtain a fully automatic data-driven procedure that has
-superior size \textsl{and} power than its peers, while the
-sensitivity to the dimension of the model (i.e., the maximum lag that
-must be set by the practitioner) is attenuated by averaging over a set
-of candidate estimating equations in a particular manner. Furthermore,
+superior size \textsl{and} power relative to those peers whose size
+distortions do not preclude their general use, while the sensitivity
+to the dimension of the model (i.e., the maximum lag that must be set
+by the practitioner) is attenuated by averaging over a set of
+candidate estimating equations in a particular manner. Furthermore,
 unlike its peers, the procedure is very robust to the number of and
 maximum dimension of the candidate estimating equations over which the
 averaging is performed (size and power are largely unaffected whether
@@ -294,7 +295,7 @@ u_{t}=\sum_{j=1}^{k-1}a_{j}(k)u_{t-j}+\epsilon_{t}(k)
 \end{equation*}
 by projection. That is, the coefficients $a_{j}(k)$ are defined so that
 $E\left(  u_{t-j}\epsilon_{t}(k)\right)  =0$ for $j=1,\dots,k-1$. This defines
-the AR(k) approximate model and error. Given the error $\epsilon_{t}(k)$, we
+the AR($k$) approximate model and error. Given the error $\epsilon_{t}(k)$, we
 can define its variance, autocovariance and long-run variance
 \begin{align}
 \sigma^{2}(k) &  =E\left(  \epsilon_{t}(k)^{2}\right)  \label{sigk}\\
@@ -321,7 +322,7 @@ dW}{\left(  \int_{0}^{1}W^{\ast2}\right)  ^{1/2}}+\frac{\lambda(k)}
 {\omega\sigma(k)\left(  \int_{0}^{1}W^{\ast2}\right)  ^{1/2}}\label{adf}
 \end{equation}
 where $W(r)$ is a standard Brownian motion, and $W^{\ast}(r)=W(r)-\int_{0}
-^{1}W(r)dr$ (or a detrended Brownian if a time trend is included).
+^{1}W(r)dr$ (or a detrended Brownian motion if a time trend is included).
 \end{theorem}
 
 Theorem \ref{thm:thm1} shows that the ADF $t$-statistics converge
@@ -529,12 +530,6 @@ and the first term is ignorable. In the presence of homoskedastic
 errors, JMA and MMA are nearly equivalent, but when the errors are
 heteroskedastic, JMA has significantly lower MSE.
 
-% A series of
-% exploratory simulations reveal that the JMA approach exhibits superior
-% size and power over the MMA approach in this setting, so we report
-% simulations for the JMA method (those for the MMA method are available
-% upon request).
-
 To obtain a model average test statistic, we take the $ADF(k)$
 statistic from each of the $K$ candidate estimating equations and
 average them using the weight vector $\hat w$, and call this averaged
@@ -587,11 +582,14 @@ is as follows:
 
 \section{\label{sec:mc}Monte Carlo Simulation for Bootstrap Unit Root Test}
 
-We construct power curves based upon three DGPs, one a simple AR(1),
-one an ARMA(1,1), and one an ARMA(1,2). The ARMA(1,1) DGP was used in
+In order to assess the finite-sample performance of the proposed
+approach relative to its peers, we conduct a series of Monte Carlo
+simulation experiments. In particular, we construct power curves for a
+handful of procedures based upon three DGPs, one a simple AR(1), one
+an ARMA(1,1), and one an ARMA(1,2). The ARMA(1,1) DGP was used in
 simulations appearing in \citeasnoun{PALM_ET_AL:2008}
 ($y_t=\rho y_{t-1}+\epsilon_t-0.8\epsilon_{t-1}$) and is known to
-confound existing tests. In particular, \citeasnoun[p.\
+confound existing tests. It is noteworthy that \citeasnoun[p.\
 344]{PHILLIPS_PERRON:1988} point out a limitation of their approach
 writing that their tests ``have significant size distortions and are
 too liberal to be useful for $\theta=-0.5,-0.8$'' (here $\theta=-0.8$
@@ -620,7 +618,10 @@ abbreviations; MMA (proposed bootstrap model average ADF test with
 values); P-P (\citeasnoun{PHILLIPS_PERRON:1988} based on asymptotic
 critical values); ADF (\citeasnoun{DICKEY_FULLER:1979} with BIC model
 selection based on \possessivecite{MACKINNON:1996} asymptotic critical
-values).
+values). The N-P and ADF tests are from the R package
+\texttt{CADFtest} \cite{CADF} while the P-P test is from the R package
+\texttt{tseries} \cite{tseries}. The proposed test is from the R
+package \texttt{hr} \cite{hr}.
 
 Among all tests considered, the preferred test would have a power
 curve that would exhibit correct size (i.e., when $\rho=1$ would have
@@ -628,11 +629,11 @@ an empirical rejection frequency that is approximately $5\%$ or
 otherwise exhibit the lowest size distortions), and otherwise would
 have uniformly higher power than its peers (i.e., when $\rho<1$ its
 power curve would lie above those of its peers). Any test procedure
-exhibiting large upwards size distortions cannot in good conscience be
-recommended to practitioners since it could lead to the rejection of
-the null at levels far in excess of the nominal level of the test when
-the null is in fact correct. Results for each DGP and a brief
-discussion follow.
+exhibiting large upwards size distortions in standard settings cannot
+in good conscience be recommended to practitioners since it could lead
+to the rejection of the null at levels far in excess of the nominal
+level of the test when the null is in fact correct. Results for each
+DGP and a brief discussion follow.
 
 \subsection{AR(1) DGP}
 
@@ -644,11 +645,11 @@ based upon the bootstrap procedure outlined in Section
 values as outlined above.
 
 \begin{figure}[!ht]
-  \includegraphics[scale=0.375]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar/n_50/power_all.pdf}
-  \includegraphics[scale=0.375]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar/n_100/power_all.pdf}
+  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar/n_50/power_all.pdf}
+  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar/n_100/power_all.pdf}
 
-  \includegraphics[scale=0.375]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar/n_200/power_all.pdf}
-  \includegraphics[scale=0.375]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar/n_400/power_all.pdf}
+  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar/n_200/power_all.pdf}
+  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar/n_400/power_all.pdf}
   \caption{\label{fig:arpower}Power curves for the AR(1) DGP
     $y_t=\rho y_{t-1}+\varepsilon_t$ for unit root tests using a
     $\alpha=0.05$ level of significance. When $\rho=1$ a unit root is
@@ -677,8 +678,8 @@ procedure arise from the use of the bootstrap procedure rather than
 from the use of model averaging.
 
 \begin{figure}[!ht]
-  \includegraphics[scale=0.375]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar_bootstrap_stationary_grid/n_50/power.pdf}
-  \includegraphics[scale=0.375]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar_bootstrap_stationary_grid/n_100/power.pdf}
+  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar_bootstrap_stationary_grid/n_50/power.pdf}
+  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar_bootstrap_stationary_grid/n_100/power.pdf}
   \caption{\label{fig:arpowerboot}Power curves for the AR(1) DGP
     $y_t=\rho y_{t-1}+\varepsilon_t$ for unit root tests using a
     $\alpha=0.05$ level of significance. When $\rho=1$ a unit root is
@@ -694,13 +695,13 @@ and N-P$^*$, respectively) with the bootstrapped model averaged ADF
 test (MMA or JMA) in Figure \ref{fig:arpowerboot}. A comparison of the
 asymptotic and bootstrapped versions of
 \possessivecite{NG_PERRON:2001} MIC model selected test reveals no
-power gains associated with bootstrapping the process using the
-identical bootstrap procedure that underpins the proposed approach (we
-present results for $T=50$ and $T=100$ only as results do not differ
-qualitatively for $T=200$ and $T=400$). We can therefore safely
-conclude that any power gains associated with the proposed approach
-arise from the use of model averaging versus model selection and
-cannot be attributed to the use of a bootstrap procedure.
+consequential power gains associated with bootstrapping the process
+using the identical bootstrap procedure that underpins the proposed
+approach (we present results for $T=50$ and $T=100$ only as results do
+not differ qualitatively for $T=200$ and $T=400$). We can therefore
+safely conclude that any power gains associated with the proposed
+approach arise from the use of model averaging versus model selection
+and cannot be attributed to the use of a bootstrap procedure.
 
 \subsection{ARMA(1,1) DGP}
 
@@ -709,11 +710,11 @@ ARMA(1,1) DGP containing a coefficient of -0.8 on the lagged MA
 component that is known to confound existing tests.
 
 \begin{figure}[!ht]
-  \includegraphics[scale=0.375]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ma/n_50/power_all.pdf}
-  \includegraphics[scale=0.375]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ma/n_100/power_all.pdf}
+  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ma/n_50/power_all.pdf}
+  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ma/n_100/power_all.pdf}
 
-  \includegraphics[scale=0.375]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ma/n_200/power_all.pdf}
-  \includegraphics[scale=0.375]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ma/n_400/power_all.pdf}
+  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ma/n_200/power_all.pdf}
+  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ma/n_400/power_all.pdf}
   \caption{\label{fig:mapower}Power curves for the ARMA(1,1) DGP
     $y_t=\rho y_{t-1}+\varepsilon_t-0.8\varepsilon_{t-1}$ for unit
     root tests using a $\alpha=0.05$ level of significance. When
@@ -740,16 +741,19 @@ comes down to either \possessivecite{NG_PERRON:2001} procedure or the
 proposed bootstrap model averaging approach.
 
 For this DGP, the proposed approach is slightly over-sized for
-$T\le 100$ (approximately $8\%$ for $T=50$ and $7\%$ for $T=100$,
+$T\le 100$ (for the MMA weighting scheme the empirical rejection
+frequencies are approximately $8\%$ for $T=50$ and $6\%$ for $T=100$,
+respectively; for the JMA weighting scheme the empirical rejection
+frequencies are approximately $7\%$ for $T=50$ and $5\%$ for $T=100$,
 respectively) while \possessivecite{NG_PERRON:2001} approach exhibits
 substantially larger size distortions for samples of size $T\le 100$
-(approximately $18\%$ and $10\%$ for $T=50$ and $T=100$, respectively),
-while both tests are correctly sized for $T \ge 200$. In addition, the
-proposed approach has substantially higher power than
-\possessivecite{NG_PERRON:2001} approach for this DGP, size distortions
-notwithstanding, regardless of whether the MMA or JMA weighting schemes
-are adopted. For this DGP, the proposed approach is first among its
-peers when judged by its power curve.
+(approximately $18\%$ and $10\%$ for $T=50$ and $T=100$,
+respectively), while both tests are approximately correctly sized for
+$T \ge 200$. In addition, the proposed approach has substantially
+higher power than \possessivecite{NG_PERRON:2001} approach for this
+DGP, size distortions notwithstanding, regardless of whether the MMA
+or JMA weighting schemes are adopted. For this DGP, the proposed
+approach is first among its peers when judged by its power curve.
 
 \subsection{ARMA(1,2) DGP}
 
@@ -761,11 +765,11 @@ ARMA(1,1) DGP above and for a range of similar DGPs, we drop them in
 the power analysis that follows.
 
 \begin{figure}[!ht]
-  \includegraphics[scale=0.375]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_arma/n_50/power.pdf}
-  \includegraphics[scale=0.375]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_arma/n_100/power.pdf}
+  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_arma/n_50/power.pdf}
+  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_arma/n_100/power.pdf}
 
-  \includegraphics[scale=0.375]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_arma/n_200/power.pdf}
-  \includegraphics[scale=0.375]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_arma/n_400/power.pdf}
+  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_arma/n_200/power.pdf}
+  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_arma/n_400/power.pdf}
   \caption{\label{fig:armapower}Power curves for the DGP
     $y_t=\rho
     y_{t-1}+\varepsilon_t+0.3\varepsilon_{t-1}-0.2\varepsilon_{t-2}$
@@ -776,8 +780,9 @@ the power analysis that follows.
 \end{figure}
 
 Figure \ref{fig:armapower} reveals that, for this DGP, all three
-procedures are correctly sized for all $T$ while the proposed approach
-that employs the MMA weight scheme dominates in terms of power.
+procedures are approximately correctly sized for all $T$ while the
+proposed approach that employs the MMA weight scheme dominates in
+terms of power.
 
 \subsection{Discussion}
 
@@ -800,7 +805,9 @@ distortions, when present, than the MMA approach, particularly when a
 trend is included in the model. A conservative approach would
 therefore be to use the JMA weight selection scheme for this
 reason. This procedure ought to appeal to practitioners as there are
-no unknown parameters that must be specified by the user.
+no unknown parameters that must be specified by the user, an R
+implementation exists, and the procedure is not computationally
+demanding.
 
 \section{Conclusion}
 
