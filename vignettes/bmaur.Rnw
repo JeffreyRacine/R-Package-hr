@@ -50,9 +50,11 @@
   Natural Sciences and Engineering Research Council of Canada
   (NSERC:www.nserc.ca), the Social Sciences and Humanities Research
   Council of Canada (SSHRC:www.sshrc.ca), and the Shared Hierarchical
-  Academic Research Computing Network (SHARCNET:www.sharcnet.ca). We
-  would like to thank but not implicate James MacKinnon, Rob Hyndman
-  and In Choi for their insight and encouragement.}
+  Academic Research Computing Network
+  (SHARCNET:www.sharcnet.ca). Hansen thanks the National Science
+  Foundation and the Phipps Chair for research support. We would like
+  to thank but not implicate James MacKinnon, Rob Hyndman and In Choi
+  for their insight and encouragement.}
 
 \keywords{Inference, model selection, size distortion, time series}
 
@@ -87,147 +89,132 @@
 
 \section{Introduction}
 
-Though unit root tests were developed over four decades ago, problems
-with the various approaches that have been proposed persist and,
-perhaps surprisingly, there remains room for improvement. When testing
-for a unit root, the null is that the series contains a unit root,
-with rejection of the null in one direction indicating that a series
-is stationary. If these tests exhibit large upwards size distortions,
-practitioners may wrongly conclude that a time series is stationary
-when in fact it is not, which can render subsequent inference
-invalid. Size distortions surface surprisingly often in this setting
-since practitioners must select from among a range of candidate
-estimating equations when testing for the presence of a unit root, and
-estimating equation mis-specification leads to bias in estimated
-parameters. To deal with the size distortions arising from
-mis-specification, bootstrap procedures have been proposed
-(\citeasnoun{PARK:2003}, \citeasnoun{PALM_ET_AL:2008}). However, for
-many of these tests, size distortions and sub-optimal power concerns
-persist in part because they rely on a model specification which must
-be selected by the practitioner from amount a set of mis-specified
-candidate models.  In order to attenuate the size distortions arising
-from the choice of a mis-specified estimating equation, the use of
-model selection criteria such as the Bayes Information Criterion (BIC)
-\cite{SCHWARZ:1978} has been advocated
-\cite{NG_PERRON:2001}. \citeasnoun{NG_PERRON:2001} assert that the BIC
-selects overly parsimonious models and propose a Modified Information
-Criteria (MIC). For \possessivecite{NG_PERRON:2001} approach, size
-distortions are attenuated as the dimension of the selected model
-increases, however this is not without cost as power falls as the
-dimension increases. Furthermore, the maximum lag that must be set by
-the practitioner affects the outcome of the test and ad-hoc rules are
-frequently adopted for its selection \cite{SCHWERT:1989}.
+Though unit root tests were developed over four decades ago, problems with the
+various approaches that have been proposed persist and, perhaps surprisingly,
+there remains room for improvement. When testing for a unit root, the null is
+that the series contains a unit root, with rejection of the null in one
+direction indicating that a series is stationary, and rejection in the other
+direction indicating explosiveness. If these tests exhibit large upwards size
+distortions, practitioners may wrongly conclude that a time series is
+stationary (or explosive)\ when in fact it is not, which can render subsequent
+inference invalid. Size distortions surface surprisingly often in this setting
+since practitioners must select from among a range of candidate estimating
+equations when testing for the presence of a unit root, and estimating
+equation mis-specification leads to bias in estimated parameters. To deal with
+the size distortions arising from mis-specification, bootstrap procedures have
+been proposed (\citeasnoun{PARK:2003}, \citeasnoun{PALM_ET_AL:2008}). However,
+for many of these tests, size distortions and sub-optimal power concerns
+persist in part because they rely on a model specification which must be
+selected by the practitioner from amount a set of mis-specified candidate
+models. In order to attenuate the size distortions arising from the choice of
+a mis-specified estimating equation, the use of model selection criteria such
+as the Bayes Information Criterion (BIC) \cite{SCHWARZ:1978} has been
+advocated \cite{NG_PERRON:2001}. \citeasnoun{NG_PERRON:2001} assert that the
+BIC selects overly parsimonious models and propose a Modified Information
+Criteria (MIC). For \possessivecite{NG_PERRON:2001} approach, size distortions
+are attenuated as the dimension of the selected model increases, however this
+is not without cost as power falls as the dimension increases. Furthermore,
+the maximum lag that must be set by the practitioner affects the outcome of
+the test and ad-hoc rules are frequently adopted for its selection
+\cite{SCHWERT:1989}.
 
 As an alternative to model selection, we could instead exploit recent
 developments in (frequentist) model averaging (\citeasnoun[Mallows
 Model Averaging (MMA)]{HANSEN:2007}, \citeasnoun[Jackknife Model
-Averaging (JMA)]{HANSEN_RACINE:2012}, \citeasnoun{HANSEN:2014}), as it
-is known that model averaging can overcome limitations associated with
-the use of model selection methods. In the present context, we propose
-a unit root statistic that is a weighted average of unit root
-statistics taken from a set of candidate estimating equations that are
-the same as those used for \possessivecite{NG_PERRON:2001} or
-\possessivecite{DICKEY_FULLER:1979} approaches. We also adopt an
-automatic, model-free, time series bootstrap procedure for
-constructing the null distribution of the proposed statistic, from
-which nonparametric critical values or nonparametric $P$-values can be
-obtained.  Most existing bootstrap unit root procedures are
-model-based, and one problem with model-based resampling is that the
-data generating process (DGP) is unknown and must be identified from
-the series at hand. In order to ensure that the bootstrap samples have
-the same structure as the series at hand, this identification must be
-correct. \citeasnoun{SWENSEN:2003} considers model-based and
-model-free bootstrap approaches and demonstrates that a
-difference-based model-free approach (along the lines of that proposed
-herein) delivers a bootstrap distribution that approaches the true
-asymptotic distribution under the null of a unit root (see also
-\citeasnoun[Section 2.4]{PALM_ET_AL:2008}).
+Averaging (JMA)]{HANSEN_RACINE:2012}, \citeasnoun{HANSEN:2014}), as it is
+known that model averaging can overcome limitations associated with the use of
+model selection methods. In the present context, we propose a unit root
+statistic that is a weighted average of unit root statistics taken from a set
+of candidate estimating equations that are the same as those used for
+\possessivecite{NG_PERRON:2001} or \possessivecite{DICKEY_FULLER:1979}
+approaches. We also adopt an automatic, model-free, time series bootstrap
+procedure for constructing the null distribution of the proposed statistic,
+from which nonparametric critical values or nonparametric $P$-values can be
+obtained. Most existing bootstrap unit root procedures are model-based, and
+one problem with model-based resampling is that the data generating process
+(DGP) is unknown and must be identified from the series at hand. In order to
+ensure that the bootstrap samples have the same structure as the series at
+hand, this identification must be correct. \citeasnoun{SWENSEN:2003} considers
+model-based and model-free bootstrap approaches and demonstrates that a
+difference-based model-free approach (along the lines of that proposed herein)
+delivers a bootstrap distribution that approaches the true asymptotic
+distribution under the null of a unit root (see also \citeasnoun[Section 2.4]{PALM_ET_AL:2008}).
 
 We will see that when model averaging is combined with a model-free,
 automatic, time series bootstrap procedure
-\cite{POLITIS_ROMANO:1994,POLITIS_WHITE:2004,PATTON_POLITIS_WHITE:2009},
-we can obtain a fully automatic data-driven procedure that has
-superior size \textsl{and} power relative to those peers whose size
-distortions do not preclude their general use, while the sensitivity
-to the dimension of the model (i.e., the maximum lag that must be set
-by the practitioner) is attenuated by averaging over a set of
-candidate estimating equations in a particular manner. Furthermore,
-unlike its peers, the procedure is very robust to the number of and
-maximum dimension of the candidate estimating equations over which the
-averaging is performed (size and power are largely unaffected whether
-you use augmented Dickey-Fuller models with, e.g., one through two,
-four, eight, sixteen, or twenty four differenced lags of the time
-series). To the best of our knowledge, ours is the first to consider
-model averaging procedures in the unit root setting.
+\cite{POLITIS_ROMANO:1994,POLITIS_WHITE:2004,PATTON_POLITIS_WHITE:2009}, we
+can obtain a fully automatic data-driven procedure that has superior size
+\textsl{and} power relative to those peers whose size distortions do not
+preclude their general use, while the sensitivity to the dimension of the
+model (i.e., the maximum lag that must be set by the practitioner) is
+attenuated by averaging over a set of candidate estimating equations in a
+particular manner. Furthermore, unlike its peers, the procedure is very robust
+to the number of and maximum dimension of the candidate estimating equations
+over which the averaging is performed (size and power are largely unaffected
+whether you use augmented Dickey-Fuller models with, e.g., one through two,
+four, eight, sixteen, or twenty four differenced lags of the time series). To
+the best of our knowledge, ours is the first to consider model averaging
+procedures in the unit root setting.
 
-We compare the proposed bootstrap model average approach with the
-classic \citeasnoun{DICKEY_FULLER:1979} method,
-\possessivecite{PHILLIPS_PERRON:1988} procedure, and with
-\possessivecite{NG_PERRON:2001} procedure (using the detrending
-approach of \citeasnoun{PERRON_QU:2007}) which is a state-of-the-art
-procedure that appears to be the go-to method for most
-practitioners. The proposed bootstrap model average approach emerges
-as the procedure of choice based upon a fairly extensive Monte Carlo
-comparison with the existing go-to and classical approaches.
-\possessivecite{NG_PERRON:2001} procedure is based on the same
-estimating equations as those \citeasnoun{DICKEY_FULLER:1979}, but
-they first detrend the series (this reduces size distortions when
-there is a large negative moving average root in the differenced
-series) and then use a novel lag selection procedure that chooses a
-larger lag length than traditional lag selection procedures.  The
-\citeasnoun{DICKEY_FULLER:1979} and \citeasnoun{NG_PERRON:2001} tests
-use a parametric autoregression to approximate the ARMA structure of
-the errors in the test regression, while
-\possessivecite{PHILLIPS_PERRON:1988} procedure instead corrects for
-any serial correlation and heteroskedasticity in the errors of the
-estimating equation by directly modifying the test statistic. We
+We compare the proposed bootstrap model average approach with the classic
+\citeasnoun{DICKEY_FULLER:1979} method, \possessivecite{PHILLIPS_PERRON:1988}
+procedure, and with \possessivecite{NG_PERRON:2001} procedure (using the
+detrending approach of \citeasnoun{PERRON_QU:2007}) which is a
+state-of-the-art procedure that appears to be the go-to method for most
+practitioners. The proposed bootstrap model average approach emerges as the
+procedure of choice based upon a fairly extensive Monte Carlo comparison with
+the existing go-to and classical approaches. \possessivecite{NG_PERRON:2001}
+procedure is based on the same estimating equations as
+\citeasnoun{DICKEY_FULLER:1979}, but they first detrend the series (this
+reduces size distortions when there is a large negative moving average root in
+the differenced series) and then use a novel lag selection procedure that
+chooses a larger lag length than traditional lag selection procedures. The
+\citeasnoun{DICKEY_FULLER:1979} and \citeasnoun{NG_PERRON:2001} tests use a
+parametric autoregression to approximate the ARMA structure of the errors in
+the test regression, while \possessivecite{PHILLIPS_PERRON:1988} procedure
+instead corrects for any serial correlation and heteroskedasticity in the
+errors of the estimating equation by directly modifying the test statistic. We
 direct the reader to the original references for further details.
 
-It has been established that the classical approach
-\cite{DICKEY_FULLER:1979} which uses tabulated critical values
-sometimes suffers from crippling size
-distortions. \possessivecite{MACKINNON:1996} improved tabulated
-critical values do not attenuate such size distortions,
-unfortunately. \citeasnoun{SCHWERT:1989} conducted extensive Monte
-Carlo simulations and demonstrated how there can exist considerable
-bias present in a mis-specified estimating equation for unit root
-testing in the presence of a moving average error process (i.e., in
-the presence of a large negative moving average root). In such cases,
-the critical values depend on the unknown parameters hence tabulated
-Dickey-Fuller critical values should be avoided, and appropriate
-bootstrap procedures may be necessary for sound inference in this
-setting. \citeasnoun{DEJONG1992323}, again via extensive simulations,
-demonstrate that the augmented Dickey-Fuller tests have low power in
-the presence of a large autoregressive root. One important practical
-aspect for augmented Dickey-Fuller unit root tests is the
-specification of the lag length. If it is too small, then the
-remaining serial correlation in the errors will bias the test. If it
-is too large, then the power of the test will
-suffer. \citeasnoun{HANSEN:1995} demonstrates how large power gains
-can be achieved by including correlated stationary covariates in the
-estimating equation (this could be trivially incorporated in the
-proposed bootstrap model average
-approach). \citeasnoun{NG_PERRON:2001} point out that a high order
-augmented autoregression is often necessary for unit root tests to
-have good size, but that information criteria such as the BIC tend to
-select a truncation lag that is small, and propose a Modified
-Information Criteria (MIC) along with GLS detrended data and
-demonstrate how this improves size but can lead to a loss in
-power. \citeasnoun{PERRON_QU:2007} propose an improved method for
+It has been established that the classical approach \cite{DICKEY_FULLER:1979}
+which uses tabulated critical values sometimes suffers from crippling size
+distortions. \possessivecite{MACKINNON:1996} improved tabulated critical
+values do not attenuate such size distortions, unfortunately.
+\citeasnoun{SCHWERT:1989} conducted extensive Monte Carlo simulations and
+demonstrated how there can exist considerable bias present in a mis-specified
+estimating equation for unit root testing in the presence of a moving average
+error process (i.e., in the presence of a large negative moving average root).
+In such cases, the critical values depend on the unknown parameters hence
+tabulated Dickey-Fuller critical values should be avoided, and appropriate
+bootstrap procedures may be necessary for sound inference in this setting.
+\citeasnoun{DEJONG1992323}, again via extensive simulations, demonstrate that
+the augmented Dickey-Fuller tests have low power in the presence of a large
+autoregressive root. One important practical aspect for augmented
+Dickey-Fuller unit root tests is the specification of the lag length. If it is
+too small, then the remaining serial correlation in the errors will bias the
+test. If it is too large, then the power of the test will suffer.
+\citeasnoun{HANSEN:1995} demonstrates how large power gains can be achieved by
+including correlated stationary covariates in the estimating equation (this
+could be incorporated in our proposed bootstrap model average approach).
+\citeasnoun{NG_PERRON:2001} point out that a high order augmented
+autoregression is often necessary for unit root tests to have good size, but
+that information criteria such as the BIC tend to select a truncation lag that
+is small, and propose a Modified Information Criteria (MIC) along with GLS
+detrended data and demonstrate how this improves size but can lead to a loss
+in power. \citeasnoun{PERRON_QU:2007} propose an improved method for
 detrending for the \citeasnoun{NG_PERRON:2001} approach. We direct the
-interested reader to \citeasnoun{CHOI:2015} who presents a
-state-of-the art treatment of unit root inference.
+interested reader to \citeasnoun{CHOI:2015} who presents a state-of-the art
+treatment of unit root inference.
 
-The rest of this paper proceeds as follows. Section
-\ref{sec:background} presents some background on unit root inference
-and presents theoretical underpinnings and the distribution of the
-weighted average ADF statistic with fixed weights. Section
-\ref{sec:bmma} outlines the proposed approach. Section \ref{sec:mc}
-presents results from a Monte Carlo simulation that compares the
-proposed approach with the classic \citeasnoun{DICKEY_FULLER:1979}
-procedure, that of \citeasnoun{NG_PERRON:2001}, and a bootstrap BIC
-model selection procedure. An R \cite{R} package exists that
-implements the proposed method \cite{hr}.
+The rest of this paper proceeds as follows. Section \ref{sec:background}
+presents some background on unit root inference and presents theoretical
+underpinnings and the distribution of the weighted average ADF statistic with
+fixed weights. Section \ref{sec:bmma} outlines the proposed approach. Section
+\ref{sec:mc} presents results from a Monte Carlo simulation that compares the
+proposed approach with the classic \citeasnoun{DICKEY_FULLER:1979} procedure,
+that of \citeasnoun{NG_PERRON:2001}, and a bootstrap BIC model selection
+procedure. An R \cite{R} package exists that implements the proposed method
+\cite{hr}.
 
 \section{\label{sec:background}Testing for a Unit Root}
 
@@ -235,13 +222,14 @@ Consider a time series $y_{t}$ which satisfies an autoregressive equation
 \begin{equation}
 y_{t}=\rho y_{t-1}+u_{t}\label{ar}
 \end{equation}
-for $t=1,\dots,T$, where $u_{t}$ is a stationary I(0) process. This includes
-i.i.d.\ processes, white noise, and mean-reverting stationary processes. When
-$\rho=1$ then $y_{t}$ is I(1) and we say that $y_{t}$ has a unit root in its
-autoregressive representation. On the other hand when $\left\vert
-\rho\right\vert <1$ then $y_{t}$ is I(0), is stationary, and does not have a
-unit root. Testing $H_{0}\colon\rho=1$ versus $H_{1}\colon\rho<1$ is an important
-practical issue in applied time series modeling.
+for $t=1,\dots,T$, where $u_{t}$ is a stationary I(0) process. The latter
+includes i.i.d.\ processes, white noise, and mean-reverting stationary
+processes. When $\rho=1$ then $y_{t}$ is I(1) and we say that $y_{t}$ has a
+unit root in its autoregressive representation. On the other hand when
+$\left\vert \rho\right\vert <1$ then $y_{t}$ is I(0), is stationary, and does
+not have a unit root. When $\rho>1$ then $y_{t}$ is explosive. Testing
+$H_{0}\colon\rho=1$ versus either $H_{1}\colon\rho\neq1$ or  $H_{1}\colon
+\rho<1$ are important practical issues in applied time series modeling.
 
 The most common method for testing the unit root hypothesis is to use the
 Augmented Dickey-Fuller (ADF) statistic, which is based on the least-squares
@@ -256,12 +244,11 @@ Form a $t$-statistic for the null that $\gamma=0$, that is
 \begin{equation*}
 ADF(k)=\frac{\widehat{\gamma}(k)}{s\left(  \widehat{\gamma}(k)\right)  }
 \end{equation*}
-where $s\left( \widehat{\gamma}(k)\right) $ is a standard error for
-$\widehat{\gamma}(k)$. The test rejects in favour of a stationary
-alternative for large negative values of $ADF(k)$ and in favour of
-non-stationary explosive alternatives for positive (or small negative)
-values. For stationary trend alternatives a linear time trend is also
-included in the regression.
+where $s\left(  \widehat{\gamma}(k)\right)  $ is a standard error for
+$\widehat{\gamma}(k)$. The test rejects in favour of a stationary alternative
+for large negative values of $ADF(k)$ and in favour of non-stationary
+explosive alternatives for positive (or small negative) values. For stationary
+trend alternatives a linear time trend is also included in the regression.
 
 The conventional asymptotic distribution theory approximates the null
 distribution of $ADF(k)$ by either assuming that $k$ is the true
@@ -271,21 +258,22 @@ model is approximately correct. We take a different approach and derive the
 asymptotic distribution without either of these assumptions.
 
 We use the following regularity condition on the fundamental errors $u_{t}$
-defined in \eqref{ar}. 
+defined in \eqref{ar}.
 
-\begin{assumption}\label{ass:ass1}
-For some $p>r>2\,$, $u_{t}$ is a strictly stationary, zero mean, strong mixing
-process of size $-pr/(p-r)$, $E\left\vert u_{i}\right\vert ^{p}<\infty$, and
-$\omega^{2}>0$ where
+\begin{assumption}
+\label{ass:ass1} For some $p>r>2\,$, $u_{t}$ is a strictly stationary, zero
+mean, strong mixing process of size $-pr/(p-r)$, $E\left\vert u_{i}\right\vert
+^{p}<\infty$, and $\omega^{2}>0$ where
 \begin{equation*}
-\omega^{2}=\sum_{j=-\infty}^{\infty}E\left(  u_{t}u_{t-j}\right).
+\omega^{2}=\sum_{j=-\infty}^{\infty}E\left(  u_{t}u_{t-j}\right) .
 \end{equation*}
+
 \end{assumption}
 
-Assumption \ref{ass:ass1} is a mild set of standard mixing conditions
-which allow for broad I(0) processes, and encompasses standard AR and
-ARMA processes. The assumption that the long-run variance $\omega^{2}$
-is positive excludes over-differenced processes.
+Assumption \ref{ass:ass1} is a mild set of standard mixing conditions which
+allow for broad I(0) processes, and encompasses standard AR and ARMA
+processes. The assumption that the long-run variance $\omega^{2}$ is positive
+excludes over-differenced processes.
 
 Our representation of the asymptotic distribution of the ADF statistic will be
 written in terms of the approximating models. For each $k$ define the
@@ -298,10 +286,10 @@ $E\left(  u_{t-j}\epsilon_{t}(k)\right)  =0$ for $j=1,\dots,k-1$. This defines
 the AR($k$) approximate model and error. Given the error $\epsilon_{t}(k)$, we
 can define its variance, autocovariance and long-run variance
 \begin{align}
-\sigma^{2}(k) &  =E\left(  \epsilon_{t}(k)^{2}\right)  \label{sigk}\\
-\lambda(k) &  =\sum_{j=1}^{\infty}E\left(  \epsilon_{t}(k)\epsilon
-_{t-j}(k)\right)  \label{lk}\\
-\nu^{2}(k) &  =\sigma^{2}(k)+2\lambda(k).\label{vk}
+\sigma^{2}(k)  &  =E\left(  \epsilon_{t}(k)^{2}\right) \label{sigk}\\
+\lambda(k)  &  =\sum_{j=1}^{\infty}E\left(  \epsilon_{t}(k)\epsilon
+_{t-j}(k)\right) \label{lk}\\
+\nu^{2}(k)  &  =\sigma^{2}(k)+2\lambda(k).\label{vk}
 \end{align}
 The parameter $\sigma^{2}(k)$ is the variance of $\epsilon_{t}(k)$,
 $\lambda(k)$ is the sum of its autocovariances, and $\nu^{2}(k)$ is its
@@ -310,14 +298,14 @@ serial correlation so that $\lambda(k)\neq0$ and $\sigma^{2}(k)\neq\nu^{2}
 (k)$. Under correct specification the error is white noise so $\lambda(k)=0$
 and $\sigma^{2}(k)=\nu^{2}(k)$. Thus for small $k$ we expect $\lambda(k)\neq0$
 and $\sigma^{2}(k)\neq\nu^{2}(k)$ but for large $k$ we expect $\lambda
-(k)\simeq0$ and  $\sigma^{2}(k)\simeq\nu^{2}(k)$, though there is no reason to
+(k)\simeq0$ and $\sigma^{2}(k)\simeq\nu^{2}(k)$, though there is no reason to
 expect equality for any finite $k.$
 
-\begin{theorem}\label{thm:thm1}
-  Under Assumption \ref{ass:ass1} and $H_{0}\colon\rho=1$, jointly
-  over $k=1,\dots,K$, as $T\rightarrow\infty$
+\begin{theorem}
+\label{thm:thm1}  Under Assumption \ref{ass:ass1} and $H_{0}\colon\rho=1$,
+jointly  over $k=1,\dots,K$, as $T\rightarrow\infty$
 \begin{equation}
-ADF(k)\stackrel{d}{\to}\frac{\nu(k)}{\sigma(k)}\frac{\int_{0}^{1}W^{\ast}
+ADF(k)\overset{d}{\to}\frac{\nu(k)}{\sigma(k)}\frac{\int_{0}^{1}W^{\ast}
 dW}{\left(  \int_{0}^{1}W^{\ast2}\right)  ^{1/2}}+\frac{\lambda(k)}
 {\omega\sigma(k)\left(  \int_{0}^{1}W^{\ast2}\right)  ^{1/2}}\label{adf}
 \end{equation}
@@ -325,65 +313,60 @@ where $W(r)$ is a standard Brownian motion, and $W^{\ast}(r)=W(r)-\int_{0}
 ^{1}W(r)dr$ (or a detrended Brownian motion if a time trend is included).
 \end{theorem}
 
-Theorem \ref{thm:thm1} shows that the ADF $t$-statistics converge
-jointly to mis-specified versions of the classic Dickey-Fuller
-$t$-distribution. The distortions are due to mis-specified serial
-correlation. When the autoregression is correctly specified so that
-the error is white noise, then $\lambda(k)=0$ in which case the
-distribution in \eqref{adf} simplifies to the classical
-$\int_{0} ^{1}W^{\ast}dW/\left( \int_{0}^{1}W^{\ast2}\right) ^{1/2}$
-found by \citeasnoun{DICKEY_FULLER:1979}.
+Theorem \ref{thm:thm1} shows that the ADF $t$-statistics converge jointly to
+mis-specified versions of the classic Dickey-Fuller $t$-distribution. The
+distortions are due to mis-specified serial correlation. When the
+autoregression is correctly specified so that the error is white noise, then
+$\lambda(k)=0$ in which case the distribution in \eqref{adf} simplifies to the
+classical $\int_{0} ^{1}W^{\ast}dW/\left(  \int_{0}^{1}W^{\ast2}\right)
+^{1/2}$ found by \citeasnoun{DICKEY_FULLER:1979}.
 
-Theorem \ref{thm:thm1} also shows that the sequence of $t$-statistics
-(for different autoregressive orders) converge jointly, and are all
-functions of the same Brownian motion process $W(r)$.
+Theorem \ref{thm:thm1} also shows that the sequence of $t$-statistics (for
+different autoregressive orders) converge jointly, and are all functions of
+the same Brownian motion process $W(r)$.
 
-The asymptotic distribution in Theorem \ref{thm:thm1} is generally
-unknown as it depends on the unknown parameters $\sigma(k)$ and
-$\lambda(k)$. However, the distribution can be approximated by
-bootstrap methods since these parameters can be consistently
-estimated.
+The asymptotic distribution in Theorem \ref{thm:thm1} is generally unknown as
+it depends on the unknown parameters $\sigma(k)$ and $\lambda(k)$. However,
+the distribution can be approximated by bootstrap methods since these
+parameters can be consistently estimated.
 
-By picking a suitably large autoregressive order $k$ the
-distributional distortions can be minimized. Larger values of $k$,
-however, reduce the power of unit root tests in finite samples. Thus
-it has been viewed as desirable to use an autoregressive order $k$
-which is large enough to minimize the size distortions but not so
-large as to reduce the power of the test. This requires a
-data-dependent rule $\widehat{k}$ for selection of $k$. One popular
-method is BIC selection. However, \citeasnoun{NG_PERRON:2001} argued
-that this produces a $\widehat{k}$ which is too small to alleviate the
-size distortion, and proposed instead a Modified Information Criteria
-(MIC) designed for the unit root testing problem.
+By picking a suitably large autoregressive order $k$ the distributional
+distortions can be minimized. Larger values of $k$, however, reduce the power
+of unit root tests in finite samples. Thus it has been viewed as desirable to
+use an autoregressive order $k$ which is large enough to minimize the size
+distortions but not so large as to reduce the power of the test. This requires
+a data-dependent rule $\widehat{k}$ for selection of $k$. One popular method
+is BIC selection. However, \citeasnoun{NG_PERRON:2001} argued that this
+produces a $\widehat{k}$ which is too small to alleviate the size distortion,
+and proposed instead a Modified Information Criteria (MIC) designed for the
+unit root testing problem.
 
-A data-dependent selection rule $\widehat{k}$ leads to a
-data-dependent ADF test $ADF(\widehat{k})$. The appropriate null
-distribution for $ADF(\widehat{k})$ is unclear, however, as the use of
-a selected lag length invalidates the conventional limit theory unless
-used without an ad hoc assumption that $\widehat{k}$ diverges with
-$T$. Bootstrap critical values could be used instead though no formal
-justification has been provided.
+A data-dependent selection rule $\widehat{k}$ leads to a data-dependent ADF
+test $ADF(\widehat{k})$. The appropriate null distribution for
+$ADF(\widehat{k})$ is unclear, however, as the use of a selected lag length
+invalidates the conventional limit theory unless used with an ad hoc
+assumption that $\widehat{k}$ diverges with $T$. Bootstrap critical values
+could be used instead though no formal justification has been provided.
 
 %% Bruce - you used $n$ in three places, I have replaced with $T$
 
 %% Bruce - you had "unless without"... added "unless used without" but
 %% you might want to correct for your intention
 
-Instead of selection rules, we propose an averaging statistic. For $k=1,\dots,K$
-let $w(k)$ be a set of non-negative weights which sum to one, and set
-$w=(w(1),\dots,w(K))$. Then an averaging ADF statistic is
+Instead of selection rules, we propose an averaging statistic. For
+$k=1,\dots,K$ let $w(k)$ be a set of non-negative weights which sum to one,
+and set $w=(w(1),\dots,w(K))$. Then an averaging ADF statistic is
 \begin{equation*}
 ADF(w)=\sum_{k=1}^{K}w(k)ADF(k).
 \end{equation*}
 
-
 The asymptotic distribution of the averaging ADF statistic can be deduced
 directly from Theorem 1.
 
-\begin{theorem}\label{thm:thm2}
-As $T\rightarrow\infty$
+\begin{theorem}
+\label{thm:thm2} As $T\rightarrow\infty$
 \begin{equation*}
-ADF(w)\stackrel{d}{\to}\left(  \sum_{k=1}^{K}w(k)\frac{\nu(k)}{\sigma
+ADF(w)\overset{d}{\to}\left(  \sum_{k=1}^{K}w(k)\frac{\nu(k)}{\sigma
 (k)}\right)  \frac{\int_{0}^{1}W^{\ast}dW}{\left(  \int_{0}^{1}W^{\ast
 2}\right)  ^{1/2}}+\left(  \sum_{k=1}^{K}w(k)\frac{\lambda(k)}{\omega
 \sigma(k)}\right)  \frac{1}{\left(  \int_{0}^{1}W^{\ast2}\right)  ^{1/2}}.
@@ -391,44 +374,41 @@ ADF(w)\stackrel{d}{\to}\left(  \sum_{k=1}^{K}w(k)\frac{\nu(k)}{\sigma
 
 \end{theorem}
 
-Theorem \ref{thm:thm2} provides the asymptotic distribution of the
-averaging ADF statistic for fixed weights. Like the distribution in
-Theorem \ref{thm:thm1}, it is a distorted version of the classic
-Dickey-Fuller $t$-distribution.
+Theorem \ref{thm:thm2} provides the asymptotic distribution of the averaging
+ADF statistic for fixed weights. Like the distribution in Theorem
+\ref{thm:thm1}, it is a distorted version of the classic Dickey-Fuller $t$-distribution.
 
-While the distribution in Theorem \ref{thm:thm2} is generally unknown,
-and dependent on the unknown serial correlation properties of the
-series $\Delta y_{t}$, it can be approximated by standard bootstrap
-methods since the serial correlation properties can be consistently
-estimated.
+While the distribution in Theorem \ref{thm:thm2} is generally unknown, and
+dependent on the unknown serial correlation properties of the series $\Delta
+y_{t}$, it can be approximated by standard bootstrap methods since the serial
+correlation properties can be consistently estimated.
 
-\begin{proof}[Proof of Theorem \ref{thm:thm1}]
-
-  For simplicity we omit the deterministic components from the
-  exposition. By the \citeasnoun{HERRNDORF:1984} functional central
-  limit theorem
+\begin{proof}
+[Proof of Theorem \ref{thm:thm1}] For simplicity we omit the deterministic
+components from the  exposition. By the \citeasnoun{HERRNDORF:1984} functional
+central  limit theorem
 \begin{align*}
-\frac{1}{\sqrt{T}}\sum_{t=1}^{[Tr]}u_{t} &  \Rightarrow\omega W(r)\\
-\frac{1}{\sqrt{T}}\sum_{t=1}^{[Tr]}\epsilon_{t}(k) &  \Rightarrow\nu(k)W(r)
+\frac{1}{\sqrt{T}}\sum_{t=1}^{[Tr]}u_{t}  &  \Rightarrow\omega W(r)\\
+\frac{1}{\sqrt{T}}\sum_{t=1}^{[Tr]}\epsilon_{t}(k)  &  \Rightarrow\nu(k)W(r)
 \end{align*}
 where $W(r)$ is standard Brownian motion. This convergence holds jointly over
 both equations and over $k$ since the $\epsilon_{t}(k)$ are linear
-transformations of the errors $u_{t}$. Applying Theorem 4.1 of \citeasnoun{HANSEN:1992}
+transformations of the errors $u_{t}$. Applying Theorem 4.1 of
+\citeasnoun{HANSEN:1992}
 \begin{equation*}
-\frac{1}{T}\sum_{t=1}^{T}y_{t-1}\epsilon_{t}(k)\stackrel{d}{\to}\omega\nu
-(k)\int_{0}^{1}WdW+\lambda(k)
+\frac{1}{T}\sum_{t=1}^{T}y_{t-1}\epsilon_{t}(k)\overset{d}{\to}\omega
+\nu(k)\int_{0}^{1}WdW+\lambda(k)
 \end{equation*}
 jointly over $k$.
 
 Let $\widehat{a}(k)=\left(  \widehat{a}_{1}(k),\dots,\widehat{a}_{k-1}
 (k)\right)  ^{\prime}$ and $a(k)=\left(  a_{1}(k),\dots,a_{k-1}(k)\right)
-^{\prime}$. Define $x_{t}(k)=(y_{t-1},\dots,y_{t-k+1})^{\prime}$, $Q(k)=E\left(
-x_{t}(k)x_{t}(k)^{\prime}\right)  $ and
+^{\prime}$. Define $x_{t}(k)=(y_{t-1},\dots,y_{t-k+1})^{\prime}$,
+$Q(k)=E\left(  x_{t}(k)x_{t}(k)^{\prime}\right)  $ and
 \begin{equation*}
 \Omega(k)=\sum_{j=-\infty}^{\infty}E\left(  x_{t}(k)\epsilon_{t}
 (k)x_{t-j}(k)^{\prime}\epsilon_{t-j}(k)\right)  .
 \end{equation*}
-
 
 By standard manipulations for the asymptotic theory of integrated processes
 \begin{equation*}
@@ -438,7 +418,7 @@ By standard manipulations for the asymptotic theory of integrated processes
 T\widehat{\gamma}(k)\\
 \sqrt{T}\left(  \widehat{a}(k)-a(k)\right)
 \end{array}
-\right)  \stackrel{d}{\to}\left(
+\right)  \overset{d}{\to}\left(
 \begin{array}
 [c]{cc}
 \omega^{2}\int_{0}^{1}W^{2} & 0\\
@@ -456,11 +436,12 @@ where $\xi(k)\sim N(0,\Omega(k))$. This convergence is joint across $k$.
 
 Furthermore, the standard errors satisfy
 \begin{equation*}
-T\left(  s\left(  \widehat{\gamma}(k)\right)  \right)  ^{2}\stackrel{d}{\to}\left(  \omega^{2}\int_{0}^{1}W^{2}\right)  ^{-1}\sigma^{2}(k).
+T\left(  s\left(  \widehat{\gamma}(k)\right)  \right)  ^{2}\overset{d}{\to
+}\left(  \omega^{2}\int_{0}^{1}W^{2}\right)  ^{-1}\sigma^{2}(k).
 \end{equation*}
 Together, we find
 \begin{equation*}
-ADF(k)\stackrel{d}{\to}\frac{\omega\nu(k)\int_{0}^{1}WdW+\lambda(k)}{\left(
+ADF(k)\overset{d}{\to}\frac{\omega\nu(k)\int_{0}^{1}WdW+\lambda(k)}{\left(
 \omega^{2}\int_{0}^{1}W^{2}\right)  ^{1/2}\sigma(k)}=\frac{\nu(k)}{\sigma
 (k)}\frac{\int_{0}^{1}WdW}{\left(  \int_{0}^{1}W^{2}\right)  ^{1/2}}
 +\frac{\lambda(k)}{\omega\sigma(k)\left(  \int_{0}^{1}W^{2}\right)  ^{1/2}}
@@ -472,362 +453,345 @@ as claimed.
 
 \subsection{Model Average Estimators}
 
-The goal in model averaging is to reduce estimation variance while
-controlling mis-specification bias. The Mallows \cite{MALLOWS:1973}
-Criterion for the model average estimator \cite{HANSEN:2007} is
+The goal in model averaging is to reduce estimation variance while controlling
+mis-specification bias. The Mallows \cite{MALLOWS:1973} Criterion for the
+model average estimator \cite{HANSEN:2007} is
 \begin{equation*}
-  C_n(w)=w'\hat E'\hat Ew+2\sigma^2K'w,
+C_{n}(w)=w^{\prime}\hat E^{\prime}\hat Ew+2\sigma^{2}\mathcal{K}^{\prime}w,
 \end{equation*}
-where $\hat E$ is the $T\times M$ matrix with columns containing the
-residual vector from the $m$th candidate estimating equation, $K$ the
-$M\times 1$ vector of the number of parameters in each model, and
-$\sigma^2$ the variance from the largest dimensional
-model.\footnote{Note that the residual vectors will be of different
-  lengths when the model incorporates lags, so some care must be
-  exercised when populating $\hat E$, i.e., the first $k-1$ elements
-  from the residual vector for the estimating equation models not
-  containing lags must be discarded.} This criterion is used to select
-the weight vector $\hat w$, i.e.,
+where $\hat E$ is the $T\times M$ matrix with columns containing the residual
+vector from the $m$th candidate estimating equation, $\mathcal{K}$ the $M\times1$ vector
+of the number of parameters in each model, and $\sigma^{2}$ the variance from
+the largest dimensional model.\footnote{Note that the residual vectors will be
+of different  lengths when the model incorporates lags, so some care must be
+exercised when populating $\hat E$, i.e., the first $k-1$ elements  from the
+residual vector for the estimating equation models not  containing lags must
+be discarded.} This criterion is used to select the weight vector $\hat w$,
+i.e.,
 \begin{equation*}
-  \hat w = \argmin_w C_n(w).
+\hat w = \argmin_{w} C_{n}(w).
 \end{equation*}
-Because $\argmin_w C_n(w)$ has no closed-form solution, the weight
-vector is found numerically. The solution involves constrained
-minimization subject to non-negativity and summation constraints,
-which constitutes a classic quadratic programming problem. This
-criterion involves nothing more than computing the residuals for each
-candidate estimating equation, obtaining the rank of each candidate
-estimating equation, and solving a simple quadratic program. The MMA
-$C_n(w)$ criterion provides an estimate of the average squared error
-from the model average fit, and has been shown to be asymptotically
-optimal in the sense of achieving the lowest possible squared error in
-a class of model average estimators. See \citeasnoun{HANSEN:2007} for
-further details. See also \citeasnoun{HANSEN:2014} who explores the
-use of the Mallows criterion in a time series autoregression setting
-and notes that averaging estimators have reduced risk relative to
-unconstrained estimation when the covariates are grouped in sets of
-four or larger so that a Stein shrinkage effect holds, and suggests
-that averaging estimators be restricted to models in which the
-regressors have been grouped in this manner. See also the related work
-of \citeasnoun{Hansen2010142} who uses a Mallows criterion for
-combining forecasts local to a unit root. In our procedure we use
-\possessivecite{SCHWERT:1989} rule for determining the dimension of
-the largest ADF model that is averaged over, and group candidate
-models per \citeasnoun{HANSEN:2014}.
+Because $\argmin_{w} C_{n}(w)$ has no closed-form solution, the weight vector
+is found numerically. The solution involves constrained minimization subject
+to non-negativity and summation constraints, which constitutes a classic
+quadratic programming problem. This criterion involves nothing more than
+computing the residuals for each candidate estimating equation, obtaining the
+rank of each candidate estimating equation, and solving a simple quadratic
+program. The MMA $C_{n}(w)$ criterion provides an estimate of the average
+squared error from the model average fit, and has been shown to be
+asymptotically optimal in the sense of achieving the lowest possible squared
+error in a class of model average estimators. See \citeasnoun{HANSEN:2007} for
+further details. See also \citeasnoun{HANSEN:2014} who explores the use of the
+Mallows criterion in a time series autoregression setting and notes that
+averaging estimators have reduced risk relative to unconstrained estimation
+when the covariates are grouped in sets of four or larger so that a Stein
+shrinkage effect holds, and suggests that averaging estimators be restricted
+to models in which the regressors have been grouped in this manner. See also
+the related work of \citeasnoun{Hansen2010142} who uses a Mallows criterion
+for combining forecasts local to a unit root. In our procedure we use
+\possessivecite{SCHWERT:1989} rule for determining the dimension of the
+largest ADF model that is averaged over, and group candidate models per \citeasnoun{HANSEN:2014}.
 
 \citeasnoun{HANSEN_RACINE:2012} propose an alternative jackknife model
 averaging (JMA) criterion for the model average estimator given by
 \begin{equation*}
-  CV_{n}(w)=\frac{1}{n}(y-\tilde Xw)'(y-\tilde Xw),
+CV_{n}(w)=\frac{1}{n}(y-\tilde{X}w)^{\prime}(y-\tilde{X}w),
 \end{equation*}
-where $\tilde X$ is the $T\times M$ matrix with columns containing the
-jackknife estimator from the $m$th candidate estimating equation
-formed by deleting the $t$ observation when constructing the $t$th
-prediction. Like its Mallows counterpart, this involves solving a
-quadratic program where we minimize
-$(y-\tilde Xw)'(y-\tilde Xw)=y'y+w'\tilde X'\tilde Xw-2y'\tilde Xw$
-and the first term is ignorable. In the presence of homoskedastic
-errors, JMA and MMA are nearly equivalent, but when the errors are
-heteroskedastic, JMA has significantly lower MSE.
+where $\tilde{X}$ is the $T\times M$ matrix with columns containing the
+jackknife estimator from the $m^{th}$ candidate estimating equation formed by
+deleting the $t$ observation when constructing the $t^{th}$ prediction. Like
+its Mallows counterpart, this involves solving a quadratic program where we
+minimize $(y-\tilde{X}w)^{\prime}(y-\tilde{X}w)=y^{\prime}y+w^{\prime}
+\tilde{X}^{\prime}\tilde{X}w-2y^{\prime}\tilde{X}w$ and the first term is
+ignorable. In the presence of homoskedastic errors, JMA and MMA are nearly
+equivalent, but when the errors are heteroskedastic, JMA has significantly
+lower MSE.
 
-To obtain a model average test statistic, we take the $ADF(k)$
-statistic from each of the $K$ candidate estimating equations and
-average them using the weight vector $\hat w$, and call this averaged
-statistic $ADF(w)=\sum_{k=1}^K\hat w(k)ADF(k)$. In order to obtain the
-null distribution of this statistic, we use a time series bootstrap
-with automatic choice of the expected block length.
+To obtain a model average test statistic, we take the $ADF(k)$ statistic from
+each of the $K$ candidate estimating equations and average them using the
+weight vector $\hat w$, and call this averaged statistic $ADF(w)=\sum
+_{k=1}^{K}\hat w(k)ADF(k)$. In order to obtain the null distribution of this
+statistic, we use a time series bootstrap with automatic choice of the
+expected block length.
 
 \subsection{A Unit Root Model Average Bootstrap Procedure}
 
-We consider a first-difference-based bootstrap procedure for obtaining
-the sampling distribution of $ADF(w)$ under the null of a unit root
-along the lines of \citeasnoun{SWENSEN:2003}, who proves the
-consistency of the standard (non-averaged) test without deterministic
-components based on the stationary bootstrap (deterministic components
-can be added in the same manner as in \citeasnoun{PSARADAKIS:2001};
-see \citeasnoun[page 382]{PALM_ET_AL:2008}). The bootstrap procedure
-is as follows:
+We consider a first-difference-based bootstrap procedure for obtaining the
+sampling distribution of $ADF(w)$ under the null of a unit root along the
+lines of \citeasnoun{SWENSEN:2003}, who proves the consistency of the standard
+(non-averaged) test without deterministic components based on the stationary
+bootstrap (deterministic components can be added in the same manner as in
+\citeasnoun{PSARADAKIS:2001}; see \citeasnoun[page 382]{PALM_ET_AL:2008}). The
+bootstrap procedure is as follows:
 
 \begin{enumerate}
+\item Take the first difference of the series at hand  $\epsilon_{t}=\Delta
+y_{t}$, $t=1,\dots,T$ ($\epsilon_{t}$ could be, e.g., an  ARMA process)
 
-\item Take the first difference of the series at hand
-  $\epsilon_t=\Delta y_t$, $t=1,\dots,T$ ($\epsilon_t$ could be, e.g., an
-  ARMA process)
+\item Apply a time series bootstrap with automated block length choice  to
+$\epsilon_{t}$, $t=1,\dots,T$ ($l$ is the expected block length  obtained for
+the geometric bootstrap; see  \citeasnoun{PATTON_POLITIS_WHITE:2009},
+\citeasnoun{POLITIS_WHITE:2004}, \citeasnoun{POLITIS_ROMANO:1994})
 
-\item Apply a time series bootstrap with automated block length choice
-  to $\epsilon_t$, $t=1,\dots,T$ ($l$ is the expected block length
-  obtained for the geometric bootstrap; see
-  \citeasnoun{PATTON_POLITIS_WHITE:2009},
-  \citeasnoun{POLITIS_WHITE:2004}, \citeasnoun{POLITIS_ROMANO:1994})
+\item Take the cumulative sum of this bootstrap residual  $\epsilon^{*}_{t}$,
+$t=1,\dots,T$ initializing the sum to the first  realization of the series,
+which will generate a bootstrap series  containing a unit root, i.e.,
+$y^{*}_{t}=y_{1}+\sum_{i=2}^{t}\epsilon^{*}_{i}=y^{*}_{t-1}+\epsilon^{*}_{t}$
 
-\item Take the cumulative sum of this bootstrap residual
-  $\epsilon^*_t$, $t=1,\dots,T$ initializing the sum to the first
-  realization of the series, which will generate a bootstrap series
-  containing a unit root, i.e.,
-  $y^*_t=y_1+\sum_{i=2}^t\epsilon^*_i=y^*_{t-1}+\epsilon^*_t$
+\item Next, take the bootstrap $ADF(k)^{*}$ statistics from each of the  $K$
+candidate estimating equations and average them using the weight  vector for
+the original series $\hat w$, which delivers a bootstrap  model average
+statistic $ADF(w)^{*}$ generated under the null
 
-\item Next, take the bootstrap $ADF(k)^{*}$ statistics from each of the
-  $K$ candidate estimating equations and average them using the weight
-  vector for the original series $\hat w$, which delivers a bootstrap
-  model average statistic $ADF(w)^{*}$ generated under the null
+\item Repeat this process $B$ times to obtain the $B$ bootstrap statistics
+$ADF(w)_{1,K}^{\ast},\dots,ADF(w)_{B,K}^{\ast}$.
 
-\item Repeat this process $B$ times, then compute percentiles of the
-  $B$ bootstrap statistics $ADF(w)^{*}_{1,K},\dots, ADF(w)^{*}_{B,K}$
-  which serve as critical values under the null (e.g., $\alpha/2$ and
-  $1-\alpha/2$ where $\alpha$ is the desired level of the test);
-  finally, determine whether one will reject or fail to reject at
-  level $\alpha$
+\item For the one-sided stationary alternative $H_{1}\colon\rho<1$ compute the
+$\alpha$ empirical quantile $q_{\alpha}$ from the bootstrap statistics. Reject
+$H_{0}\colon\rho=1$ in favor of $H_{1}\colon\rho<1$ if $ADF(w)<q_{\alpha}$.
 
+\item For the two-sided alternative $H_{1}\colon\rho\neq1$ compute the
+$\alpha/2$ and $1-\alpha/2$ empirical quantiles $q_{\alpha/2}$ and
+$q_{1-\alpha/2}$ from the bootstrap statistics. Reject $H_{0}\colon\rho=1$ in
+favor of $H_{1}:\rho\neq1$ if $ADF(w)<q_{\alpha/2}$ or $ADF(w)>q_{1-\alpha/2}$.
 \end{enumerate}
 
 \section{\label{sec:mc}Monte Carlo Simulation for Bootstrap Unit Root Test}
 
-In order to assess the finite-sample performance of the proposed
-approach relative to its peers, we conduct a series of Monte Carlo
-simulation experiments. In particular, we construct power curves for a
-handful of procedures based upon three DGPs, one a simple AR(1), one
-an ARMA(1,1), and one an ARMA(1,2). The ARMA(1,1) DGP was used in
-simulations appearing in \citeasnoun{PALM_ET_AL:2008}
-($y_t=\rho y_{t-1}+\epsilon_t-0.8\epsilon_{t-1}$) and is known to
-confound existing tests. It is noteworthy that \citeasnoun[p.\
-344]{PHILLIPS_PERRON:1988} point out a limitation of their approach
-writing that their tests ``have significant size distortions and are
-too liberal to be useful for $\theta=-0.5,-0.8$'' (here $\theta=-0.8$
-is the MA coefficient in the ARMA(1,1) model). For the ARMA(1,2) DGP
-we use
-$y_t=\rho y_{t-1}+\epsilon_t+0.3\epsilon_{t-1}-0.2\epsilon_{t-1}$,
-while for the AR(1) DGP we use $y_t=\rho y_{t-1}+\epsilon_t$.
+In order to assess the finite-sample performance of the proposed approach
+relative to its peers, we conduct a series of Monte Carlo simulation
+experiments. In particular, we construct power curves for a handful of
+procedures based upon three DGPs, one a simple AR(1), one an ARMA(1,1), and
+one an ARMA(1,2). The ARMA(1,1) DGP was used in simulations appearing in
+\citeasnoun{PALM_ET_AL:2008} ($y_{t}=\rho y_{t-1}+\epsilon_{t}-0.8\epsilon
+_{t-1}$) and is known to confound existing tests. It is noteworthy that
+\citeasnoun[p.\
+344]{PHILLIPS_PERRON:1988} point out a limitation of their approach writing
+that their tests ``have significant size distortions and are too liberal to be
+useful for $\theta=-0.5,-0.8$'' (here $\theta=-0.8$ is the MA coefficient in
+the ARMA(1,1) model). For the ARMA(1,2) DGP we use $y_{t}=\rho y_{t-1}
++\epsilon_{t}+0.3\epsilon_{t-1}-0.2\epsilon_{t-1}$, while for the AR(1) DGP we
+use $y_{t}=\rho y_{t-1}+\epsilon_{t}$.
 
 We conduct $B=399$ bootstrap replications and $M=2500$ Monte Carlo
-replications for sample sizes $T=(50,100,200,400)$. We then conduct
-the bootstrap test described above using the MMA and JMA weighting
-scheme and report the empirical rejection frequency of it and the
-tests of \citeasnoun{NG_PERRON:2001},
-\citeasnoun{PHILLIPS_PERRON:1988} and \citeasnoun{DICKEY_FULLER:1979},
-where each test is conducted using a $5\%$ nominal level. When $\rho=1$
-we can assess each test's empirical size while when $\rho<1$ we can
-assess power, and we consider $\rho\in[0.75,1]$ using a grid of $15$
-equally spaced values for $\rho$ when constructing each power curve.
+replications for sample sizes $T=(50,100,200,400)$. We then conduct the
+two-sided bootstrap test described above using the MMA and JMA weighting
+scheme and report the empirical rejection frequency of it and the one-sided
+tests of \citeasnoun{NG_PERRON:2001}, \citeasnoun{PHILLIPS_PERRON:1988} and
+\citeasnoun{DICKEY_FULLER:1979}, where each test is conducted using a $5\%$
+nominal level. When $\rho=1$ we can assess each test's empirical size. We
+examine power against stationary alternatives $\rho<1$, and we consider
+$\rho\in\lbrack0.75,1]$ using a grid of $15$ equally spaced values for $\rho$
+when constructing each power curve.
 
-The legends in the figures that follow use the following
-abbreviations; MMA (proposed bootstrap model average ADF test with
-\citeasnoun{HANSEN:2007} weight selection); JMA (proposed test with
-\citeasnoun{HANSEN_RACINE:2012} weight selection); N-P
-(\citeasnoun{NG_PERRON:2001} with MIC model selection using
-\citeasnoun{PERRON_QU:2007} detrending based on asymptotic critical
-values); P-P (\citeasnoun{PHILLIPS_PERRON:1988} based on asymptotic
-critical values); ADF (\citeasnoun{DICKEY_FULLER:1979} with BIC model
-selection based on \possessivecite{MACKINNON:1996} asymptotic critical
-values). The N-P and ADF tests are from the R package
-\texttt{CADFtest} \cite{CADF} while the P-P test is from the R package
-\texttt{tseries} \cite{tseries}. The proposed test is from the R
-package \texttt{hr} \cite{hr}.
+It might seem odd that we compare our proposed two-sided tests with existing
+one-sided tests. We select our two-sided test as we believe it is important to
+be agnostic about the alternative. We use existing one-sided tests as these
+are the common implementation. If we replace the latter tests by two-sided
+versions this substantially decreases their power, so this is a fair
+comparison regarding power.
 
-Among all tests considered, the preferred test would have a power
-curve that would exhibit correct size (i.e., when $\rho=1$ would have
-an empirical rejection frequency that is approximately $5\%$ or
-otherwise exhibit the lowest size distortions), and otherwise would
-have uniformly higher power than its peers (i.e., when $\rho<1$ its
-power curve would lie above those of its peers). Any test procedure
-exhibiting large upwards size distortions in standard settings cannot
-in good conscience be recommended to practitioners since it could lead
-to the rejection of the null at levels far in excess of the nominal
-level of the test when the null is in fact correct. Results for each
-DGP and a brief discussion follow.
+The legends in the figures that follow use the following abbreviations; MMA
+(proposed bootstrap model average ADF test with \citeasnoun{HANSEN:2007}
+weight selection); JMA (proposed test with \citeasnoun{HANSEN_RACINE:2012}
+weight selection); N-P (\citeasnoun{NG_PERRON:2001} with MIC model selection
+using \citeasnoun{PERRON_QU:2007} detrending based on asymptotic critical
+values); P-P (\citeasnoun{PHILLIPS_PERRON:1988} based on asymptotic critical
+values); ADF (\citeasnoun{DICKEY_FULLER:1979} with BIC model selection based
+on \possessivecite{MACKINNON:1996} asymptotic critical values). The N-P and
+ADF tests are from the R package \texttt{CADFtest} \cite{CADF} while the P-P
+test is from the R package \texttt{tseries} \cite{tseries}. The proposed test
+is from the R package \texttt{hr} \cite{hr}.
+
+Among all tests considered, the preferred test would have a power curve that
+would exhibit correct size (i.e., when $\rho=1$ would have an empirical
+rejection frequency that is approximately $5\%$ or otherwise exhibit the
+lowest size distortions), and otherwise would have uniformly higher power than
+its peers (i.e., when $\rho<1$ its power curve would lie above those of its
+peers). Any test procedure exhibiting large upwards size distortions in
+standard settings cannot in good conscience be recommended to practitioners
+since it could lead to the rejection of the null at levels far in excess of
+the nominal level of the test when the null is in fact correct. Results for
+each DGP and a brief discussion follow.
 
 \subsection{AR(1) DGP}
 
-Figure \ref{fig:arpower} presents power curves generated under the
-AR(1) DGP.  For the proposed test we present results using both the
-MMA or JMA weight selection schemes outlined in Section \ref{sec:bmma}
-based upon the bootstrap procedure outlined in Section
-\ref{sec:bmma}. For the remaining tests we use asymptotic critical
-values as outlined above.
+Figure \ref{fig:arpower} presents power curves generated under the AR(1) DGP.
+For the proposed test we present results using both the MMA or JMA weight
+selection schemes outlined in Section \ref{sec:bmma} based upon the bootstrap
+procedure outlined in Section \ref{sec:bmma}. For the remaining tests we use
+asymptotic critical values as outlined above.
 
-\begin{figure}[!ht]
-  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar/n_50/power_all.pdf}
-  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar/n_100/power_all.pdf}
-
-  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar/n_200/power_all.pdf}
-  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar/n_400/power_all.pdf}
-  \caption{\label{fig:arpower}Power curves for the AR(1) DGP
-    $y_t=\rho y_{t-1}+\varepsilon_t$ for unit root tests using a
-    $\alpha=0.05$ level of significance. When $\rho=1$ a unit root is
-    present (empirical size is the height of the power curve at
-    $\rho=1$, i.e., at the right of each figure).}
+\begin{figure}[th]
+\includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar/n_50/power_all.pdf}
+\includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar/n_100/power_all.pdf}
+\par
+\includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar/n_200/power_all.pdf}
+\includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar/n_400/power_all.pdf}
+\caption{Power curves for the AR(1) DGP $y_{t}=\rho y_{t-1}+\varepsilon_{t}$
+for unit root tests using a $\alpha=0.05$ level of significance. When $\rho=1$
+a unit root is present (empirical size is the height of the power curve at
+$\rho=1$, i.e., at the right of each figure).}
+\label{fig:arpower}
 \end{figure}
 
-Figure \ref{fig:arpower} reveals that this is a textbook case where
-all tests are correctly sized, though it is evident that the proposed
-approach dominates in terms of power. As expected, for a given value
-of $\rho$ ($<1$), power increases as the sample size increases for all
-tests. For the proposed test, \possessivecite{HANSEN:2007} MMA weight
-selection scheme delivers a test with more power than that based on
-\possessivecite{HANSEN_RACINE:2012} JMA approach for this DGP. Based
-on this set of power curves, for this DGP the proposed approach with
-MMA weight selection dominates its peers.
+Figure \ref{fig:arpower} reveals that this is a textbook case where all tests
+are approximately correctly sized, though it is evident that the proposed
+approach dominates in terms of power. As expected, for a given value of $\rho$
+($<1$), power increases as the sample size increases for all tests. For the
+proposed test, \possessivecite{HANSEN:2007} MMA weight selection scheme
+delivers a test with more power than that based on
+\possessivecite{HANSEN_RACINE:2012} JMA approach for this DGP. Based on this
+set of power curves, for this DGP the proposed approach with MMA weight
+selection dominates its peers.
 
-Next, we address the question of the fact that there are two
-comparisons being made, one between model selection and model
-averaging, and one between asymptotic and bootstrap inference. To
-assess these interplay of these issues we report both the asymptotic
-and bootstrapped versions of the N-P approach in Figure
-\ref{fig:arpowerboot}. We report this simply because the reader might
+Next, we address the question of the fact that there are two comparisons being
+made, one between model selection and model averaging, and one between
+asymptotic and bootstrap inference. To assess these interplay of these issues
+we report both the asymptotic and bootstrapped versions of the N-P approach in
+Figure \ref{fig:arpowerboot}. We report this simply because the reader might
 reasonably wonder whether the power gains associated with the proposed
-procedure arise from the use of the bootstrap procedure rather than
-from the use of model averaging.
+procedure arise from the use of the bootstrap procedure rather than from the
+use of model averaging.
 
-\begin{figure}[!ht]
-  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar_bootstrap_stationary_grid/n_50/power.pdf}
-  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar_bootstrap_stationary_grid/n_100/power.pdf}
-  \caption{\label{fig:arpowerboot}Power curves for the AR(1) DGP
-    $y_t=\rho y_{t-1}+\varepsilon_t$ for unit root tests using a
-    $\alpha=0.05$ level of significance. When $\rho=1$ a unit root is
-    present (empirical size is the height of the power curve at
-    $\rho=1$, i.e., at the right of each figure). The power curve N-P
-    is based on asymptotic critical values, while N-P$^*$ is based on
-    bootstrapped critical values.}
+\begin{figure}[th]
+\includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar_bootstrap_stationary_grid/n_50/power.pdf}
+\includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ar_bootstrap_stationary_grid/n_100/power.pdf}
+\caption{Power curves for the AR(1) DGP $y_{t}=\rho y_{t-1}+\varepsilon_{t}$
+for unit root tests using a $\alpha=0.05$ level of significance. When $\rho=1$
+a unit root is present (empirical size is the height of the power curve at
+$\rho=1$, i.e., at the right of each figure). The power curve N-P is based on
+asymptotic critical values, while N-P$^{*}$ is based on bootstrapped critical
+values.}
+\label{fig:arpowerboot}
 \end{figure}
 
 By way of illustration, compare the performance of the asymptotic and
-bootstrapped MIC model selected \citeasnoun{NG_PERRON:2001} test (N-P
-and N-P$^*$, respectively) with the bootstrapped model averaged ADF
-test (MMA or JMA) in Figure \ref{fig:arpowerboot}. A comparison of the
-asymptotic and bootstrapped versions of
-\possessivecite{NG_PERRON:2001} MIC model selected test reveals no
-consequential power gains associated with bootstrapping the process
-using the identical bootstrap procedure that underpins the proposed
-approach (we present results for $T=50$ and $T=100$ only as results do
-not differ qualitatively for $T=200$ and $T=400$). We can therefore
-safely conclude that any power gains associated with the proposed
-approach arise from the use of model averaging versus model selection
-and cannot be attributed to the use of a bootstrap procedure.
+bootstrapped MIC model selected \citeasnoun{NG_PERRON:2001} test (N-P and
+N-P$^{*}$, respectively) with the bootstrapped model averaged ADF test (MMA or
+JMA) in Figure \ref{fig:arpowerboot}. A comparison of the asymptotic and
+bootstrapped versions of \possessivecite{NG_PERRON:2001} MIC model selected
+test reveals no consequential power gains associated with bootstrapping the
+process using the identical bootstrap procedure that underpins the proposed
+approach (we present results for $T=50$ and $T=100$ only as results do not
+differ qualitatively for $T=200$ and $T=400$). We can therefore safely
+conclude that any power gains associated with the proposed approach arise from
+the use of model averaging versus model selection and cannot be attributed to
+the use of a bootstrap procedure.
 
 \subsection{ARMA(1,1) DGP}
 
-Figure \ref{fig:mapower} presents power curves generated under the
-ARMA(1,1) DGP containing a coefficient of -0.8 on the lagged MA
-component that is known to confound existing tests.
+Figure \ref{fig:mapower} presents power curves generated under the ARMA(1,1)
+DGP containing a coefficient of -0.8 on the lagged MA component that is known
+to confound existing tests.
 
-\begin{figure}[!ht]
-  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ma/n_50/power_all.pdf}
-  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ma/n_100/power_all.pdf}
-
-  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ma/n_200/power_all.pdf}
-  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ma/n_400/power_all.pdf}
-  \caption{\label{fig:mapower}Power curves for the ARMA(1,1) DGP
-    $y_t=\rho y_{t-1}+\varepsilon_t-0.8\varepsilon_{t-1}$ for unit
-    root tests using a $\alpha=0.05$ level of significance. When
-    $\rho=1$ a unit root is present (empirical size is the height of
-    the power curve at $\rho=1$, i.e., at the right of each figure).}
+\begin{figure}[th]
+\includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ma/n_50/power_all.pdf}
+\includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ma/n_100/power_all.pdf}
+\par
+\includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ma/n_200/power_all.pdf}
+\includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_ma/n_400/power_all.pdf}
+\caption{Power curves for the ARMA(1,1) DGP $y_{t}=\rho y_{t-1}+\varepsilon
+_{t}-0.8\varepsilon_{t-1}$ for unit root tests using a $\alpha=0.05$ level of
+significance. When $\rho=1$ a unit root is present (empirical size is the
+height of the power curve at $\rho=1$, i.e., at the right of each figure).}
+\label{fig:mapower}
 \end{figure}
 
 It is evident from Figure \ref{fig:mapower} that the
 \citeasnoun{PHILLIPS_PERRON:1988} and \citeasnoun{DICKEY_FULLER:1979}
 approaches completely fail for this DGP as was pointed out by
 \citeasnoun{PHILLIPS_PERRON:1988} and \citeasnoun{PALM_ET_AL:2008}. In
-particular, for this DGP the \citeasnoun{PHILLIPS_PERRON:1988} test
-has empirical size equal to $1.00$ for any $T$ when $\alpha=0.05$
-thereby rejecting $100\%$ of the time when in fact the null is true,
-while the \citeasnoun{DICKEY_FULLER:1979} approach displays similarly
-crippling upward size distortions that very slowly approach nominal
-size as $T$ increases but otherwise remain unacceptably high.
+particular, for this DGP the \citeasnoun{PHILLIPS_PERRON:1988} test has
+empirical size equal to $1.00$ for any $T$ when $\alpha=0.05$ thereby
+rejecting $100\%$ of the time when in fact the null is true, while the
+\citeasnoun{DICKEY_FULLER:1979} approach displays similarly crippling upward
+size distortions that very slowly approach nominal size as $T$ increases but
+otherwise remain unacceptably high.
 
-In light of the extreme size distortions that surface for this (and
-similar) DGPs when using the \citeasnoun{PHILLIPS_PERRON:1988} and
-\citeasnoun{DICKEY_FULLER:1979} tests, it is difficult to recommend
-either test to practitioners, therefore the choice of tests therefore
-comes down to either \possessivecite{NG_PERRON:2001} procedure or the
-proposed bootstrap model averaging approach.
+In light of the extreme size distortions that surface for this (and similar)
+DGPs when using the \citeasnoun{PHILLIPS_PERRON:1988} and
+\citeasnoun{DICKEY_FULLER:1979} tests, it is difficult to recommend either
+test to practitioners, therefore the choice of tests therefore comes down to
+either \possessivecite{NG_PERRON:2001} procedure or the proposed bootstrap
+model averaging approach.
 
-For this DGP, the proposed approach is slightly over-sized for
-$T\le 100$ (for the MMA weighting scheme the empirical rejection
-frequencies are approximately $8\%$ for $T=50$ and $6\%$ for $T=100$,
-respectively; for the JMA weighting scheme the empirical rejection
-frequencies are approximately $7\%$ for $T=50$ and $5\%$ for $T=100$,
-respectively) while \possessivecite{NG_PERRON:2001} approach exhibits
-substantially larger size distortions for samples of size $T\le 100$
-(approximately $18\%$ and $10\%$ for $T=50$ and $T=100$,
-respectively), while both tests are approximately correctly sized for
-$T \ge 200$. In addition, the proposed approach has substantially
-higher power than \possessivecite{NG_PERRON:2001} approach for this
-DGP, size distortions notwithstanding, regardless of whether the MMA
-or JMA weighting schemes are adopted. For this DGP, the proposed
-approach is first among its peers when judged by its power curve.
+For this DGP, the proposed approach is slightly over-sized for $T\le100$ (for
+the MMA weighting scheme the empirical rejection frequencies are approximately
+$8\%$ for $T=50$ and $6\%$ for $T=100$, respectively; for the JMA weighting
+scheme the empirical rejection frequencies are approximately $7\%$ for $T=50$
+and $5\%$ for $T=100$, respectively) while \possessivecite{NG_PERRON:2001}
+approach exhibits substantially larger size distortions for samples of size
+$T\le100$ (approximately $18\%$ and $10\%$ for $T=50$ and $T=100$,
+respectively), while both tests are approximately correctly sized for $T
+\ge200$. In addition, the proposed approach has substantially higher power
+than \possessivecite{NG_PERRON:2001} approach for this DGP, size distortions
+notwithstanding, regardless of whether the MMA or JMA weighting schemes are
+adopted. For this DGP, the proposed approach is first among its peers when
+judged by its power curve.
 
 \subsection{ARMA(1,2) DGP}
 
-Figure \ref{fig:armapower} presents power curves generated under the
-ARMA(1,2) DGP. Given that neither the
-\citeasnoun{PHILLIPS_PERRON:1988} nor \citeasnoun{DICKEY_FULLER:1979}
-tests can be recommended to practitioners given their failure for the
-ARMA(1,1) DGP above and for a range of similar DGPs, we drop them in
-the power analysis that follows.
+Figure \ref{fig:armapower} presents power curves generated under the ARMA(1,2)
+DGP. Given that neither the \citeasnoun{PHILLIPS_PERRON:1988} nor
+\citeasnoun{DICKEY_FULLER:1979} tests can be recommended to practitioners
+given their failure for the ARMA(1,1) DGP above and for a range of similar
+DGPs, we drop them in the power analysis that follows.
 
-\begin{figure}[!ht]
-  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_arma/n_50/power.pdf}
-  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_arma/n_100/power.pdf}
-
-  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_arma/n_200/power.pdf}
-  \includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_arma/n_400/power.pdf}
-  \caption{\label{fig:armapower}Power curves for the DGP
-    $y_t=\rho
-    y_{t-1}+\varepsilon_t+0.3\varepsilon_{t-1}-0.2\varepsilon_{t-2}$
-    for unit root tests using a $\alpha=0.05$ level of
-    significance. When $\rho=1$ a unit root is present (empirical size
-    is the height of the power curve at $\rho=1$, i.e., at the right
-    of each figure).}
+\begin{figure}[th]
+\includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_arma/n_50/power.pdf}
+\includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_arma/n_100/power.pdf}
+\par
+\includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_arma/n_200/power.pdf}
+\includegraphics[scale=0.45]{/Users/jracine/tex/categorical/bootstrap_unitroot/work_power_arma/n_400/power.pdf}
+\caption{Power curves for the DGP $y_{t}=\rho y_{t-1}+\varepsilon
+_{t}+0.3\varepsilon_{t-1}-0.2\varepsilon_{t-2}$ for unit root tests using a
+$\alpha=0.05$ level of significance. When $\rho=1$ a unit root is present
+(empirical size is the height of the power curve at $\rho=1$, i.e., at the
+right of each figure).}
+\label{fig:armapower}
 \end{figure}
 
-Figure \ref{fig:armapower} reveals that, for this DGP, all three
-procedures are approximately correctly sized for all $T$ while the
-proposed approach that employs the MMA weight scheme dominates in
-terms of power.
+Figure \ref{fig:armapower} reveals that, for this DGP, all three procedures
+are approximately correctly sized for all $T$ while the proposed approach that
+employs the MMA weight scheme dominates in terms of power.
 
 \subsection{Discussion}
 
-On the basis of our simulation results, we feel confident recommending
-the proposed procedure for testing for the presence of a unit root
-(extensive simulations that examine the effect of the largest
-dimension model that is averaged over, the distribution of the weight
-vector and so forth are available upon request). Our approach
-attenuates the large size distortions that can arise when using the
-classical approach \cite{DICKEY_FULLER:1979} that relies on tabulated
-critical values, distortions that can also arise when using in
-\possessivecite{NG_PERRON:2001} approach. Furthermore, the proposed
-approach exhibits higher power, does not require specification of the
-model from which the bootstrap resamples are drawn, and uses and an
-automatic block length selection procedure for the dependent bootstrap
-method. Though the MMA procedure has higher power than the JMA
-procedure for the DGPs considered above, extensive simulations not
-reported here indicate that the JMA procedure exhibits lower size
-distortions, when present, than the MMA approach, particularly when a
-trend is included in the model. A conservative approach would
-therefore be to use the JMA weight selection scheme for this
-reason. This procedure ought to appeal to practitioners as there are
-no unknown parameters that must be specified by the user, an R
-implementation exists, and the procedure is not computationally
-demanding.
+On the basis of our simulation results, we feel confident recommending the
+proposed procedure for testing for the presence of a unit root (extensive
+simulations that examine the effect of the largest dimension model that is
+averaged over, the distribution of the weight vector and so forth are
+available upon request). Our approach attenuates the large size distortions
+that can arise when using the classical approach \cite{DICKEY_FULLER:1979}
+that relies on tabulated critical values, distortions that can also arise when
+using in \possessivecite{NG_PERRON:2001} approach. Furthermore, the proposed
+approach exhibits higher power, does not require specification of the model
+from which the bootstrap resamples are drawn, and uses and an automatic block
+length selection procedure for the dependent bootstrap method. Though the MMA
+procedure has higher power than the JMA procedure for the DGPs considered
+above, extensive simulations not reported here indicate that the JMA procedure
+exhibits lower size distortions, when present, than the MMA approach,
+particularly when a trend is included in the model. A conservative approach
+would therefore be to use the JMA weight selection scheme for this reason.
+This procedure ought to appeal to practitioners as there are no unknown
+parameters that must be specified by the user, an R implementation exists, and
+the procedure is not computationally demanding.
 
 \section{Conclusion}
 
-We propose a bootstrap model averaging procedure capable of
-attenuating large upward size distortions that can arise when testing
-for the presence of a unit root while possessing power that dominates
-its peers. We adopt a model-free bootstrap procedure where the null is
-imposed by simple differencing, exploit recent developments in
-automatic block length selection for the geometric bootstrap procedure
-invoked, and adopt a novel model averaging procedure to address model
-uncertainty. Theoretical support is provided, and a set of simulation
-exercises underscore its advantages relative to its peers. An R
-\cite{R} package exists that implements the proposed method
-\cite{hr}. Since there are no nuisance parameters to be set by the
-user, and in light of its performance in a range of simulated
-scenarios, we are optimistic that the proposed approach will appeal to
-practitioners.
-
-\clearpage
-
+We propose a bootstrap model averaging procedure capable of attenuating large
+upward size distortions that can arise when testing for the presence of a unit
+root while possessing power that dominates its peers. We adopt a model-free
+bootstrap procedure where the null is imposed by simple differencing, exploit
+recent developments in automatic block length selection for the geometric
+bootstrap procedure invoked, and adopt a novel model averaging procedure to
+address model uncertainty. Theoretical support is provided, and a set of
+simulation exercises underscore its advantages relative to its peers. An R
+\cite{R} package exists that implements the proposed method \cite{hr}. Since
+there are no nuisance parameters to be set by the user, and in light of its
+performance in a range of simulated scenarios, we are optimistic that the
+proposed approach will appeal to practitioners.
 
 \clearpage
 

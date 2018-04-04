@@ -63,7 +63,7 @@ Simulations reveal that the test's size and power is quite balanced regardless o
 
 We use the function \code{\link[np]{b.star}} from the \pkg{np} package for the automatic dependent bootstrap procedure, \code{\link[quadprog]{solve.QP}} from the \pkg{quadprog} package to solve the quadratic program for the model average weights), \code{\link[boot]{tsboot}} from the \pkg{boot} package to generate the stationary geometric bootstrap resample, and the \code{\link[fUnitRoots]{adfTest}} function from the \pkg{fUnitRoots} package to generate the statistics that are averaged.
 
-Note that the default tests for the presence of a unit root (point null) version a stationary alternative. Rejection of the null implies stationarity, however failure to reject could arise when the series contains a unit root or is explosive. This is the reason why two critical values are returned no matter what the alternative (for the one-sided alternatives they are the alpha tail critical values instead of the alpha/2 tail ones, so you can determine whether failure to reject is an indication of a unit root or an explosive series).
+Note that the default is to test for the presence of a unit root (point null) version either a stationary or explosive alternative as we believe it is important to be agnostic about the alternative. Rejection of the null implies stationarity, however failure to reject could arise when the series contains a unit root or is explosive. This is the reason why two critical values are returned no matter what the alternative (for the one-sided alternatives they are the alpha tail critical values instead of the alpha/2 tail ones, so you can determine whether failure to reject is an indication of a unit root or an explosive series).
 
 }
 
@@ -102,7 +102,7 @@ Hansen, B. E. (2007), \dQuote{Least squares model averaging,} Econometrica 75, 1
 
 Hansen, B. E. (2014), \dQuote{Model averaging, asymptotic risk, and regressor groups,} Quantitative Economics 5(3), 495-530.
 
-Hansen, B. E. & J. S. Racine (2017), \dQuote{Bootstrap Model Averaging Unit Root Inference,} Technical Report.
+Hansen, B. E. & J. S. Racine (2018), \dQuote{Bootstrap Model Averaging Unit Root Inference,} Technical Report.
 
 Hansen, B. E. & J. S. Racine (2012), \dQuote{Jackknife model averaging,} Journal of Econometrics 167(1), 38-46.
 
