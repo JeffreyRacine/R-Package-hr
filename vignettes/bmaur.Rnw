@@ -361,7 +361,7 @@ ADF(w)=\sum_{k=1}^{K}w(k)ADF(k).
 \end{equation*}
 
 The asymptotic distribution of the averaging ADF statistic can be deduced
-directly from Theorem 1.
+directly from Theorem \ref{thm:thm1}.
 
 \begin{theorem}
 \label{thm:thm2} As $T\rightarrow\infty$
